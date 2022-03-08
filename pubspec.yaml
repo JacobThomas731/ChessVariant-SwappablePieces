@@ -58,6 +58,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/piece images 1/
+    - assets/images/
     - assets/homepage/
 
   # To add assets to your application, add an assets section, like this:

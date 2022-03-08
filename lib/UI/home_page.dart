@@ -1,5 +1,6 @@
 //start screen shows up here
 
+import 'package:chess_variant_swappable_pieces/chess_board.dart';
 import 'package:flutter/cupertino.dart';
 // import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -41,25 +42,32 @@ class _HomePageState extends State<HomePage> {
             image: AssetImage('assets/homepage/menu_background.png'),
           ),
           Column(
-            // mainAxisAlignment: MainAxisAlignment.center,
-            // crossAxisAlignment: CrossAxisAlignment.center,
-
-            children: const [
+            children:  [
               Padding(
-                padding: EdgeInsets.only(top: 20, left: 20, right: 20),
-                child: Image(
-                  image: AssetImage('assets/homepage/findGame_button.png'),
-                  // height: 65,
+                padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                child: GestureDetector(
+                  onTap: (){
+
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Board(screenHeight)),
+                    );
+                  },
+                  child: const Image(
+                    image: AssetImage('assets/homepage/findGame_button.png'),
+                    // height: 65,
+                  ),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: Image(
                   image: AssetImage('assets/homepage/joinLobby_button.png'),
                   // height: 40,
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: Image(
                   image:
@@ -67,13 +75,13 @@ class _HomePageState extends State<HomePage> {
                   // height: 40,
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: Image(
                   image: AssetImage('assets/homepage/rules_button.png'),
                 ),
               ),
-              Padding(
+              const Padding(
                 padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: Image(
                   image: AssetImage('assets/homepage/settings_button.png'),
