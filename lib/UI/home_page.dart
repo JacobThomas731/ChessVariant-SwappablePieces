@@ -1,7 +1,7 @@
 //start screen shows up here
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/rendering.dart';
+// import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -32,10 +32,10 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.center,
       ),
       Positioned(
-        top: screenHeight * .1,
-        bottom: screenHeight * .1,
+        top: screenHeight * .2,
+        bottom: screenHeight * .2,
         left: screenWidth * .1,
-        right: screenWidth * .65,
+        right: screenWidth * .70,
         child: Stack(children: [
           const Image(
             image: AssetImage('assets/homepage/menu_background.png'),
@@ -46,21 +46,21 @@ class _HomePageState extends State<HomePage> {
 
             children: const [
               Padding(
-                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                padding: EdgeInsets.only(top: 20, left: 20, right: 20),
                 child: Image(
                   image: AssetImage('assets/homepage/findGame_button.png'),
                   // height: 65,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: Image(
                   image: AssetImage('assets/homepage/joinLobby_button.png'),
                   // height: 40,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: Image(
                   image:
                       AssetImage('assets/homepage/playwithfriend_button.png'),
@@ -68,13 +68,13 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: Image(
                   image: AssetImage('assets/homepage/rules_button.png'),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
+                padding: EdgeInsets.only(top: 10, left: 20, right: 20),
                 child: Image(
                   image: AssetImage('assets/homepage/settings_button.png'),
                 ),
@@ -84,8 +84,8 @@ class _HomePageState extends State<HomePage> {
         ]),
       ),
       Positioned(
-        top: screenHeight * .1,
-        bottom: screenHeight * .1,
+        top: screenHeight * .2,
+        bottom: screenHeight * .2,
         left: screenWidth * .45,
         right: screenWidth * .1,
         child: Stack(
