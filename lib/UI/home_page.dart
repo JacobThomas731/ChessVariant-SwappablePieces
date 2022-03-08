@@ -40,28 +40,29 @@ class _HomePageState extends State<HomePage> {
           const Image(
             image: AssetImage('assets/homepage/menu_background.png'),
           ),
-          Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Image(
-                  image: AssetImage('assets/homepage/menu_button.png'),
-                ),
-                Image(
-                  image: AssetImage('assets/homepage/menu_button.png'),
-                ),
-                Image(
-                  image: AssetImage('assets/homepage/menu_button.png'),
-                ),
-                Image(
-                  image: AssetImage('assets/homepage/menu_button.png'),
-                ),
-                Image(
-                  image: AssetImage('assets/homepage/menu_button.png'),
-                ),
-              ],
-            ),
+          Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: const [
+              Image(
+                image: AssetImage('assets/homepage/findGame_button.png'),
+                // height: 40,
+              ),
+              Image(
+                image: AssetImage('assets/homepage/joinLobby_button.png'),
+                // height: 40,
+              ),
+              Image(
+                image: AssetImage('assets/homepage/playwithfriend_button.png'),
+                // height: 40,
+              ),
+              Image(
+                image: AssetImage('assets/homepage/rules_button.png'),
+              ),
+              Image(
+                image: AssetImage('assets/homepage/settings_button.png'),
+              ),
+            ],
           ),
         ]),
       ),
