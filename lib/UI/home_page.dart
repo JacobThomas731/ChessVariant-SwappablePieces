@@ -43,24 +43,40 @@ class _HomePageState extends State<HomePage> {
           Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
+
             children: const [
-              Image(
-                image: AssetImage('assets/homepage/findGame_button.png'),
-                // height: 40,
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Image(
+                  image: AssetImage('assets/homepage/findGame_button.png'),
+                  // height: 40,
+                ),
               ),
-              Image(
-                image: AssetImage('assets/homepage/joinLobby_button.png'),
-                // height: 40,
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Image(
+                  image: AssetImage('assets/homepage/joinLobby_button.png'),
+                  // height: 40,
+                ),
               ),
-              Image(
-                image: AssetImage('assets/homepage/playwithfriend_button.png'),
-                // height: 40,
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Image(
+                  image: AssetImage('assets/homepage/playwithfriend_button.png'),
+                  // height: 40,
+                ),
               ),
-              Image(
-                image: AssetImage('assets/homepage/rules_button.png'),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Image(
+                  image: AssetImage('assets/homepage/rules_button.png'),
+                ),
               ),
-              Image(
-                image: AssetImage('assets/homepage/settings_button.png'),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Image(
+                  image: AssetImage('assets/homepage/settings_button.png'),
+                ),
               ),
             ],
           ),
