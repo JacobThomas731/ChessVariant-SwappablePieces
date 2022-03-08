@@ -21,7 +21,7 @@ class Startup extends StatelessWidget {
           scaffoldBackgroundColor: Colors.black,
           accentColor: Colors.black,
           splashColor: Colors.black12),
-      home: HomePage());
+      home: HomePage(Title));
   }
 }
 
