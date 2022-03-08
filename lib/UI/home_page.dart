@@ -32,48 +32,49 @@ class _HomePageState extends State<HomePage> {
         alignment: Alignment.center,
       ),
       Positioned(
-        top: screenHeight * .25,
-        bottom: screenHeight * .25,
-        left: screenWidth * .2,
-        right: screenWidth * .6,
+        top: screenHeight * .1,
+        bottom: screenHeight * .1,
+        left: screenWidth * .1,
+        right: screenWidth * .65,
         child: Stack(children: [
           const Image(
             image: AssetImage('assets/homepage/menu_background.png'),
           ),
           Column(
             // mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            // crossAxisAlignment: CrossAxisAlignment.center,
 
             children: const [
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Image(
                   image: AssetImage('assets/homepage/findGame_button.png'),
-                  // height: 40,
+                  // height: 65,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Image(
                   image: AssetImage('assets/homepage/joinLobby_button.png'),
                   // height: 40,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Image(
-                  image: AssetImage('assets/homepage/playwithfriend_button.png'),
+                  image:
+                      AssetImage('assets/homepage/playwithfriend_button.png'),
                   // height: 40,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Image(
                   image: AssetImage('assets/homepage/rules_button.png'),
                 ),
               ),
               Padding(
-                padding: EdgeInsets.all(8.0),
+                padding: EdgeInsets.only(top: 10, left: 10, right: 10),
                 child: Image(
                   image: AssetImage('assets/homepage/settings_button.png'),
                 ),
@@ -83,12 +84,29 @@ class _HomePageState extends State<HomePage> {
         ]),
       ),
       Positioned(
-        top: screenHeight * .25,
-        bottom: screenHeight * .25,
-        left: screenWidth * .6,
-        right: screenWidth * .2,
-        child: const Image(
-          image: AssetImage('assets/homepage/menu_background.png'),
+        top: screenHeight * .1,
+        bottom: screenHeight * .1,
+        left: screenWidth * .45,
+        right: screenWidth * .1,
+        child: Stack(
+          children: [
+            Column(
+              children: const [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Image(
+                    image: AssetImage('assets/homepage/title.png'),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Image(
+                    image: AssetImage('assets/homepage/register_sign_in_bg.png'),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     ]);
