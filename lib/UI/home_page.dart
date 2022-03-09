@@ -47,11 +47,9 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                 child: GestureDetector(
                   onTap: (){
-
-
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Board(screenHeight)),
+                      MaterialPageRoute(builder: (context) => Board(screenHeight-100)),
                     );
                   },
                   child: const Image(

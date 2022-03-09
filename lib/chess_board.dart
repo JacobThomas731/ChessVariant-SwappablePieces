@@ -89,128 +89,141 @@ class _BoardState extends State<Board> {
   Widget build(BuildContext context) {
     var boardLength = widget.boardLength;
     var boardSquare = boardLength / 8;
-    return Container(
-      color: Colors.brown[700],
-      height: boardLength,
-      width: boardLength,
-      child: Column(
-        children: [
-          for (int i = 0; i < 8; i++)
-            Row(
-              children: [
-                for (int j = 0; j < 8; j++)
-                  GestureDetector(
-                    onTap: () {
-                      var ij = i.toString() + j.toString();
-                      if (whites_turn) {
-                        if (curr_status[ij]! > 0) {
-                          setState(() {
-                            if (first_click == ij) {
-                              first_click = '';
-                              possible_moves = {};
-                              possible_swap_moves = {};
-                            } else if (possible_swap_moves[ij] == 1) {
-                              swap_white--;
-                              var temp = curr_status[ij]!;
-                              curr_status[ij] = curr_status[first_click]!;
-                              curr_status[first_click] = temp;
-                              first_click = '';
-                              second_click = '';
-                              possible_moves = {};
-                              possible_swap_moves = {};
-                              whites_turn = !whites_turn;
+    return Stack(
+
+      children: [
+        const Image(
+          image: AssetImage('assets/homepage/homeScreen_background.png'),
+          fit: BoxFit.cover,
+          height: double.infinity,
+          width: double.infinity,
+          alignment: Alignment.center,
+        ),
+        Center(
+        child: Container(
+          color: Colors.brown[700],
+          height: boardLength,
+          width: boardLength,
+          child: Column(
+            children: [
+              for (int i = 0; i < 8; i++)
+                Row(
+                  children: [
+                    for (int j = 0; j < 8; j++)
+                      GestureDetector(
+                        onTap: () {
+                          var ij = i.toString() + j.toString();
+                          if (whites_turn) {
+                            if (curr_status[ij]! > 0) {
+                              setState(() {
+                                if (first_click == ij) {
+                                  first_click = '';
+                                  possible_moves = {};
+                                  possible_swap_moves = {};
+                                } else if (possible_swap_moves[ij] == 1) {
+                                  swap_white--;
+                                  var temp = curr_status[ij]!;
+                                  curr_status[ij] = curr_status[first_click]!;
+                                  curr_status[first_click] = temp;
+                                  first_click = '';
+                                  second_click = '';
+                                  possible_moves = {};
+                                  possible_swap_moves = {};
+                                  whites_turn = !whites_turn;
+                                } else {
+                                  first_click = ij;
+                                  possible_moves = {};
+                                  possible_swap_moves = {};
+                                  update_suggestions(i, j);
+                                }
+                              });
+                            } else if (first_click != '' &&
+                                possible_moves[ij] != null) {
+                              setState(() {
+                                second_click = ij;
+                                curr_status[second_click] =
+                                curr_status[first_click]!;
+                                curr_status[first_click] = 0;
+                                first_click = '';
+                                whites_turn = false;
+                                possible_moves = {};
+                                possible_swap_moves = {};
+                              });
                             } else {
-                              first_click = ij;
-                              possible_moves = {};
-                              possible_swap_moves = {};
-                              update_suggestions(i, j);
+                              setState(() {
+                                first_click = '';
+                                second_click = '';
+                                possible_moves = {};
+                                possible_swap_moves = {};
+                              });
                             }
-                          });
-                        } else if (first_click != '' &&
-                            possible_moves[ij] != null) {
-                          setState(() {
-                            second_click = ij;
-                            curr_status[second_click] =
-                            curr_status[first_click]!;
-                            curr_status[first_click] = 0;
-                            first_click = '';
-                            whites_turn = false;
-                            possible_moves = {};
-                            possible_swap_moves = {};
-                          });
-                        } else {
-                          setState(() {
-                            first_click = '';
-                            second_click = '';
-                            possible_moves = {};
-                            possible_swap_moves = {};
-                          });
-                        }
-                      } else {
-                        //black's turn
-                        if (curr_status[ij]! < 0) {
-                          setState(() {
-                            if (first_click == ij) {
-                              first_click = '';
-                              possible_moves = {};
-                              possible_swap_moves = {};
-                            } else if (possible_swap_moves[ij] == 1) {
-                              swap_black--;
-                              var temp = curr_status[ij]!;
-                              curr_status[ij] = curr_status[first_click]!;
-                              curr_status[first_click] = temp;
-                              first_click = '';
-                              second_click = '';
-                              possible_moves = {};
-                              possible_swap_moves = {};
-                              whites_turn = !whites_turn;
+                          } else {
+                            //black's turn
+                            if (curr_status[ij]! < 0) {
+                              setState(() {
+                                if (first_click == ij) {
+                                  first_click = '';
+                                  possible_moves = {};
+                                  possible_swap_moves = {};
+                                } else if (possible_swap_moves[ij] == 1) {
+                                  swap_black--;
+                                  var temp = curr_status[ij]!;
+                                  curr_status[ij] = curr_status[first_click]!;
+                                  curr_status[first_click] = temp;
+                                  first_click = '';
+                                  second_click = '';
+                                  possible_moves = {};
+                                  possible_swap_moves = {};
+                                  whites_turn = !whites_turn;
+                                } else {
+                                  first_click = ij;
+                                  possible_moves = {};
+                                  possible_swap_moves = {};
+                                  update_suggestions(i, j);
+                                }
+                              });
+                            } else if (first_click != '' &&
+                                possible_moves[ij] != null) {
+                              setState(() {
+                                second_click = ij;
+                                curr_status[second_click] =
+                                curr_status[first_click]!;
+                                curr_status[first_click] = 0;
+                                first_click = '';
+                                whites_turn = true;
+                                possible_moves = {};
+                                possible_swap_moves = {};
+                              });
                             } else {
-                              first_click = ij;
-                              possible_moves = {};
-                              possible_swap_moves = {};
-                              update_suggestions(i, j);
+                              setState(() {
+                                first_click = '';
+                                second_click = '';
+                                possible_moves = {};
+                                possible_swap_moves = {};
+                              });
                             }
-                          });
-                        } else if (first_click != '' &&
-                            possible_moves[ij] != null) {
-                          setState(() {
-                            second_click = ij;
-                            curr_status[second_click] =
-                            curr_status[first_click]!;
-                            curr_status[first_click] = 0;
-                            first_click = '';
-                            whites_turn = true;
-                            possible_moves = {};
-                            possible_swap_moves = {};
-                          });
-                        } else {
-                          setState(() {
-                            first_click = '';
-                            second_click = '';
-                            possible_moves = {};
-                            possible_swap_moves = {};
-                          });
-                        }
-                      }
-                    },
-                    child: Container(
-                      height: boardSquare,
-                      width: boardSquare,
-                      color: tile_color(i, j),
-                      alignment: Alignment.center,
-                      child: Image(
-                        image: AssetImage(
-                          piece(i, j),
+                          }
+                        },
+                        child: Container(
+                          height: boardSquare,
+                          width: boardSquare,
+                          color: tile_color(i, j),
+                          alignment: Alignment.center,
+                          child: Image(
+                            image: AssetImage(
+                              piece(i, j),
+                            ),
+                            height: boardSquare / 2,
+                            width: boardSquare / 2,
+                          ),
                         ),
-                        height: boardSquare / 2,
-                        width: boardSquare / 2,
                       ),
-                    ),
-                  ),
-              ],
-            ),
-        ],
-      ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ),]
     );
   }
 
@@ -231,7 +244,7 @@ class _BoardState extends State<Board> {
     } else if (curr_status[ij] == -8) {
       return 'assets/images/black_rook.png';
     } else if (curr_status[ij] == -4) {
-      return 'assets/images/black_king.png';
+      return 'assets/images/black_knight.png';
     } else if (curr_status[ij] == -6) {
       return 'assets/images/black_bishop.png';
     } else if (curr_status[ij] == -9) {
