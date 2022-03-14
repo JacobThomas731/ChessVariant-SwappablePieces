@@ -1,15 +1,12 @@
 //start screen shows up here
 
-import 'package:chess_variant_swappable_pieces/chess_board.dart';
-import 'package:flutter/cupertino.dart';
-// import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:chess_variant_swappable_pieces/chess_board.dart';
 
 class HomePage extends StatefulWidget {
   final title;
 
-  HomePage(this.title);
+  const HomePage(this.title, {Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -23,6 +20,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
+
 
     return Stack(children: [
       const Image(
@@ -42,14 +40,15 @@ class _HomePageState extends State<HomePage> {
             image: AssetImage('assets/homepage/menu_background.png'),
           ),
           Column(
-            children:  [
+            children: [
               Padding(
                 padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                 child: GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Board(screenHeight-100)),
+                      MaterialPageRoute(
+                          builder: (context) => Board()),
                     );
                   },
                   child: const Image(
@@ -107,7 +106,8 @@ class _HomePageState extends State<HomePage> {
                 Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Image(
-                    image: AssetImage('assets/homepage/register_sign_in_bg.png'),
+                    image:
+                        AssetImage('assets/homepage/register_sign_in_bg.png'),
                   ),
                 ),
               ],

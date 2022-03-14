@@ -1,10 +1,7 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
 
 class Board extends StatefulWidget {
-  final boardLength;
-
-  Board(this.boardLength);
+  const Board({Key? key}) : super(key: key);
 
   @override
   _BoardState createState() => _BoardState();
@@ -85,21 +82,28 @@ class _BoardState extends State<Board> {
     '76': -4,
     '77': -8,
   };
+  var screenHeight;
+  var screenWidth;
+  var boardLength;
+  var boardSquare;
+  var boardPadding = 100.0;
+
   @override
   Widget build(BuildContext context) {
-    var boardLength = widget.boardLength;
-    var boardSquare = boardLength / 8;
-    return Stack(
-
-      children: [
-        const Image(
-          image: AssetImage('assets/homepage/homeScreen_background.png'),
-          fit: BoxFit.cover,
-          height: double.infinity,
-          width: double.infinity,
-          alignment: Alignment.center,
-        ),
-        Center(
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
+    boardLength = screenHeight < screenWidth ? screenHeight : screenWidth;
+    boardLength = boardLength - boardPadding;
+    boardSquare = boardLength / 8;
+    return Stack(children: [
+      const Image(
+        image: AssetImage('assets/homepage/homeScreen_background.png'),
+        fit: BoxFit.cover,
+        height: double.infinity,
+        width: double.infinity,
+        alignment: Alignment.center,
+      ),
+      Center(
         child: Container(
           color: Colors.brown[700],
           height: boardLength,
@@ -142,7 +146,7 @@ class _BoardState extends State<Board> {
                               setState(() {
                                 second_click = ij;
                                 curr_status[second_click] =
-                                curr_status[first_click]!;
+                                    curr_status[first_click]!;
                                 curr_status[first_click] = 0;
                                 first_click = '';
                                 whites_turn = false;
@@ -187,7 +191,7 @@ class _BoardState extends State<Board> {
                               setState(() {
                                 second_click = ij;
                                 curr_status[second_click] =
-                                curr_status[first_click]!;
+                                    curr_status[first_click]!;
                                 curr_status[first_click] = 0;
                                 first_click = '';
                                 whites_turn = true;
@@ -223,8 +227,8 @@ class _BoardState extends State<Board> {
             ],
           ),
         ),
-      ),]
-    );
+      ),
+    ]);
   }
 
   String piece(int i, int j) {
@@ -276,6 +280,7 @@ class _BoardState extends State<Board> {
   }
 
   void reset_suggestions() {}
+
   void update_suggestions(int i, int j) {
     var ij = i.toString() + j.toString();
 
