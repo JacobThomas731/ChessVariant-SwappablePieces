@@ -11,6 +11,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  var isHover0 = false;
+  var isHover1 = false;
+  var isHover2 = false;
+  var isHover3 = false;
+  var isHover4 = false;
+  var isHover5 = false;
+
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -40,6 +47,8 @@ class _HomePageState extends State<HomePage> {
     var title1Size = screenHeight * screenWidth * .00003;
     var title2Size = screenHeight * screenWidth * .00005;
     var registrationTextSize = screenHeight * screenWidth * .00002;
+    var animationTime = 100;
+
     return Material(
       type: MaterialType.transparency,
       child: Stack(children: [
@@ -55,10 +64,30 @@ class _HomePageState extends State<HomePage> {
           left: gapSpace,
           right: screenWidth - menuWidth - gapSpace,
           child: Stack(children: [
-            Container(
-              color: menuBarBgColor,
-              height: menuHeight,
-              width: menuWidth,
+            MouseRegion(
+              onEnter: (f) {
+                setState(() {
+                  isHover0 = true;
+                });
+              },
+              onExit: (f) {
+                setState(() {
+                  isHover0 = false;
+                });
+              },
+              child: AnimatedContainer(
+                duration: Duration(microseconds: animationTime),
+                color: menuBarBgColor,
+                height: (isHover0 ||
+                        isHover1 ||
+                        isHover2 ||
+                        isHover3 ||
+                        isHover4 ||
+                        isHover5)
+                    ? menuHeight + 10
+                    : menuHeight,
+                width: menuWidth,
+              ),
             ),
             Padding(
               padding: EdgeInsets.all(menuPadding),
@@ -71,15 +100,59 @@ class _HomePageState extends State<HomePage> {
                         MaterialPageRoute(builder: (context) => const Board()),
                       );
                     },
-                    child: Container(
+                    child: MouseRegion(
+                      onEnter: (f) {
+                        setState(() {
+                          isHover1 = true;
+                        });
+                      },
+                      onExit: (f) {
+                        setState(() {
+                          isHover1 = false;
+                        });
+                      },
+                      child: AnimatedContainer(
+                        duration: const Duration(microseconds: 100),
+                        color: menuBgColor,
+                        height: isHover1 ? menuBarHeight + 10 : menuBarHeight,
+                        width: menuBarWidth,
+                        child: Center(
+                          child: Text(
+                            menuText1,
+                            style: TextStyle(
+                                color: menuTextColor,
+                                fontSize: menuTextFontSize),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: menuPadding,
+                  ),
+                  MouseRegion(
+                    onEnter: (f) {
+                      setState(() {
+                        isHover2 = true;
+                      });
+                    },
+                    onExit: (f) {
+                      setState(() {
+                        isHover2 = false;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(microseconds: 200),
                       color: menuBgColor,
-                      height: menuBarHeight,
+                      height: isHover2 ? menuBarHeight + 10 : menuBarHeight,
                       width: menuBarWidth,
                       child: Center(
                         child: Text(
-                          menuText1,
+                          menuText2,
                           style: TextStyle(
-                              color: menuTextColor, fontSize: menuTextFontSize),
+                            color: menuTextColor,
+                            fontSize: menuTextFontSize,
+                          ),
                         ),
                       ),
                     ),
@@ -87,58 +160,80 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     height: menuPadding,
                   ),
-                  Container(
-                    color: menuBgColor,
-                    height: menuBarHeight,
-                    width: menuBarWidth,
-                    child: Center(
-                      child: Text(
-                        menuText2,
-                        style: TextStyle(
-                          color: menuTextColor,
-                          fontSize: menuTextFontSize,
-                        ),
-                      ),
+                  MouseRegion(
+                    onEnter: (f) {
+                      setState(() {
+                        isHover3 = true;
+                      });
+                    },
+                    onExit: (f) {
+                      setState(() {
+                        isHover3 = false;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      duration: Duration(microseconds: animationTime),
+                      color: menuBgColor,
+                      height: isHover3 ? menuBarHeight + 10 : menuBarHeight,
+                      width: menuBarWidth,
+                      child: Center(
+                          child: Text(menuText3,
+                              style: TextStyle(
+                                  color: menuTextColor,
+                                  fontSize: menuTextFontSize))),
                     ),
                   ),
                   Container(
                     height: menuPadding,
                   ),
-                  Container(
-                    color: menuBgColor,
-                    height: menuBarHeight,
-                    width: menuBarWidth,
-                    child: Center(
-                        child: Text(menuText3,
-                            style: TextStyle(
-                                color: menuTextColor,
-                                fontSize: menuTextFontSize))),
+                  MouseRegion(
+                    onEnter: (f) {
+                      setState(() {
+                        isHover4 = true;
+                      });
+                    },
+                    onExit: (f) {
+                      setState(() {
+                        isHover4 = false;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      duration: Duration(microseconds: animationTime),
+                      color: menuBgColor,
+                      height: isHover4 ? menuBarHeight + 10 : menuBarHeight,
+                      width: menuBarWidth,
+                      child: Center(
+                          child: Text(menuText4,
+                              style: TextStyle(
+                                  color: menuTextColor,
+                                  fontSize: menuTextFontSize))),
+                    ),
                   ),
                   Container(
                     height: menuPadding,
                   ),
-                  Container(
-                    color: menuBgColor,
-                    height: menuBarHeight,
-                    width: menuBarWidth,
-                    child: Center(
-                        child: Text(menuText4,
-                            style: TextStyle(
-                                color: menuTextColor,
-                                fontSize: menuTextFontSize))),
-                  ),
-                  Container(
-                    height: menuPadding,
-                  ),
-                  Container(
-                    color: menuBgColor,
-                    height: menuBarHeight,
-                    width: menuBarWidth,
-                    child: Center(
-                        child: Text(menuText5,
-                            style: TextStyle(
-                                color: menuTextColor,
-                                fontSize: menuTextFontSize))),
+                  MouseRegion(
+                    onEnter: (f) {
+                      setState(() {
+                        isHover5 = true;
+                      });
+                    },
+                    onExit: (f) {
+                      setState(() {
+                        isHover5 = false;
+                      });
+                    },
+                    child: AnimatedContainer(
+                      duration: Duration(microseconds: animationTime),
+                      color: menuBgColor,
+                      height: isHover5 ? menuBarHeight + 10 : menuBarHeight,
+                      width: menuBarWidth,
+                      child: Center(
+                          child: Text(menuText5,
+                              style: TextStyle(
+                                  color: menuTextColor,
+                                  fontSize: menuTextFontSize))),
+                    ),
                   ),
                 ],
               ),
