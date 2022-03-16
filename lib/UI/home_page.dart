@@ -47,7 +47,7 @@ class _HomePageState extends State<HomePage> {
     var title1Size = screenHeight * screenWidth * .00003;
     var title2Size = screenHeight * screenWidth * .00005;
     var registrationTextSize = screenHeight * screenWidth * .00002;
-    var animationTime = 100;
+    var animationTime = 100000;
 
     return Material(
       type: MaterialType.transparency,
@@ -112,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                         });
                       },
                       child: AnimatedContainer(
-                        duration: const Duration(microseconds: 100),
+                        duration: Duration(microseconds: animationTime),
                         color: menuBgColor,
                         height: isHover1 ? menuBarHeight + 10 : menuBarHeight,
                         width: menuBarWidth,
@@ -142,7 +142,7 @@ class _HomePageState extends State<HomePage> {
                       });
                     },
                     child: AnimatedContainer(
-                      duration: const Duration(microseconds: 200),
+                      duration: Duration(microseconds: animationTime),
                       color: menuBgColor,
                       height: isHover2 ? menuBarHeight + 10 : menuBarHeight,
                       width: menuBarWidth,
