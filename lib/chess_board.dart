@@ -217,8 +217,8 @@ class _BoardState extends State<Board> {
                             image: AssetImage(
                               piece(i, j),
                             ),
-                            height: boardSquare / 2,
-                            width: boardSquare / 2,
+                            height: boardSquare / 1.45,
+                            width: boardSquare / 1.45,
                           ),
                         ),
                       ),
@@ -234,29 +234,29 @@ class _BoardState extends State<Board> {
   String piece(int i, int j) {
     var ij = i.toString() + j.toString();
     if (curr_status[ij] == 8) {
-      return 'assets/images/white_rook.png';
+      return 'assets/piro/wR.png';
     } else if (curr_status[ij] == 4) {
-      return 'assets/images/white_knight.png';
+      return 'assets/piro/wN.png';
     } else if (curr_status[ij] == 6) {
-      return 'assets/images/white_bishop.png';
+      return 'assets/piro/wB.png';
     } else if (curr_status[ij] == 9) {
-      return 'assets/images/white_queen.png';
+      return 'assets/piro/wQ.png';
     } else if (curr_status[ij] == 7) {
-      return 'assets/images/white_king.png';
+      return 'assets/piro/wK.png';
     } else if (curr_status[ij] == 1) {
-      return 'assets/images/white_pawn.png';
+      return 'assets/piro/wP.png';
     } else if (curr_status[ij] == -8) {
-      return 'assets/images/black_rook.png';
+      return 'assets/piro/bR.png';
     } else if (curr_status[ij] == -4) {
-      return 'assets/images/black_knight.png';
+      return 'assets/piro/bN.png';
     } else if (curr_status[ij] == -6) {
-      return 'assets/images/black_bishop.png';
+      return 'assets/piro/bB.png';
     } else if (curr_status[ij] == -9) {
-      return 'assets/images/black_queen.png';
+      return 'assets/piro/bQ.png';
     } else if (curr_status[ij] == -7) {
-      return 'assets/images/black_king.png';
+      return 'assets/piro/bK.png';
     } else if (curr_status[ij] == -1) {
-      return 'assets/images/black_pawn.png';
+      return 'assets/piro/bP.png';
     } else {
       return 'assets/images/empty.png';
     }
