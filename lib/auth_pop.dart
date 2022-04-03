@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AuthPop extends StatefulWidget {
@@ -8,12 +9,10 @@ class AuthPop extends StatefulWidget {
 }
 
 class _AuthPopState extends State<AuthPop> {
-  var screenHeight, screenWidth;
-
   @override
   Widget build(BuildContext context) {
-    screenHeight = MediaQuery.of(context).size.height;
-    screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Center(
         child: Container(
@@ -28,48 +27,99 @@ class _AuthPopState extends State<AuthPop> {
               ],
               child: Column(children: [
                 const SizedBox(
-                  height: 50,
-                  child: Text('Register/Sign-In'),
-                ),
-                const MediaQuery(
-                  data: MediaQueryData(),
-                  child: Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: TextField(),
+                  height: 80,
+                  child: Center(
+                    child: Text(
+                      'Register/Sign-In',
+                      style: TextStyle(
+                        color: Colors.yellow,
+                        fontSize: 30,
+                      ),
+                    ),
                   ),
                 ),
-                const MediaQuery(
-                  data: MediaQueryData(),
+                MediaQuery(
+                  data: const MediaQueryData(),
                   child: Directionality(
                     textDirection: TextDirection.ltr,
-                    child: TextField(),
-                  ),
-                ),
-                const MediaQuery(
-                  data: MediaQueryData(),
-                  child: Directionality(
-                    textDirection: TextDirection.ltr,
-                    child: TextField(),
+                    child: Container(
+                        width: (screenWidth - 500) / 2,
+                        decoration: (BoxDecoration(
+                            border:
+                                Border.all(width: 1, color: Colors.yellow))),
+                        child: const TextField()),
                   ),
                 ),
                 const SizedBox(
+                  height: 10,
+                ),
+                MediaQuery(
+                  data: const MediaQueryData(),
+                  child: Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Container(
+                        width: (screenWidth - 500) / 2,
+                        decoration: (BoxDecoration(
+                            border:
+                                Border.all(width: 1, color: Colors.yellow))),
+                        child: const TextField()),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                MediaQuery(
+                  data: const MediaQueryData(),
+                  child: Directionality(
+                    textDirection: TextDirection.ltr,
+                    child: Container(
+                        width: (screenWidth - 500) / 2,
+                        decoration: (BoxDecoration(
+                            border:
+                                Border.all(width: 1, color: Colors.yellow))),
+                        child: const TextField()),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
                   height: 20,
-                  child: Text('Forget Password'),
+                  width: (screenWidth - 500) / 2,
+                  child: const Text(
+                    'Forget Password',
+                    textAlign: TextAlign.right,
+                    style: TextStyle(color: Colors.yellow),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       Container(
-                          height: 50,
-                          width: 60,
-                          color: Colors.red,
-                          child: const Text('Register'),
+                        height: 50,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1, color: Colors.yellow)),
+                        child: const Center(
+                          child: Text(
+                            'Register',
+                            style: TextStyle(color: Colors.yellow),
+                          ),
+                        ),
                       ),
                       Container(
-                          height: 50,
-                          width: 60,
-                          color: Colors.red,
-                          child: const Text('Sign-In'))
+                        height: 50,
+                        width: 60,
+                        decoration: BoxDecoration(
+                            border: Border.all(width: 1, color: Colors.yellow)),
+                        child: const Center(
+                          child: Text('Sign-In',
+                              style: TextStyle(color: Colors.yellow)),
+                        ),
+                      ),
                     ])
               ]),
             )),
