@@ -17,19 +17,20 @@ class _AuthPopState extends State<AuthPop> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    return Scaffold(
-      body: Center(
-        child: Container(
-            decoration: BoxDecoration(
-              color: theme1,
-              borderRadius:
-                  BorderRadius.all(Radius.circular(screenHeight * 0.002)),
-              border: Border.all(color: theme1, width: screenHeight * 0.002),
-            ),
-            height: screenHeight / 1.95,
-            width: screenWidth / 2.1,
-            //color: theme1,
-            child: Localizations(
+    return Center(
+      child: Container(
+          decoration: BoxDecoration(
+            color: theme1,
+            borderRadius:
+                BorderRadius.all(Radius.circular(screenHeight * 0.002)),
+            border: Border.all(color: theme1, width: screenHeight * 0.002),
+          ),
+          height: screenHeight / 1.95,
+          width: screenWidth / 2.1,
+          //color: theme1,
+          child: Scaffold(
+            backgroundColor: theme1,
+            body: Localizations(
               locale: const Locale('en', 'US'),
               delegates: const <LocalizationsDelegate<dynamic>>[
                 DefaultWidgetsLocalizations.delegate,
@@ -70,8 +71,8 @@ class _AuthPopState extends State<AuthPop> {
                   const SignInRegisterButtons(text: 'Sign-In'),
                 ])
               ]),
-            )),
-      ),
+            ),
+          )),
     );
   }
 }

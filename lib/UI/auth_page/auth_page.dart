@@ -50,9 +50,7 @@ class _AuthPageState extends State<AuthPage> {
                                     sigmaX: 2.0,
                                     sigmaY: 2.0,
                                   ),
-                                  child: Container(
-                                    child: const AuthPop(),
-                                  ),
+                                  child: const AuthPop(),
                                 ),
                               );
                             });
