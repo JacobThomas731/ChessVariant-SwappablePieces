@@ -6,8 +6,9 @@ class CustomTextField {
   late double screenHeight;
   late double screenWidth;
   late String text;
+  TextEditingController textEditingController;
 
-  CustomTextField(BuildContext context, this.text) {
+  CustomTextField(BuildContext context, this.textEditingController, this.text) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
   }
@@ -19,6 +20,7 @@ class CustomTextField {
           padding: EdgeInsets.fromLTRB(screenHeight * 0.07,
               screenHeight * 0.007, screenHeight * 0.07, screenHeight * 0.007),
           child: TextField(
+            controller: textEditingController,
             cursorColor: theme2,
             style: TextStyle(
                 color: const Color(0xff8e6d58),
@@ -31,12 +33,12 @@ class CustomTextField {
                     borderRadius:
                         BorderRadius.all(Radius.circular(screenHeight * 0.002)),
                     borderSide:
-                        BorderSide(color: theme2, width: screenHeight * 0.002)),
+                    BorderSide(color: theme2, width: screenHeight * 0.002)),
                 focusedBorder: OutlineInputBorder(
                     borderRadius:
-                        BorderRadius.all(Radius.circular(screenHeight * 0.002)),
+                    BorderRadius.all(Radius.circular(screenHeight * 0.002)),
                     borderSide:
-                        BorderSide(color: theme2, width: screenHeight * 0.002)),
+                    BorderSide(color: theme2, width: screenHeight * 0.002)),
                 labelText: text,
                 labelStyle: TextStyle(
                     color: const Color(0xff8e6d58),

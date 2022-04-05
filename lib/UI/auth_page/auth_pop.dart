@@ -12,6 +12,9 @@ class AuthPop extends StatefulWidget {
 class _AuthPopState extends State<AuthPop> {
   Color theme1 = const Color(0xff5f433f);
   Color theme2 = const Color(0xff8e6d58);
+  final userNameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +52,12 @@ class _AuthPopState extends State<AuthPop> {
                     ),
                   ),
                 ),
-                CustomTextField(context, 'User Name').tField(),
-                CustomTextField(context, 'Email Address').tField(),
-                CustomTextField(context, 'Password').tField(),
+                CustomTextField(context, userNameController, 'User Name')
+                    .tField(),
+                CustomTextField(context, emailController, 'Email Address')
+                    .tField(),
+                CustomTextField(context, passwordController, 'Password')
+                    .tField(),
                 Container(
                   padding: EdgeInsets.fromLTRB(
                       screenHeight * 0.07, 0, screenHeight * 0.07, 0),
@@ -63,11 +69,13 @@ class _AuthPopState extends State<AuthPop> {
                   ),
                 ),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  const SignInRegisterButtons(text: 'Register'),
+                  SignInRegisterButtons('Register', userNameController,
+                      emailController, passwordController),
                   SizedBox(
                     width: screenHeight * 0.015,
                   ),
-                  const SignInRegisterButtons(text: 'Sign-In'),
+                  SignInRegisterButtons('Sign-In', userNameController,
+                      emailController, passwordController),
                 ])
               ]),
             ),
