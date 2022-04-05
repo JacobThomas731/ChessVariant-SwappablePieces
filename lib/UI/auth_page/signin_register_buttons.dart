@@ -1,3 +1,5 @@
+import 'package:chess_variant_swappable_pieces/UI/authentication/authentication.dart';
+
 import 'package:flutter/cupertino.dart';
 
 class SignInRegisterButtons extends StatefulWidget {
@@ -5,9 +7,12 @@ class SignInRegisterButtons extends StatefulWidget {
   final TextEditingController userNameController;
   final TextEditingController emailController;
   final TextEditingController passwordController;
+  final Authentication auth = Authentication();
 
-  const SignInRegisterButtons(this.text, this.userNameController,
-      this.emailController, this.passwordController);
+  SignInRegisterButtons(this.text, this.userNameController,
+      this.emailController, this.passwordController,
+      {Key? key})
+      : super(key: key);
 
   @override
   _SignInRegisterButtonsState createState() => _SignInRegisterButtonsState();
@@ -33,6 +38,11 @@ class _SignInRegisterButtonsState extends State<SignInRegisterButtons> {
         String userName = widget.userNameController.text;
         String email = widget.emailController.text;
         String password = widget.passwordController.text;
+        if (widget.text == 'Register') {
+          widget.auth.registerUser(userName, email, password);
+        } else {
+          widget.auth.signInEmailPass(userName, email, password);
+        }
       },
       child: MouseRegion(
         onEnter: (f) {

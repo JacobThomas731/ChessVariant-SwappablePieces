@@ -99,6 +99,28 @@
       // Service workers not supported. Just drop the <script> tag.
       loadMainDartJs();
     }
+
+  </script>
+  <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDXrMQtCgS-8hG1rfMIAm1cHFEindllBVM",
+    authDomain: "chess-swappable-pieces.firebaseapp.com",
+    projectId: "chess-swappable-pieces",
+    storageBucket: "chess-swappable-pieces.appspot.com",
+    messagingSenderId: "307380759063",
+    appId: "1:307380759063:web:ef32b9acae47108506ca52"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
   </script>
 </body>
 </html>

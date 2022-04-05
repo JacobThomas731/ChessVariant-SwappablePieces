@@ -1,6 +1,7 @@
 //do all the startup/initializing stuff
 
 import 'package:chess_variant_swappable_pieces/routes/route_generator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/rendering.dart';
 
 import 'UI/homepage/home_page.dart';
@@ -11,14 +12,26 @@ class Startup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: RouteGenerator.generateRoute,
-      initialRoute: '/',
-      color: Colors.transparent,
-      theme: ThemeData(
-        primarySwatch: Colors.brown,
-      ),
-    );
+    if (FirebaseAuth.instance.currentUser == null) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: RouteGenerator.generateRoute,
+        initialRoute: '/',
+        color: Colors.transparent,
+        theme: ThemeData(
+          primarySwatch: Colors.brown,
+        ),
+      );
+    } else {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: RouteGenerator.generateRoute,
+        initialRoute: '/homepage',
+        color: Colors.transparent,
+        theme: ThemeData(
+          primarySwatch: Colors.brown,
+        ),
+      );
+    }
   }
 }
