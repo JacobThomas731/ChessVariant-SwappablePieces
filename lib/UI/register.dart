@@ -1,1 +1,0 @@
-// new register window to register using email password

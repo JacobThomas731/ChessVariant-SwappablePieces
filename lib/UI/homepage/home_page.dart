@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
                                   'multiplayer chess variant:',
                                   style: TextStyle(
                                     color: const Color(0xff8e6d58),
-                                    fontFamily: 'ob',
+                                    fontFamily: 'ol',
                                     fontSize: screenWidth * 0.037,
                                     letterSpacing: -1.5,
                                   ),

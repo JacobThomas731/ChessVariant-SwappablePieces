@@ -2,7 +2,8 @@ import 'package:flutter/services.dart';
 
 import 'startup.dart';
 import 'package:flutter/material.dart';
-import 'dart:io' show Platform;
+import 'package:universal_io/io.dart' show Platform;
+import 'globals.dart' as globals;
 
 // import 'UI/home_page.dart';
 // import 'package:firebase_auth/firebase_auth.dart';

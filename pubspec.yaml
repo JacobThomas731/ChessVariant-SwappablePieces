@@ -30,11 +30,7 @@ dependencies:
   flutter:
     sdk: flutter
   assorted_layout_widgets: 5.5.0
-
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  universal_io: 2.0.4
   cupertino_icons: ^1.0.2
 
 dev_dependencies:
@@ -72,6 +68,18 @@ flutter:
     - family: ob
       fonts:
         - asset: fonts/oswald/ob.ttf
+    - family: oel
+      fonts:
+        - asset: fonts/oswald/oel.ttf
+    - family: ol
+      fonts:
+        - asset: fonts/oswald/ol.ttf
+    - family: or
+      fonts:
+        - asset: fonts/oswald/or.ttf
+    - family: osb
+      fonts:
+        - asset: fonts/oswald/osb.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
