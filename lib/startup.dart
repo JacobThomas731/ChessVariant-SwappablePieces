@@ -11,11 +11,14 @@ class Startup extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: RouteGenerator.generateRoute,
       initialRoute: '/',
       color: Colors.transparent,
+      theme: ThemeData(
+        primarySwatch: Colors.brown,
+      ),
     );
   }
 }

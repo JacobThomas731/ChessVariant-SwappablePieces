@@ -20,14 +20,13 @@ class _AuthPopState extends State<AuthPop> {
     return Center(
       child: Container(
           decoration: BoxDecoration(
-            color: theme1,
             borderRadius:
                 BorderRadius.all(Radius.circular(screenHeight * 0.002)),
             border: Border.all(color: theme1, width: screenHeight * 0.002),
           ),
+
           height: screenHeight / 1.95,
           width: screenWidth / 2.1,
-          //color: theme1,
           child: Scaffold(
             backgroundColor: theme1,
             body: Localizations(
