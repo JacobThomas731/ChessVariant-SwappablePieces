@@ -28,108 +28,110 @@ class _HomePageState extends State<HomePage> {
     double menuSizeHeight = screenHeight * 0.6;
     //double titleBackgroundWidth = screenWidth * 0.4;
     double titleBackgroundHeight = screenHeight * 0.6;
-    return Container(
-        color: Colors.transparent,
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            Image(
-              image: background,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-              height: double.infinity,
-              width: double.infinity,
-            ),
-            Row(
-              children: [
-                Expanded(
-                  flex: 3,
-                  child: Container(
-                    height: menuSizeHeight,
-                    margin: EdgeInsets.fromLTRB(menuPadding, 0, menuPadding, 0),
-                    padding: EdgeInsets.fromLTRB(
-                        menuPadding * 0.3,
-                        menuPadding * 0.3,
-                        menuPadding * 0.3,
-                        menuPadding * 0.3),
-                    color: menuButContainer,
-                    alignment: Alignment.center,
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: const [
-                          MenuButton(
-                              text: "Challenge Anyone", pageRoute: '/board'),
-                          MenuButton(
-                              text: "Challenge Friend", pageRoute: '/board'),
-                          MenuButton(text: "Check Lobby", pageRoute: '/auth'),
-                          MenuButton(text: "Settings", pageRoute: '/board'),
-                          MenuButton(text: "Quit Game", pageRoute: '/board')
-                        ]),
+    return Scaffold(
+      body: Container(
+          color: Colors.transparent,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Image(
+                image: background,
+                fit: BoxFit.cover,
+                alignment: Alignment.center,
+                height: double.infinity,
+                width: double.infinity,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      height: menuSizeHeight,
+                      margin: EdgeInsets.fromLTRB(menuPadding, 0, menuPadding, 0),
+                      padding: EdgeInsets.fromLTRB(
+                          menuPadding * 0.3,
+                          menuPadding * 0.3,
+                          menuPadding * 0.3,
+                          menuPadding * 0.3),
+                      color: menuButContainer,
+                      alignment: Alignment.center,
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: const [
+                            MenuButton(
+                                text: "Challenge Anyone", pageRoute: '/board'),
+                            MenuButton(
+                                text: "Challenge Friend", pageRoute: '/board'),
+                            MenuButton(text: "Check Lobby", pageRoute: '/auth'),
+                            MenuButton(text: "Settings", pageRoute: '/board'),
+                            MenuButton(text: "Quit Game", pageRoute: '/board')
+                          ]),
+                    ),
                   ),
-                ),
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    //color: Colors.yellow[300],
-                    height: titleBackgroundHeight,
-                    padding:
-                        EdgeInsets.fromLTRB(0, 0, menuPadding, menuPadding),
-                    child: Column(children: [
-                      Expanded(
-                        flex: 6,
-                        child: Container(
-                          color: menuButContainer,
-                          alignment: Alignment.topLeft,
-                          padding: EdgeInsets.fromLTRB(
-                              screenWidth * 0.02, screenWidth * 0.015, 0, 0),
-                          child: ColumnSuper(
-                              alignment: Alignment.topLeft,
-                              innerDistance: -screenWidth * 0.024,
-                              outerDistance: -screenWidth * 0.0085,
-                              children: [
-                                Text(
-                                  'multiplayer chess variant:',
-                                  style: TextStyle(
-                                    color: const Color(0xff8e6d58),
-                                    fontFamily: 'ol',
-                                    fontSize: screenWidth * 0.037,
-                                    letterSpacing: -1.5,
-                                  ),
-                                ),
-                                Text(
-                                  'swappable pieces',
-                                  style: TextStyle(
+                  Expanded(
+                    flex: 5,
+                    child: Container(
+                      //color: Colors.yellow[300],
+                      height: titleBackgroundHeight,
+                      padding:
+                          EdgeInsets.fromLTRB(0, 0, menuPadding, menuPadding),
+                      child: Column(children: [
+                        Expanded(
+                          flex: 6,
+                          child: Container(
+                            color: menuButContainer,
+                            alignment: Alignment.topLeft,
+                            padding: EdgeInsets.fromLTRB(
+                                screenWidth * 0.02, screenWidth * 0.015, 0, 0),
+                            child: ColumnSuper(
+                                alignment: Alignment.topLeft,
+                                innerDistance: -screenWidth * 0.024,
+                                outerDistance: -screenWidth * 0.0085,
+                                children: [
+                                  Text(
+                                    'multiplayer chess variant:',
+                                    style: TextStyle(
                                       color: const Color(0xff8e6d58),
-                                      fontFamily: 'o',
-                                      fontSize: screenWidth * 0.07,
-                                      letterSpacing: screenWidth * 0.004),
-                                )
-                              ]),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Expanded(
-                        flex: 4,
-                        child: Container(
-                          color: menuButContainer,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
-                              AuthButton(text: 'Sign-in'),
-                              AuthButton(text: '|'),
-                              AuthButton(text: 'Register'),
-                            ],
+                                      fontFamily: 'ol',
+                                      fontSize: screenWidth * 0.037,
+                                      letterSpacing: -1.5,
+                                    ),
+                                  ),
+                                  Text(
+                                    'swappable pieces',
+                                    style: TextStyle(
+                                        color: const Color(0xff8e6d58),
+                                        fontFamily: 'o',
+                                        fontSize: screenWidth * 0.07,
+                                        letterSpacing: screenWidth * 0.004),
+                                  )
+                                ]),
                           ),
                         ),
-                      )
-                    ]),
-                  ),
-                )
-              ],
-            )
-          ],
-        ));
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        Expanded(
+                          flex: 4,
+                          child: Container(
+                            color: menuButContainer,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: const [
+                                AuthButton(text: 'Sign-in'),
+                                AuthButton(text: '|'),
+                                AuthButton(text: 'Register'),
+                              ],
+                            ),
+                          ),
+                        )
+                      ]),
+                    ),
+                  )
+                ],
+              )
+            ],
+          )),
+    );
   }
 }

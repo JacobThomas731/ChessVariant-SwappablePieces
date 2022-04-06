@@ -39,6 +39,7 @@ class _SignInRegisterButtonsState extends State<SignInRegisterButtons> {
         String email = widget.emailController.text;
         String password = widget.passwordController.text;
         if (widget.text == 'Register') {
+          Navigator.of(context).pushNamed('/homepage', arguments: '');
           widget.auth.registerUser(userName, email, password);
           Navigator.of(context).pushNamed('/homepage', arguments: '');
         } else {
