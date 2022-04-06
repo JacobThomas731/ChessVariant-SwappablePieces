@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+import '../authentication/authentication.dart';
+
 class AuthButton extends StatefulWidget {
   final String text;
+  final Authentication auth = Authentication();
 
-  const AuthButton({
+  AuthButton({
     Key? key,
     required this.text,
   }) : super(key: key);
@@ -27,25 +30,33 @@ class _AuthButtonState extends State<AuthButton> {
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
-    return MouseRegion(
-      onHover: (e) {
-        setState(() {
-          if (widget.text != '|') {
-            textColor = hoverTextColor;
-          }
-        });
+    return GestureDetector(
+      onTap: () {
+        if (widget.text == 'Sign-Out') {
+          widget.auth.signOut();
+          Navigator.of(context).pushNamed('/', arguments: '');
+        }
       },
-      onExit: (e) {
-        setState(() {
-          textColor = defaultTextColor;
-        });
-      },
-      child: Text(
-        widget.text,
-        style: TextStyle(
-          color: textColor,
-          fontFamily: 'o',
-          fontSize: screenWidth * 0.024,
+      child: MouseRegion(
+        onHover: (e) {
+          setState(() {
+            if (widget.text != '|') {
+              textColor = hoverTextColor;
+            }
+          });
+        },
+        onExit: (e) {
+          setState(() {
+            textColor = defaultTextColor;
+          });
+        },
+        child: Text(
+          widget.text,
+          style: TextStyle(
+            color: textColor,
+            fontFamily: 'o',
+            fontSize: screenWidth * 0.024,
+          ),
         ),
       ),
     );

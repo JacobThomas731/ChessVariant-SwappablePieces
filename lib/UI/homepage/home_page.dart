@@ -116,10 +116,10 @@ class _HomePageState extends State<HomePage> {
                           color: menuButContainer,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: const [
+                            children: [
                               AuthButton(text: 'Sign-in'),
                               AuthButton(text: '|'),
-                              AuthButton(text: 'Register'),
+                              AuthButton(text: 'Sign-Out'),
                             ],
                           ),
                         ),
