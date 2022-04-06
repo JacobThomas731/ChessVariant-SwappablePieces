@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Board extends StatefulWidget {
@@ -87,6 +88,7 @@ class _BoardState extends State<Board> {
   var boardLength;
   var boardSquare;
   var boardPadding = 100.0;
+  var textStream;
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +97,33 @@ class _BoardState extends State<Board> {
     boardLength = screenHeight < screenWidth ? screenHeight : screenWidth;
     boardLength = boardLength - boardPadding;
     boardSquare = boardLength / 8;
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        var ij = (i).toString() + (j).toString();
+
+        FirebaseFirestore.instance
+            .collection('test')
+            .doc('game')
+            .update({ij: curr_status[ij]});
+        print('qqqqqqq');
+      }
+    }
+
+    textStream = FirebaseFirestore.instance
+        .collection('test')
+        .doc('game')
+        .snapshots()
+        .listen((event) {
+      setState(() {
+        print(event.data());
+        for (int i = 0; i < 8; i++) {
+          for (int j = 0; j < 8; j++) {
+            var ij = i.toString() + j.toString();
+            curr_status[ij] = event.data()![ij];
+          }
+        }
+      });
+    });
     return Stack(children: [
       const Image(
         image: AssetImage('assets/homepage/homeScreen_background.png'),
@@ -159,6 +188,10 @@ class _BoardState extends State<Board> {
                                 second_click = '';
                                 possible_moves = {};
                                 possible_swap_moves = {};
+                                FirebaseFirestore.instance
+                                    .collection('Chatting')
+                                    .doc('Text')
+                                    .update({ij: curr_status[ij]});
                               });
                             }
                           } else {
@@ -197,6 +230,11 @@ class _BoardState extends State<Board> {
                                 whites_turn = true;
                                 possible_moves = {};
                                 possible_swap_moves = {};
+
+                                FirebaseFirestore.instance
+                                    .collection('Chatting')
+                                    .doc('Text')
+                                    .update({ij: curr_status[ij]});
                               });
                             } else {
                               setState(() {
@@ -204,6 +242,11 @@ class _BoardState extends State<Board> {
                                 second_click = '';
                                 possible_moves = {};
                                 possible_swap_moves = {};
+
+                                FirebaseFirestore.instance
+                                    .collection('Chatting')
+                                    .doc('Text')
+                                    .update({ij: curr_status[ij]});
                               });
                             }
                           }
