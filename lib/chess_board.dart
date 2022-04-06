@@ -100,12 +100,10 @@ class _BoardState extends State<Board> {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         var ij = (i).toString() + (j).toString();
-
         FirebaseFirestore.instance
             .collection('test')
             .doc('game')
             .update({ij: curr_status[ij]});
-        print('qqqqqqq');
       }
     }
 
@@ -114,15 +112,15 @@ class _BoardState extends State<Board> {
         .doc('game')
         .snapshots()
         .listen((event) {
-      setState(() {
-        print(event.data());
+      // setState(() {
+        // print(event.data());
         for (int i = 0; i < 8; i++) {
           for (int j = 0; j < 8; j++) {
             var ij = i.toString() + j.toString();
             curr_status[ij] = event.data()![ij];
           }
         }
-      });
+      // });
     });
     return Stack(children: [
       const Image(
@@ -163,6 +161,10 @@ class _BoardState extends State<Board> {
                                   possible_moves = {};
                                   possible_swap_moves = {};
                                   whites_turn = !whites_turn;
+                                  FirebaseFirestore.instance
+                                      .collection('test')
+                                      .doc('game')
+                                      .update({ij: curr_status[ij]});
                                 } else {
                                   first_click = ij;
                                   possible_moves = {};
@@ -181,6 +183,11 @@ class _BoardState extends State<Board> {
                                 whites_turn = false;
                                 possible_moves = {};
                                 possible_swap_moves = {};
+
+                                FirebaseFirestore.instance
+                                    .collection('test')
+                                    .doc('game')
+                                    .update({ij: curr_status[ij]});
                               });
                             } else {
                               setState(() {
@@ -188,10 +195,6 @@ class _BoardState extends State<Board> {
                                 second_click = '';
                                 possible_moves = {};
                                 possible_swap_moves = {};
-                                FirebaseFirestore.instance
-                                    .collection('Chatting')
-                                    .doc('Text')
-                                    .update({ij: curr_status[ij]});
                               });
                             }
                           } else {
@@ -212,6 +215,10 @@ class _BoardState extends State<Board> {
                                   possible_moves = {};
                                   possible_swap_moves = {};
                                   whites_turn = !whites_turn;
+                                  FirebaseFirestore.instance
+                                      .collection('test')
+                                      .doc('game')
+                                      .update({ij: curr_status[ij]});
                                 } else {
                                   first_click = ij;
                                   possible_moves = {};
@@ -232,8 +239,8 @@ class _BoardState extends State<Board> {
                                 possible_swap_moves = {};
 
                                 FirebaseFirestore.instance
-                                    .collection('Chatting')
-                                    .doc('Text')
+                                    .collection('test')
+                                    .doc('game')
                                     .update({ij: curr_status[ij]});
                               });
                             } else {
@@ -242,11 +249,6 @@ class _BoardState extends State<Board> {
                                 second_click = '';
                                 possible_moves = {};
                                 possible_swap_moves = {};
-
-                                FirebaseFirestore.instance
-                                    .collection('Chatting')
-                                    .doc('Text')
-                                    .update({ij: curr_status[ij]});
                               });
                             }
                           }
