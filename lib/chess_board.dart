@@ -163,7 +163,8 @@ class _BoardState extends State<Board> {
                       GestureDetector(
                         onTap: () {
                           var ij = i.toString() + j.toString();
-                          if (whites_turn) {
+                          // if (whites_turn) {
+                            if (whites_turn || !whites_turn){
                             if (curr_status[ij]! > 0) {
                               setState(() {
                                 if (first_click == ij) {
