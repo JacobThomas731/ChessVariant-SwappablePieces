@@ -98,11 +98,20 @@ class _BoardState extends State<Board> {
     initialize();
   }
 
-  void initialize() {
+  void initialize() async {
+    //data fetches the data to compare and avoid unnecessary duplicate writes
+    var data = await FirebaseFirestore.instance
+        .collection('test')
+        .doc('game')
+        .get()
+        .then((value) => value.data());
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         var ij = (i).toString() + (j).toString();
-        game2firebase(ij, ij);
+        if (data![ij] != curr_status[ij]) {
+          print('updated');
+          game2firebase(ij, ij);
+        }
       }
     }
   }
@@ -126,10 +135,12 @@ class _BoardState extends State<Board> {
   }
 
   void game2firebase(String ij1, ij2) {
-    FirebaseFirestore.instance
-        .collection('test')
-        .doc('game')
-        .update({ij1: curr_status[ij1], ij2: curr_status[ij2]});
+    var db = FirebaseFirestore.instance.collection('test').doc('game');
+    if (ij1 == ij2) {
+      db.update({ij1: curr_status[ij1]});
+    } else {
+      db.update({ij1: curr_status[ij1], ij2: curr_status[ij2]});
+    }
   }
 
   @override
@@ -215,9 +226,9 @@ class _BoardState extends State<Board> {
                                 print("moved5");
                               });
                             }
-                            // } else {
-                          }
-                          if (whites_turn || !whites_turn) {
+                          } else {
+                            // }
+                            // if (whites_turn || !whites_turn) {
                             //black's turn
                             if (curr_status[ij]! < 0) {
                               setState(() {
