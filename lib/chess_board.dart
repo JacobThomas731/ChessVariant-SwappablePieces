@@ -102,7 +102,7 @@ class _BoardState extends State<Board> {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         var ij = (i).toString() + (j).toString();
-        game2firebase(ij,ij);
+        game2firebase(ij, ij);
       }
     }
   }
@@ -116,8 +116,10 @@ class _BoardState extends State<Board> {
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
           var ij = i.toString() + j.toString();
-          curr_status[ij] = event.data()![ij];
-          setState(() {});
+          if (curr_status[ij] != event.data()![ij]) {
+            curr_status[ij] = event.data()![ij];
+            setState(() {});
+          }
         }
       }
     });
@@ -196,7 +198,7 @@ class _BoardState extends State<Board> {
                                 curr_status[second_click] =
                                     curr_status[first_click]!;
                                 curr_status[first_click] = 0;
-                                game2firebase(ij,first_click);
+                                game2firebase(ij, first_click);
                                 first_click = '';
                                 whites_turn = false;
                                 possible_moves = {};
@@ -225,7 +227,7 @@ class _BoardState extends State<Board> {
                                   var temp = curr_status[ij]!;
                                   curr_status[ij] = curr_status[first_click]!;
                                   curr_status[first_click] = temp;
-                                  game2firebase(ij,first_click);
+                                  game2firebase(ij, first_click);
                                   first_click = '';
                                   second_click = '';
                                   possible_moves = {};
@@ -245,7 +247,7 @@ class _BoardState extends State<Board> {
                                 curr_status[second_click] =
                                     curr_status[first_click]!;
                                 curr_status[first_click] = 0;
-                                game2firebase(ij,first_click);
+                                game2firebase(ij, first_click);
                                 first_click = '';
                                 whites_turn = true;
                                 possible_moves = {};
