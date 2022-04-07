@@ -127,10 +127,10 @@ class _BoardState extends State<Board> {
           var ij = i.toString() + j.toString();
           if (curr_status[ij] != event.data()![ij]) {
             curr_status[ij] = event.data()![ij];
-            setState(() {});
           }
         }
       }
+      setState(() {});
     });
   }
 
@@ -174,9 +174,16 @@ class _BoardState extends State<Board> {
                       GestureDetector(
                         onTap: () {
                           var ij = i.toString() + j.toString();
-
+                          if (first_click == '') {
+                            if (curr_status[ij]! > 0) {
+                              whites_turn = true;
+                            } else if (curr_status[ij]! < 0) {
+                              whites_turn = false;
+                            }
+                          }
                           if (whites_turn) {
-                            if (curr_status[ij]! > 0 || curr_status[ij]! < 0) {
+                            if (curr_status[ij]! > 0) {
+                              // if (curr_status[ij]! > 0 || curr_status[ij]! < 0) {
                               setState(() {
                                 if (first_click == ij) {
                                   first_click = '';
@@ -228,7 +235,9 @@ class _BoardState extends State<Board> {
                             }
                           } else {
                             //black's turn
-                            if (curr_status[ij]! < 0 || curr_status[ij]! > 0 ) {
+
+                            if (curr_status[ij]! < 0) {
+                              // if (curr_status[ij]! < 0 || curr_status[ij]! > 0) {
                               setState(() {
                                 if (first_click == ij) {
                                   first_click = '';
