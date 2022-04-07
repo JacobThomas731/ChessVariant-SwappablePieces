@@ -164,7 +164,7 @@ class _BoardState extends State<Board> {
                         onTap: () {
                           var ij = i.toString() + j.toString();
                           // if (whites_turn) {
-                            if (whites_turn || !whites_turn){
+                          if (whites_turn || !whites_turn) {
                             if (curr_status[ij]! > 0) {
                               setState(() {
                                 if (first_click == ij) {
@@ -215,7 +215,9 @@ class _BoardState extends State<Board> {
                                 print("moved5");
                               });
                             }
-                          } else {
+                            // } else {
+                          }
+                          if (whites_turn || !whites_turn) {
                             //black's turn
                             if (curr_status[ij]! < 0) {
                               setState(() {
