@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Board extends StatefulWidget {
@@ -9,15 +10,15 @@ class Board extends StatefulWidget {
 }
 
 class _BoardState extends State<Board> {
-  var first_click = '';
-  var second_click = '';
-  var whites_turn = true;
-  var possible_moves = {};
-  var possible_swap_moves = {};
+  var firstClick = '';
+  var secondClick = '';
+  var whitesTurn = true;
+  var possibleMoves = {};
+  var possibleSwapMoves = {};
   var castle = true;
-  var swap_white = 3;
-  var swap_black = 3;
-  var curr_status = {
+  var swapWhite = 3;
+  var swapBlack = 3;
+  var currStatus = {
     '00': 8,
     '01': 4,
     '02': 6,
@@ -87,14 +88,16 @@ class _BoardState extends State<Board> {
   var screenWidth;
   var boardLength;
   var boardSquare;
-  var boardPadding = 100.0;
   var textStream;
+  var boardPadding = 100.0;
   var counter = 0;
   var flag = 0;
 
   @override
   void initState() {
-    print('called once');
+    if (kDebugMode) {
+      print('called once');
+    }
     initialize();
   }
 
@@ -108,8 +111,10 @@ class _BoardState extends State<Board> {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         var ij = (i).toString() + (j).toString();
-        if (data![ij] != curr_status[ij]) {
-          print('updated');
+        if (data![ij] != currStatus[ij]) {
+          if (kDebugMode) {
+            print('updated');
+          }
           game2firebase(ij, ij);
         }
       }
@@ -125,8 +130,8 @@ class _BoardState extends State<Board> {
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
           var ij = i.toString() + j.toString();
-          if (curr_status[ij] != event.data()![ij]) {
-            curr_status[ij] = event.data()![ij];
+          if (currStatus[ij] != event.data()![ij]) {
+            currStatus[ij] = event.data()![ij];
           }
         }
       }
@@ -137,9 +142,9 @@ class _BoardState extends State<Board> {
   void game2firebase(String ij1, ij2) {
     var db = FirebaseFirestore.instance.collection('test').doc('game');
     if (ij1 == ij2) {
-      db.update({ij1: curr_status[ij1]});
+      db.update({ij1: currStatus[ij1]});
     } else {
-      db.update({ij1: curr_status[ij1], ij2: curr_status[ij2]});
+      db.update({ij1: currStatus[ij1], ij2: currStatus[ij2]});
     }
   }
 
@@ -174,112 +179,110 @@ class _BoardState extends State<Board> {
                       GestureDetector(
                         onTap: () {
                           var ij = i.toString() + j.toString();
-                          if (first_click == '') {
-                            if (curr_status[ij]! > 0) {
-                              whites_turn = true;
-                            } else if (curr_status[ij]! < 0) {
-                              whites_turn = false;
+                          if (firstClick == '') {
+                            if (currStatus[ij]! > 0) {
+                              whitesTurn = true;
+                            } else if (currStatus[ij]! < 0) {
+                              whitesTurn = false;
                             }
                           }
-                          if (whites_turn) {
-                            if (curr_status[ij]! > 0) {
-                              // if (curr_status[ij]! > 0 || curr_status[ij]! < 0) {
+                          if (whitesTurn) {
+                            if (currStatus[ij]! > 0) {
+                              // if (currStatus[ij]! > 0 || currStatus[ij]! < 0) {
                               setState(() {
-                                if (first_click == ij) {
-                                  first_click = '';
-                                  possible_moves = {};
-                                  possible_swap_moves = {};
-                                  print("moved1");
-                                } else if (possible_swap_moves[ij] == 1) {
-                                  swap_white--;
-                                  var temp = curr_status[ij]!;
-                                  curr_status[ij] = curr_status[first_click]!;
-                                  curr_status[first_click] = temp;
-                                  game2firebase(ij, first_click);
-                                  first_click = '';
-                                  second_click = '';
-                                  possible_moves = {};
-                                  possible_swap_moves = {};
-                                  whites_turn = !whites_turn;
-                                  print("moved2");
+                                if (firstClick == ij) {
+                                  firstClick = '';
+                                  possibleMoves = {};
+                                  possibleSwapMoves = {};
+                                } else if (possibleSwapMoves[ij] == 1) {
+                                  swapWhite--;
+                                  var temp = currStatus[ij]!;
+                                  currStatus[ij] = currStatus[firstClick]!;
+                                  currStatus[firstClick] = temp;
+                                  game2firebase(ij, firstClick);
+                                  firstClick = '';
+                                  secondClick = '';
+                                  possibleMoves = {};
+                                  possibleSwapMoves = {};
+                                  whitesTurn = !whitesTurn;
                                 } else {
-                                  first_click = ij;
-                                  possible_moves = {};
-                                  possible_swap_moves = {};
-                                  update_suggestions(i, j);
-                                  print("moved3");
+                                  firstClick = ij;
+                                  possibleMoves = {};
+                                  possibleSwapMoves = {};
+                                  updateSuggestions(i, j);
                                 }
                               });
-                            } else if (first_click != '' &&
-                                possible_moves[ij] != null) {
+                            } else if (firstClick != '' &&
+                                possibleMoves[ij] != null) {
                               setState(() {
-                                second_click = ij;
-                                curr_status[second_click] =
-                                    curr_status[first_click]!;
-                                curr_status[first_click] = 0;
-                                game2firebase(ij, first_click);
-                                first_click = '';
-                                whites_turn = false;
-                                possible_moves = {};
-                                possible_swap_moves = {};
-                                print("moved4");
+                                secondClick = ij;
+                                currStatus[secondClick] =
+                                    currStatus[firstClick]!;
+                                currStatus[firstClick] = 0;
+                                game2firebase(ij, firstClick);
+                                firstClick = '';
+                                whitesTurn = false;
+                                possibleMoves = {};
+                                possibleSwapMoves = {};
                               });
                             } else {
                               setState(() {
-                                first_click = '';
-                                second_click = '';
-                                possible_moves = {};
-                                possible_swap_moves = {};
-                                print("moved5");
+                                firstClick = '';
+                                secondClick = '';
+                                possibleMoves = {};
+                                possibleSwapMoves = {};
+                                if (kDebugMode) {
+                                  print("moved5");
+                                }
                               });
                             }
                           } else {
                             //black's turn
 
-                            if (curr_status[ij]! < 0) {
-                              // if (curr_status[ij]! < 0 || curr_status[ij]! > 0) {
+                            if (currStatus[ij]! < 0) {
+                              // if (currStatus[ij]! < 0 || currStatus[ij]! > 0) {
                               setState(() {
-                                if (first_click == ij) {
-                                  first_click = '';
-                                  possible_moves = {};
-                                  possible_swap_moves = {};
-                                } else if (possible_swap_moves[ij] == 1) {
-                                  swap_black--;
-                                  var temp = curr_status[ij]!;
-                                  curr_status[ij] = curr_status[first_click]!;
-                                  curr_status[first_click] = temp;
-                                  game2firebase(ij, first_click);
-                                  first_click = '';
-                                  second_click = '';
-                                  possible_moves = {};
-                                  possible_swap_moves = {};
-                                  whites_turn = !whites_turn;
+                                if (firstClick == ij) {
+                                  firstClick = '';
+                                  possibleMoves = {};
+                                  possibleSwapMoves = {};
+                                } else if (possibleSwapMoves[ij] == 1) {
+                                  swapBlack--;
+                                  var temp = currStatus[ij]!;
+                                  currStatus[ij] = currStatus[firstClick]!;
+                                  currStatus[firstClick] = temp;
+                                  game2firebase(ij, firstClick);
+                                  firstClick = '';
+                                  secondClick = '';
+                                  possibleMoves = {};
+                                  possibleSwapMoves = {};
+                                  whitesTurn = !whitesTurn;
                                 } else {
-                                  first_click = ij;
-                                  possible_moves = {};
-                                  possible_swap_moves = {};
-                                  update_suggestions(i, j);
+                                  firstClick = ij;
+                                  possibleMoves = {};
+                                  possibleSwapMoves = {};
+                                  updateSuggestions(i, j);
                                 }
                               });
-                            } else if (first_click != '' &&
-                                possible_moves[ij] != null) {
+                            } else if (firstClick != '' &&
+                                possibleMoves[ij] != null) {
                               setState(() {
-                                second_click = ij;
-                                curr_status[second_click] =
-                                    curr_status[first_click]!;
-                                curr_status[first_click] = 0;
-                                game2firebase(ij, first_click);
-                                first_click = '';
-                                whites_turn = true;
-                                possible_moves = {};
-                                possible_swap_moves = {};
+                                secondClick = ij;
+                                currStatus[secondClick] =
+                                    currStatus[firstClick]!;
+                                currStatus[firstClick] = 0;
+                                game2firebase(ij, firstClick);
+                                firstClick = '';
+                                whitesTurn = true;
+                                possibleMoves = {};
+                                possibleSwapMoves = {};
                               });
                             } else {
                               setState(() {
-                                first_click = '';
-                                second_click = '';
-                                possible_moves = {};
-                                possible_swap_moves = {};
+                                firstClick = '';
+                                secondClick = '';
+                                possibleMoves = {};
+                                possibleSwapMoves = {};
                               });
                             }
                           }
@@ -287,7 +290,7 @@ class _BoardState extends State<Board> {
                         child: Container(
                           height: boardSquare,
                           width: boardSquare,
-                          color: tile_color(i, j),
+                          color: tileColor(i, j),
                           alignment: Alignment.center,
                           child: Image(
                             image: AssetImage(
@@ -309,44 +312,44 @@ class _BoardState extends State<Board> {
 
   String piece(int i, int j) {
     var ij = i.toString() + j.toString();
-    if (curr_status[ij] == 8) {
-      return 'assets/piro/wR.png';
-    } else if (curr_status[ij] == 4) {
-      return 'assets/piro/wN.png';
-    } else if (curr_status[ij] == 6) {
-      return 'assets/piro/wB.png';
-    } else if (curr_status[ij] == 9) {
-      return 'assets/piro/wQ.png';
-    } else if (curr_status[ij] == 7) {
-      return 'assets/piro/wK.png';
-    } else if (curr_status[ij] == 1) {
-      return 'assets/piro/wP.png';
-    } else if (curr_status[ij] == -8) {
-      return 'assets/piro/bR.png';
-    } else if (curr_status[ij] == -4) {
-      return 'assets/piro/bN.png';
-    } else if (curr_status[ij] == -6) {
-      return 'assets/piro/bB.png';
-    } else if (curr_status[ij] == -9) {
-      return 'assets/piro/bQ.png';
-    } else if (curr_status[ij] == -7) {
-      return 'assets/piro/bK.png';
-    } else if (curr_status[ij] == -1) {
-      return 'assets/piro/bP.png';
+    if (currStatus[ij] == 8) {
+      return 'assets/pro/wR.png';
+    } else if (currStatus[ij] == 4) {
+      return 'assets/pro/wN.png';
+    } else if (currStatus[ij] == 6) {
+      return 'assets/pro/wB.png';
+    } else if (currStatus[ij] == 9) {
+      return 'assets/pro/wQ.png';
+    } else if (currStatus[ij] == 7) {
+      return 'assets/pro/wK.png';
+    } else if (currStatus[ij] == 1) {
+      return 'assets/pro/wP.png';
+    } else if (currStatus[ij] == -8) {
+      return 'assets/pro/bR.png';
+    } else if (currStatus[ij] == -4) {
+      return 'assets/pro/bN.png';
+    } else if (currStatus[ij] == -6) {
+      return 'assets/pro/bB.png';
+    } else if (currStatus[ij] == -9) {
+      return 'assets/pro/bQ.png';
+    } else if (currStatus[ij] == -7) {
+      return 'assets/pro/bK.png';
+    } else if (currStatus[ij] == -1) {
+      return 'assets/pro/bP.png';
     } else {
       return 'assets/images/empty.png';
     }
   }
 
-  Color tile_color(int i, int j) {
+  Color tileColor(int i, int j) {
     var ij = i.toString() + j.toString();
-    if ((possible_moves[ij] == 1) && curr_status[ij] != 0) {
+    if ((possibleMoves[ij] == 1) && currStatus[ij] != 0) {
       return Colors.red;
-    } else if (possible_moves[ij] == 1 || possible_swap_moves[ij] == 1) {
+    } else if (possibleMoves[ij] == 1 || possibleSwapMoves[ij] == 1) {
       return Colors.green;
     }
     // make current click yellow
-    else if (ij == first_click) {
+    else if (ij == firstClick) {
       return Colors.yellow;
     } else if ((i + j) % 2 == 0) {
       return Colors.brown.shade700;
@@ -355,59 +358,59 @@ class _BoardState extends State<Board> {
     }
   }
 
-  void reset_suggestions() {}
+  void resetSuggestions() {}
 
-  void update_suggestions(int i, int j) {
+  void updateSuggestions(int i, int j) {
     var ij = i.toString() + j.toString();
 
-    if (curr_status[ij]! == 1) {
+    if (currStatus[ij]! == 1) {
       //white pawn
-      if (curr_status[(i + 1).toString() + j.toString()]! == 0) {
-        possible_moves[(i + 1).toString() + j.toString()] = 1;
-        if (i == 1 && curr_status[(i + 2).toString() + j.toString()]! == 0) {
-          possible_moves[(i + 2).toString() + j.toString()] = 1;
+      if (currStatus[(i + 1).toString() + j.toString()]! == 0) {
+        possibleMoves[(i + 1).toString() + j.toString()] = 1;
+        if (i == 1 && currStatus[(i + 2).toString() + j.toString()]! == 0) {
+          possibleMoves[(i + 2).toString() + j.toString()] = 1;
         }
       }
       if (j + 1 < 8 &&
-          curr_status[(i + 1).toString() + (j + 1).toString()]! < 0) {
+          currStatus[(i + 1).toString() + (j + 1).toString()]! < 0) {
         //right
-        possible_moves[(i + 1).toString() + (j + 1).toString()] = 1;
+        possibleMoves[(i + 1).toString() + (j + 1).toString()] = 1;
       }
       if (j - 1 > -1 &&
-          curr_status[(i + 1).toString() + (j - 1).toString()]! < 0) {
+          currStatus[(i + 1).toString() + (j - 1).toString()]! < 0) {
         //left
-        possible_moves[(i + 1).toString() + (j - 1).toString()] = 1;
+        possibleMoves[(i + 1).toString() + (j - 1).toString()] = 1;
       }
     }
-    if (curr_status[ij]! == -1) {
+    if (currStatus[ij]! == -1) {
       //black pawn
-      if (curr_status[(i - 1).toString() + j.toString()]! == 0) {
+      if (currStatus[(i - 1).toString() + j.toString()]! == 0) {
         //up
-        possible_moves[(i - 1).toString() + j.toString()] = 1;
-        if (i == 6 && curr_status[(i - 2).toString() + j.toString()]! == 0) {
-          possible_moves[(i - 2).toString() + j.toString()] = 1;
+        possibleMoves[(i - 1).toString() + j.toString()] = 1;
+        if (i == 6 && currStatus[(i - 2).toString() + j.toString()]! == 0) {
+          possibleMoves[(i - 2).toString() + j.toString()] = 1;
         }
       }
       if (j + 1 < 8 &&
-          curr_status[(i - 1).toString() + (j + 1).toString()]! > 0) {
+          currStatus[(i - 1).toString() + (j + 1).toString()]! > 0) {
         //right
-        possible_moves[(i - 1).toString() + (j + 1).toString()] = 1;
+        possibleMoves[(i - 1).toString() + (j + 1).toString()] = 1;
       }
       if (j - 1 > -1 &&
-          curr_status[(i - 1).toString() + (j - 1).toString()]! > 0) {
+          currStatus[(i - 1).toString() + (j - 1).toString()]! > 0) {
         //left
-        possible_moves[(i - 1).toString() + (j - 1).toString()] = 1;
+        possibleMoves[(i - 1).toString() + (j - 1).toString()] = 1;
       }
     }
-    if (curr_status[ij] == 6) {
+    if (currStatus[ij] == 6) {
       //white bishop
       // add rook and knite positions to possible moves
-      if (swap_white > 0) {
+      if (swapWhite > 0) {
         for (int k1 = 0; k1 < 8; k1++) {
           for (int k2 = 0; k2 < 8; k2++) {
-            if (curr_status[k1.toString() + k2.toString()] == 8 ||
-                curr_status[k1.toString() + k2.toString()] == 4) {
-              possible_swap_moves[k1.toString() + k2.toString()] = 1;
+            if (currStatus[k1.toString() + k2.toString()] == 8 ||
+                currStatus[k1.toString() + k2.toString()] == 4) {
+              possibleSwapMoves[k1.toString() + k2.toString()] = 1;
             }
           }
         }
@@ -416,59 +419,59 @@ class _BoardState extends State<Board> {
         //up right
         if ((i + k > 7 ||
             j + k > 7 ||
-            curr_status[(i + k).toString() + (j + k).toString()]! > 0)) {
+            currStatus[(i + k).toString() + (j + k).toString()]! > 0)) {
           //out of bounds
           break;
         }
-        if (curr_status[(i + k).toString() + (j + k).toString()]! < 0) {
-          possible_moves[(i + k).toString() + (j + k).toString()] = 1;
+        if (currStatus[(i + k).toString() + (j + k).toString()]! < 0) {
+          possibleMoves[(i + k).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j + k).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((i - k < 0 ||
             j - k < 0 ||
-            curr_status[(i - k).toString() + (j - k).toString()]! > 0)) {
+            currStatus[(i - k).toString() + (j - k).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j - k).toString()]! < 0) {
-          possible_moves[(i - k).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j - k).toString()]! < 0) {
+          possibleMoves[(i - k).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j - k).toString()] = 1;
       }
       for (int k = 1; k <= 7; k++) {
         if ((j - k < 0 ||
             i + k > 7 ||
-            curr_status[(i + k).toString() + (j - k).toString()]! > 0)) {
+            currStatus[(i + k).toString() + (j - k).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i + k).toString() + (j - k).toString()]! < 0) {
-          possible_moves[(i + k).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i + k).toString() + (j - k).toString()]! < 0) {
+          possibleMoves[(i + k).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j - k).toString()] = 1;
       }
       for (int k = 1; k <= 7; k++) {
         if ((i - k < 0 ||
             j + k > 7 ||
-            curr_status[(i - k).toString() + (j + k).toString()]! > 0)) {
+            currStatus[(i - k).toString() + (j + k).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j + k).toString()]! < 0) {
-          possible_moves[(i - k).toString() + (j + k).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j + k).toString()]! < 0) {
+          possibleMoves[(i - k).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j + k).toString()] = 1;
       }
     }
-    if (curr_status[ij] == -6) {
+    if (currStatus[ij] == -6) {
       //black bishop
       // add rook positions to possible moves
-      if (swap_black > 0) {
+      if (swapBlack > 0) {
         for (int k1 = 0; k1 < 8; k1++) {
           for (int k2 = 0; k2 < 8; k2++) {
-            if (curr_status[k1.toString() + k2.toString()] == -8 ||
-                curr_status[k1.toString() + k2.toString()] == -4) {
-              possible_swap_moves[k1.toString() + k2.toString()] = 1;
+            if (currStatus[k1.toString() + k2.toString()] == -8 ||
+                currStatus[k1.toString() + k2.toString()] == -4) {
+              possibleSwapMoves[k1.toString() + k2.toString()] = 1;
             }
           }
         }
@@ -476,410 +479,410 @@ class _BoardState extends State<Board> {
       for (int k = 1; k < 8; k++) {
         if ((i + k > 7 ||
             j + k > 7 ||
-            curr_status[(i + k).toString() + (j + k).toString()]! < 0)) {
+            currStatus[(i + k).toString() + (j + k).toString()]! < 0)) {
           break;
         }
-        if (curr_status[(i + k).toString() + (j + k).toString()]! > 0) {
-          possible_moves[(i + k).toString() + (j + k).toString()] = 1;
+        if (currStatus[(i + k).toString() + (j + k).toString()]! > 0) {
+          possibleMoves[(i + k).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j + k).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((i - k < 0 ||
             j - k < 0 ||
-            curr_status[(i - k).toString() + (j - k).toString()]! < 0)) {
+            currStatus[(i - k).toString() + (j - k).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j - k).toString()]! > 0) {
-          possible_moves[(i - k).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j - k).toString()]! > 0) {
+          possibleMoves[(i - k).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j - k).toString()] = 1;
       }
       for (int k = 1; k <= 7; k++) {
         if ((j - k < 0 ||
             i + k > 7 ||
-            curr_status[(i + k).toString() + (j - k).toString()]! < 0)) {
+            currStatus[(i + k).toString() + (j - k).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i + k).toString() + (j - k).toString()]! > 0) {
-          possible_moves[(i + k).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i + k).toString() + (j - k).toString()]! > 0) {
+          possibleMoves[(i + k).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j - k).toString()] = 1;
       }
       for (int k = 1; k <= 7; k++) {
         if ((i - k < 0 ||
             j + k > 7 ||
-            curr_status[(i - k).toString() + (j + k).toString()]! < 0)) {
+            currStatus[(i - k).toString() + (j + k).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j + k).toString()]! > 0) {
-          possible_moves[(i - k).toString() + (j + k).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j + k).toString()]! > 0) {
+          possibleMoves[(i - k).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j + k).toString()] = 1;
       }
     }
-    if (curr_status[ij] == 8) {
+    if (currStatus[ij] == 8) {
       //white rook
       // add bishop positions to possible moves
-      if (swap_white > 0) {
+      if (swapWhite > 0) {
         for (int k1 = 0; k1 < 8; k1++) {
           for (int k2 = 0; k2 < 8; k2++) {
-            if (curr_status[k1.toString() + k2.toString()] == 6 ||
-                curr_status[k1.toString() + k2.toString()] == 4) {
-              possible_swap_moves[k1.toString() + k2.toString()] = 1;
+            if (currStatus[k1.toString() + k2.toString()] == 6 ||
+                currStatus[k1.toString() + k2.toString()] == 4) {
+              possibleSwapMoves[k1.toString() + k2.toString()] = 1;
             }
           }
         }
       }
       for (int k = 1; k < 8; k++) {
         if ((i + k > 7 ||
-            curr_status[(i + k).toString() + (j).toString()]! > 0)) {
+            currStatus[(i + k).toString() + (j).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i + k).toString() + (j).toString()]! < 0) {
-          possible_moves[(i + k).toString() + (j).toString()] = 1;
+        } else if (currStatus[(i + k).toString() + (j).toString()]! < 0) {
+          possibleMoves[(i + k).toString() + (j).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((i - k < 0 ||
-            curr_status[(i - k).toString() + (j).toString()]! > 0)) {
+            currStatus[(i - k).toString() + (j).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j).toString()]! < 0) {
-          possible_moves[(i - k).toString() + (j).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j).toString()]! < 0) {
+          possibleMoves[(i - k).toString() + (j).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((j + k > 7 ||
-            curr_status[(i).toString() + (j + k).toString()]! > 0)) {
+            currStatus[(i).toString() + (j + k).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i).toString() + (j + k).toString()]! < 0) {
-          possible_moves[(i).toString() + (j + k).toString()] = 1;
+        } else if (currStatus[(i).toString() + (j + k).toString()]! < 0) {
+          possibleMoves[(i).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i).toString() + (j + k).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((j - k < 0 ||
-            curr_status[(i).toString() + (j - k).toString()]! > 0)) {
+            currStatus[(i).toString() + (j - k).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i).toString() + (j - k).toString()]! < 0) {
-          possible_moves[(i).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i).toString() + (j - k).toString()]! < 0) {
+          possibleMoves[(i).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i).toString() + (j - k).toString()] = 1;
       }
     }
-    if (curr_status[ij] == -8) {
+    if (currStatus[ij] == -8) {
       //black rook
       // add bishop positions to possible moves
-      if (swap_black > 0) {
+      if (swapBlack > 0) {
         for (int k1 = 0; k1 < 8; k1++) {
           for (int k2 = 0; k2 < 8; k2++) {
-            if (curr_status[k1.toString() + k2.toString()] == -6 ||
-                curr_status[k1.toString() + k2.toString()] == -4) {
-              possible_swap_moves[k1.toString() + k2.toString()] = 1;
+            if (currStatus[k1.toString() + k2.toString()] == -6 ||
+                currStatus[k1.toString() + k2.toString()] == -4) {
+              possibleSwapMoves[k1.toString() + k2.toString()] = 1;
             }
           }
         }
       }
       for (int k = 1; k < 8; k++) {
         if ((i + k > 7 ||
-            curr_status[(i + k).toString() + (j).toString()]! < 0)) {
+            currStatus[(i + k).toString() + (j).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i + k).toString() + (j).toString()]! < 0) {
-          possible_moves[(i + k).toString() + (j).toString()] = 1;
+        } else if (currStatus[(i + k).toString() + (j).toString()]! < 0) {
+          possibleMoves[(i + k).toString() + (j).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((i - k < 0 ||
-            curr_status[(i - k).toString() + (j).toString()]! < 0)) {
+            currStatus[(i - k).toString() + (j).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j).toString()]! < 0) {
-          possible_moves[(i - k).toString() + (j).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j).toString()]! < 0) {
+          possibleMoves[(i - k).toString() + (j).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((j + k > 7 ||
-            curr_status[(i).toString() + (j + k).toString()]! < 0)) {
+            currStatus[(i).toString() + (j + k).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i).toString() + (j + k).toString()]! < 0) {
-          possible_moves[(i).toString() + (j + k).toString()] = 1;
+        } else if (currStatus[(i).toString() + (j + k).toString()]! < 0) {
+          possibleMoves[(i).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i).toString() + (j + k).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((j - k < 0 ||
-            curr_status[(i).toString() + (j - k).toString()]! < 0)) {
+            currStatus[(i).toString() + (j - k).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i).toString() + (j - k).toString()]! < 0) {
-          possible_moves[(i).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i).toString() + (j - k).toString()]! < 0) {
+          possibleMoves[(i).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i).toString() + (j - k).toString()] = 1;
       }
     }
-    if (curr_status[ij] == 9) {
+    if (currStatus[ij] == 9) {
       //white queen
       for (int k = 1; k < 8; k++) {
         if ((i + k > 7 ||
             j + k > 7 ||
-            curr_status[(i + k).toString() + (j + k).toString()]! > 0)) {
+            currStatus[(i + k).toString() + (j + k).toString()]! > 0)) {
           break;
         }
-        if (curr_status[(i + k).toString() + (j + k).toString()]! < 0) {
-          possible_moves[(i + k).toString() + (j + k).toString()] = 1;
+        if (currStatus[(i + k).toString() + (j + k).toString()]! < 0) {
+          possibleMoves[(i + k).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j + k).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((i - k < 0 ||
             j - k < 0 ||
-            curr_status[(i - k).toString() + (j - k).toString()]! > 0)) {
+            currStatus[(i - k).toString() + (j - k).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j - k).toString()]! < 0) {
-          possible_moves[(i - k).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j - k).toString()]! < 0) {
+          possibleMoves[(i - k).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j - k).toString()] = 1;
       }
       for (int k = 1; k <= 7; k++) {
         if ((j - k < 0 ||
             i + k > 7 ||
-            curr_status[(i + k).toString() + (j - k).toString()]! > 0)) {
+            currStatus[(i + k).toString() + (j - k).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i + k).toString() + (j - k).toString()]! < 0) {
-          possible_moves[(i + k).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i + k).toString() + (j - k).toString()]! < 0) {
+          possibleMoves[(i + k).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j - k).toString()] = 1;
       }
       for (int k = 1; k <= 7; k++) {
         if ((i - k < 0 ||
             j + k > 7 ||
-            curr_status[(i - k).toString() + (j + k).toString()]! > 0)) {
+            currStatus[(i - k).toString() + (j + k).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j + k).toString()]! < 0) {
-          possible_moves[(i - k).toString() + (j + k).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j + k).toString()]! < 0) {
+          possibleMoves[(i - k).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j + k).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((i + k > 7 ||
-            curr_status[(i + k).toString() + (j).toString()]! > 0)) {
+            currStatus[(i + k).toString() + (j).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i + k).toString() + (j).toString()]! < 0) {
-          possible_moves[(i + k).toString() + (j).toString()] = 1;
+        } else if (currStatus[(i + k).toString() + (j).toString()]! < 0) {
+          possibleMoves[(i + k).toString() + (j).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((i - k < 0 ||
-            curr_status[(i - k).toString() + (j).toString()]! > 0)) {
+            currStatus[(i - k).toString() + (j).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j).toString()]! < 0) {
-          possible_moves[(i - k).toString() + (j).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j).toString()]! < 0) {
+          possibleMoves[(i - k).toString() + (j).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((j + k > 7 ||
-            curr_status[(i).toString() + (j + k).toString()]! > 0)) {
+            currStatus[(i).toString() + (j + k).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i).toString() + (j + k).toString()]! < 0) {
-          possible_moves[(i).toString() + (j + k).toString()] = 1;
+        } else if (currStatus[(i).toString() + (j + k).toString()]! < 0) {
+          possibleMoves[(i).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i).toString() + (j + k).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((j - k < 0 ||
-            curr_status[(i).toString() + (j - k).toString()]! > 0)) {
+            currStatus[(i).toString() + (j - k).toString()]! > 0)) {
           break;
-        } else if (curr_status[(i).toString() + (j - k).toString()]! < 0) {
-          possible_moves[(i).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i).toString() + (j - k).toString()]! < 0) {
+          possibleMoves[(i).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i).toString() + (j - k).toString()] = 1;
       }
     }
-    if (curr_status[ij] == -9) {
+    if (currStatus[ij] == -9) {
       //black queen
       for (int k = 1; k < 8; k++) {
         if ((i + k > 7 ||
             j + k > 7 ||
-            curr_status[(i + k).toString() + (j + k).toString()]! < 0)) {
+            currStatus[(i + k).toString() + (j + k).toString()]! < 0)) {
           break;
         }
-        if (curr_status[(i + k).toString() + (j + k).toString()]! > 0) {
-          possible_moves[(i + k).toString() + (j + k).toString()] = 1;
+        if (currStatus[(i + k).toString() + (j + k).toString()]! > 0) {
+          possibleMoves[(i + k).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j + k).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((i - k < 0 ||
             j - k < 0 ||
-            curr_status[(i - k).toString() + (j - k).toString()]! < 0)) {
+            currStatus[(i - k).toString() + (j - k).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j - k).toString()]! > 0) {
-          possible_moves[(i - k).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j - k).toString()]! > 0) {
+          possibleMoves[(i - k).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j - k).toString()] = 1;
       }
       for (int k = 1; k <= 7; k++) {
         if ((j - k < 0 ||
             i + k > 7 ||
-            curr_status[(i + k).toString() + (j - k).toString()]! < 0)) {
+            currStatus[(i + k).toString() + (j - k).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i + k).toString() + (j - k).toString()]! > 0) {
-          possible_moves[(i + k).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i + k).toString() + (j - k).toString()]! > 0) {
+          possibleMoves[(i + k).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j - k).toString()] = 1;
       }
       for (int k = 1; k <= 7; k++) {
         if ((j + k > 7 ||
             i - k < 0 ||
-            curr_status[(i - k).toString() + (j + k).toString()]! < 0)) {
+            currStatus[(i - k).toString() + (j + k).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j + k).toString()]! > 0) {
-          possible_moves[(i - k).toString() + (j + k).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j + k).toString()]! > 0) {
+          possibleMoves[(i - k).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j + k).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((i + k > 7 ||
-            curr_status[(i + k).toString() + (j).toString()]! < 0)) {
+            currStatus[(i + k).toString() + (j).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i + k).toString() + (j).toString()]! > 0) {
-          possible_moves[(i + k).toString() + (j).toString()] = 1;
+        } else if (currStatus[(i + k).toString() + (j).toString()]! > 0) {
+          possibleMoves[(i + k).toString() + (j).toString()] = 1;
           break;
         }
-        possible_moves[(i + k).toString() + (j).toString()] = 1;
+        possibleMoves[(i + k).toString() + (j).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((i - k < 0 ||
-            curr_status[(i - k).toString() + (j).toString()]! < 0)) {
+            currStatus[(i - k).toString() + (j).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i - k).toString() + (j).toString()]! > 0) {
-          possible_moves[(i - k).toString() + (j).toString()] = 1;
+        } else if (currStatus[(i - k).toString() + (j).toString()]! > 0) {
+          possibleMoves[(i - k).toString() + (j).toString()] = 1;
           break;
         }
-        possible_moves[(i - k).toString() + (j).toString()] = 1;
+        possibleMoves[(i - k).toString() + (j).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((j + k > 7 ||
-            curr_status[(i).toString() + (j + k).toString()]! < 0)) {
+            currStatus[(i).toString() + (j + k).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i).toString() + (j + k).toString()]! > 0) {
-          possible_moves[(i).toString() + (j + k).toString()] = 1;
+        } else if (currStatus[(i).toString() + (j + k).toString()]! > 0) {
+          possibleMoves[(i).toString() + (j + k).toString()] = 1;
           break;
         }
-        possible_moves[(i).toString() + (j + k).toString()] = 1;
+        possibleMoves[(i).toString() + (j + k).toString()] = 1;
       }
       for (int k = 1; k < 8; k++) {
         if ((j - k < 0 ||
-            curr_status[(i).toString() + (j - k).toString()]! < 0)) {
+            currStatus[(i).toString() + (j - k).toString()]! < 0)) {
           break;
-        } else if (curr_status[(i).toString() + (j - k).toString()]! > 0) {
-          possible_moves[(i).toString() + (j - k).toString()] = 1;
+        } else if (currStatus[(i).toString() + (j - k).toString()]! > 0) {
+          possibleMoves[(i).toString() + (j - k).toString()] = 1;
           break;
         }
-        possible_moves[(i).toString() + (j - k).toString()] = 1;
+        possibleMoves[(i).toString() + (j - k).toString()] = 1;
       }
     }
-    if (curr_status[ij] == 7) {
+    if (currStatus[ij] == 7) {
       //white king
       if (i + 1 < 8 &&
           j - 1 > -1 &&
-          curr_status[(i + 1).toString() + (j - 1).toString()]! < 1) {
-        possible_moves[(i + 1).toString() + (j - 1).toString()] = 1;
+          currStatus[(i + 1).toString() + (j - 1).toString()]! < 1) {
+        possibleMoves[(i + 1).toString() + (j - 1).toString()] = 1;
       }
       if (i - 1 > -1 &&
           j + 1 > 8 &&
-          curr_status[(i - 1).toString() + (j + 1).toString()]! < 1) {
-        possible_moves[(i - 1).toString() + (j + 1).toString()] = 1;
+          currStatus[(i - 1).toString() + (j + 1).toString()]! < 1) {
+        possibleMoves[(i - 1).toString() + (j + 1).toString()] = 1;
       }
       if (i - 1 > -1 &&
           j - 1 < -1 &&
-          curr_status[(i - 1).toString() + (j - 1).toString()]! < 1) {
-        possible_moves[(i - 1).toString() + (j - 1).toString()] = 1;
+          currStatus[(i - 1).toString() + (j - 1).toString()]! < 1) {
+        possibleMoves[(i - 1).toString() + (j - 1).toString()] = 1;
       }
       if (i + 1 < 8 &&
           j + 1 > 8 &&
-          curr_status[(i + 1).toString() + (j + 1).toString()]! < 1) {
-        possible_moves[(i + 1).toString() + (j + 1).toString()] = 1;
+          currStatus[(i + 1).toString() + (j + 1).toString()]! < 1) {
+        possibleMoves[(i + 1).toString() + (j + 1).toString()] = 1;
       }
-      if (i + 1 < 8 && curr_status[(i + 1).toString() + j.toString()]! < 1) {
-        possible_moves[(i + 1).toString() + j.toString()] = 1;
+      if (i + 1 < 8 && currStatus[(i + 1).toString() + j.toString()]! < 1) {
+        possibleMoves[(i + 1).toString() + j.toString()] = 1;
       }
-      if (i - 1 > -1 && curr_status[(i - 1).toString() + j.toString()]! < 1) {
-        possible_moves[(i - 1).toString() + j.toString()] = 1;
+      if (i - 1 > -1 && currStatus[(i - 1).toString() + j.toString()]! < 1) {
+        possibleMoves[(i - 1).toString() + j.toString()] = 1;
       }
-      if (j + 1 < 8 && curr_status[i.toString() + (j + 1).toString()]! < 1) {
-        possible_moves[i.toString() + (j + 1).toString()] = 1;
+      if (j + 1 < 8 && currStatus[i.toString() + (j + 1).toString()]! < 1) {
+        possibleMoves[i.toString() + (j + 1).toString()] = 1;
       }
-      if (j - 1 > -1 && curr_status[i.toString() + (j - 1).toString()]! < 1) {
-        possible_moves[i.toString() + (j - 1).toString()] = 1;
+      if (j - 1 > -1 && currStatus[i.toString() + (j - 1).toString()]! < 1) {
+        possibleMoves[i.toString() + (j - 1).toString()] = 1;
       }
     }
-    if (curr_status[ij] == -7) {
+    if (currStatus[ij] == -7) {
       if (i + 1 < 8 &&
           j - 1 > -1 &&
-          curr_status[(i + 1).toString() + (j - 1).toString()]! > 1) {
-        possible_moves[(i + 1).toString() + (j - 1).toString()] = 1;
+          currStatus[(i + 1).toString() + (j - 1).toString()]! > 1) {
+        possibleMoves[(i + 1).toString() + (j - 1).toString()] = 1;
       }
       if (i - 1 > -1 &&
           j + 1 > 8 &&
-          curr_status[(i - 1).toString() + (j + 1).toString()]! > 1) {
-        possible_moves[(i - 1).toString() + (j + 1).toString()] = 1;
+          currStatus[(i - 1).toString() + (j + 1).toString()]! > 1) {
+        possibleMoves[(i - 1).toString() + (j + 1).toString()] = 1;
       }
       if (i - 1 > -1 &&
           j - 1 < -1 &&
-          curr_status[(i - 1).toString() + (j - 1).toString()]! > 1) {
-        possible_moves[(i - 1).toString() + (j - 1).toString()] = 1;
+          currStatus[(i - 1).toString() + (j - 1).toString()]! > 1) {
+        possibleMoves[(i - 1).toString() + (j - 1).toString()] = 1;
       }
       if (i + 1 < 8 &&
           j + 1 > 8 &&
-          curr_status[(i + 1).toString() + (j + 1).toString()]! > 1) {
-        possible_moves[(i + 1).toString() + (j + 1).toString()] = 1;
+          currStatus[(i + 1).toString() + (j + 1).toString()]! > 1) {
+        possibleMoves[(i + 1).toString() + (j + 1).toString()] = 1;
       }
-      if (i + 1 < 8 && curr_status[(i + 1).toString() + j.toString()]! > 1) {
-        possible_moves[(i + 1).toString() + j.toString()] = 1;
+      if (i + 1 < 8 && currStatus[(i + 1).toString() + j.toString()]! > 1) {
+        possibleMoves[(i + 1).toString() + j.toString()] = 1;
       }
-      if (i - 1 > -1 && curr_status[(i - 1).toString() + j.toString()]! > 1) {
-        possible_moves[(i - 1).toString() + j.toString()] = 1;
+      if (i - 1 > -1 && currStatus[(i - 1).toString() + j.toString()]! > 1) {
+        possibleMoves[(i - 1).toString() + j.toString()] = 1;
       }
-      if (j + 1 < 8 && curr_status[i.toString() + (j + 1).toString()]! > 1) {
-        possible_moves[i.toString() + (j + 1).toString()] = 1;
+      if (j + 1 < 8 && currStatus[i.toString() + (j + 1).toString()]! > 1) {
+        possibleMoves[i.toString() + (j + 1).toString()] = 1;
       }
-      if (j - 1 > -1 && curr_status[i.toString() + (j - 1).toString()]! > 1) {
-        possible_moves[i.toString() + (j - 1).toString()] = 1;
+      if (j - 1 > -1 && currStatus[i.toString() + (j - 1).toString()]! > 1) {
+        possibleMoves[i.toString() + (j - 1).toString()] = 1;
       }
     }
-    if (curr_status[ij] == 4) {
+    if (currStatus[ij] == 4) {
       //white knight
-      if (swap_white > 0) {
+      if (swapWhite > 0) {
         for (int k1 = 0; k1 < 8; k1++) {
           for (int k2 = 0; k2 < 8; k2++) {
-            if (curr_status[k1.toString() + k2.toString()] == 8 ||
-                curr_status[k1.toString() + k2.toString()] == 6) {
-              possible_swap_moves[k1.toString() + k2.toString()] = 1;
+            if (currStatus[k1.toString() + k2.toString()] == 8 ||
+                currStatus[k1.toString() + k2.toString()] == 6) {
+              possibleSwapMoves[k1.toString() + k2.toString()] = 1;
             }
           }
         }
@@ -887,97 +890,97 @@ class _BoardState extends State<Board> {
 
       if (i + 2 < 8 &&
           j + 1 < 8 &&
-          curr_status[(i + 2).toString() + (j + 1).toString()]! < 1) {
-        possible_moves[(i + 2).toString() + (j + 1).toString()] = 1;
+          currStatus[(i + 2).toString() + (j + 1).toString()]! < 1) {
+        possibleMoves[(i + 2).toString() + (j + 1).toString()] = 1;
       }
       if (i + 2 < 8 &&
           j - 1 > -1 &&
-          curr_status[(i + 2).toString() + (j - 1).toString()]! < 1) {
-        possible_moves[(i + 2).toString() + (j - 1).toString()] = 1;
+          currStatus[(i + 2).toString() + (j - 1).toString()]! < 1) {
+        possibleMoves[(i + 2).toString() + (j - 1).toString()] = 1;
       }
       if (i - 2 > -1 &&
           j + 1 < 8 &&
-          curr_status[(i - 2).toString() + (j + 1).toString()]! < 1) {
-        possible_moves[(i - 2).toString() + (j + 1).toString()] = 1;
+          currStatus[(i - 2).toString() + (j + 1).toString()]! < 1) {
+        possibleMoves[(i - 2).toString() + (j + 1).toString()] = 1;
       }
       if (i - 2 > -1 &&
           j - 1 > -1 &&
-          curr_status[(i - 2).toString() + (j - 1).toString()]! < 1) {
-        possible_moves[(i - 2).toString() + (j - 1).toString()] = 1;
+          currStatus[(i - 2).toString() + (j - 1).toString()]! < 1) {
+        possibleMoves[(i - 2).toString() + (j - 1).toString()] = 1;
       }
       if (i + 1 < 8 &&
           j + 2 < 8 &&
-          curr_status[(i + 1).toString() + (j + 2).toString()]! < 1) {
-        possible_moves[(i + 1).toString() + (j + 2).toString()] = 1;
+          currStatus[(i + 1).toString() + (j + 2).toString()]! < 1) {
+        possibleMoves[(i + 1).toString() + (j + 2).toString()] = 1;
       }
       if (i - 1 > -1 &&
           j + 2 < 8 &&
-          curr_status[(i - 1).toString() + (j + 2).toString()]! < 1) {
-        possible_moves[(i - 1).toString() + (j + 2).toString()] = 1;
+          currStatus[(i - 1).toString() + (j + 2).toString()]! < 1) {
+        possibleMoves[(i - 1).toString() + (j + 2).toString()] = 1;
       }
       if (i + 1 < 8 &&
           j - 2 > -1 &&
-          curr_status[(i + 1).toString() + (j - 2).toString()]! < 1) {
-        possible_moves[(i + 1).toString() + (j - 2).toString()] = 1;
+          currStatus[(i + 1).toString() + (j - 2).toString()]! < 1) {
+        possibleMoves[(i + 1).toString() + (j - 2).toString()] = 1;
       }
       if (i - 1 > -1 &&
           j - 2 > -1 &&
-          curr_status[(i - 1).toString() + (j - 2).toString()]! < 1) {
-        possible_moves[(i - 1).toString() + (j - 2).toString()] = 1;
+          currStatus[(i - 1).toString() + (j - 2).toString()]! < 1) {
+        possibleMoves[(i - 1).toString() + (j - 2).toString()] = 1;
       }
     }
-    if (curr_status[ij] == -4) {
+    if (currStatus[ij] == -4) {
       //black knight
 
-      if (swap_black > 0) {
+      if (swapBlack > 0) {
         for (int k1 = 0; k1 < 8; k1++) {
           for (int k2 = 0; k2 < 8; k2++) {
-            if (curr_status[k1.toString() + k2.toString()] == -8 ||
-                curr_status[k1.toString() + k2.toString()] == -6) {
-              possible_swap_moves[k1.toString() + k2.toString()] = 1;
+            if (currStatus[k1.toString() + k2.toString()] == -8 ||
+                currStatus[k1.toString() + k2.toString()] == -6) {
+              possibleSwapMoves[k1.toString() + k2.toString()] = 1;
             }
           }
         }
       }
       if (i + 2 < 8 &&
           j + 1 < 8 &&
-          curr_status[(i + 2).toString() + (j + 1).toString()]! > -1) {
-        possible_moves[(i + 2).toString() + (j + 1).toString()] = 1;
+          currStatus[(i + 2).toString() + (j + 1).toString()]! > -1) {
+        possibleMoves[(i + 2).toString() + (j + 1).toString()] = 1;
       }
       if (i + 2 < 8 &&
           j - 1 > -1 &&
-          curr_status[(i + 2).toString() + (j - 1).toString()]! > -1) {
-        possible_moves[(i + 2).toString() + (j - 1).toString()] = 1;
+          currStatus[(i + 2).toString() + (j - 1).toString()]! > -1) {
+        possibleMoves[(i + 2).toString() + (j - 1).toString()] = 1;
       }
       if (i - 2 > -1 &&
           j + 1 < 8 &&
-          curr_status[(i - 2).toString() + (j + 1).toString()]! > -1) {
-        possible_moves[(i - 2).toString() + (j + 1).toString()] = 1;
+          currStatus[(i - 2).toString() + (j + 1).toString()]! > -1) {
+        possibleMoves[(i - 2).toString() + (j + 1).toString()] = 1;
       }
       if (i - 2 > -1 &&
           j - 1 > -1 &&
-          curr_status[(i - 2).toString() + (j - 1).toString()]! > -1) {
-        possible_moves[(i - 2).toString() + (j - 1).toString()] = 1;
+          currStatus[(i - 2).toString() + (j - 1).toString()]! > -1) {
+        possibleMoves[(i - 2).toString() + (j - 1).toString()] = 1;
       }
       if (i + 1 < 8 &&
           j + 2 < 8 &&
-          curr_status[(i + 1).toString() + (j + 2).toString()]! > -1) {
-        possible_moves[(i + 1).toString() + (j + 2).toString()] = 1;
+          currStatus[(i + 1).toString() + (j + 2).toString()]! > -1) {
+        possibleMoves[(i + 1).toString() + (j + 2).toString()] = 1;
       }
       if (i - 1 > -1 &&
           j + 2 < 8 &&
-          curr_status[(i - 1).toString() + (j + 2).toString()]! > -1) {
-        possible_moves[(i - 1).toString() + (j + 2).toString()] = 1;
+          currStatus[(i - 1).toString() + (j + 2).toString()]! > -1) {
+        possibleMoves[(i - 1).toString() + (j + 2).toString()] = 1;
       }
       if (i + 1 < 8 &&
           j - 2 > -1 &&
-          curr_status[(i + 1).toString() + (j - 2).toString()]! > -1) {
-        possible_moves[(i + 1).toString() + (j - 2).toString()] = 1;
+          currStatus[(i + 1).toString() + (j - 2).toString()]! > -1) {
+        possibleMoves[(i + 1).toString() + (j - 2).toString()] = 1;
       }
       if (i - 1 > -1 &&
           j - 2 > -1 &&
-          curr_status[(i - 1).toString() + (j - 2).toString()]! > -1) {
-        possible_moves[(i - 1).toString() + (j - 2).toString()] = 1;
+          currStatus[(i - 1).toString() + (j - 2).toString()]! > -1) {
+        possibleMoves[(i - 1).toString() + (j - 2).toString()] = 1;
       }
     }
   }

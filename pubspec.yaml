@@ -58,7 +58,7 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - assets/piro/
+    - assets/pro/
     - assets/images/
     - assets/homepage/
   fonts:
