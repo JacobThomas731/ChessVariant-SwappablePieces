@@ -89,6 +89,58 @@ class _BoardState extends State<Board> {
   var boardSquare;
   var boardPadding = 100.0;
   var textStream;
+  var counter = 0;
+
+  @override
+  void initState() {
+    print('called once');
+    initialize();
+  }
+
+  void initialize() async {
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        var ij = (i).toString() + (j).toString();
+
+        await FirebaseFirestore.instance
+            .collection('test')
+            .doc('game')
+            .update({ij: curr_status[ij]});
+        //.then((value) => print("success")).onError((error, stackTrace) => print(error));
+
+      }
+    }
+    //update1(curr_status);
+  }
+
+  // void update1(Map currStatus) {
+  //   FirebaseFirestore.instance
+  //       .collection('test')
+  //       .doc('game')
+  //       .snapshots()
+  //       .listen((event) {
+  //     // setState(() {
+  //     print(event.data());
+  //     print("aaaaaaaaaaa");
+  //     for (int i = 0; i < 8; i++) {
+  //       for (int j = 0; j < 8; j++) {
+  //         var ij = i.toString() + j.toString();
+  //         curr_status[ij] = event.data()![ij];
+  //       }
+  //     }
+  //     // });
+  //   });
+  // }
+
+  void updateMove(String ij) async {
+    print('called');
+    print(ij);
+    print(curr_status[ij]);
+    await FirebaseFirestore.instance
+        .collection('test')
+        .doc('game')
+        .update({ij: curr_status[ij]});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,31 +149,7 @@ class _BoardState extends State<Board> {
     boardLength = screenHeight < screenWidth ? screenHeight : screenWidth;
     boardLength = boardLength - boardPadding;
     boardSquare = boardLength / 8;
-    for (int i = 0; i < 8; i++) {
-      for (int j = 0; j < 8; j++) {
-        var ij = (i).toString() + (j).toString();
-        FirebaseFirestore.instance
-            .collection('test')
-            .doc('game')
-            .update({ij: curr_status[ij]});
-      }
-    }
 
-    textStream = FirebaseFirestore.instance
-        .collection('test')
-        .doc('game')
-        .snapshots()
-        .listen((event) {
-      // setState(() {
-        // print(event.data());
-        for (int i = 0; i < 8; i++) {
-          for (int j = 0; j < 8; j++) {
-            var ij = i.toString() + j.toString();
-            curr_status[ij] = event.data()![ij];
-          }
-        }
-      // });
-    });
     return Stack(children: [
       const Image(
         image: AssetImage('assets/homepage/homeScreen_background.png'),
@@ -151,6 +179,7 @@ class _BoardState extends State<Board> {
                                   first_click = '';
                                   possible_moves = {};
                                   possible_swap_moves = {};
+                                  print("moved1");
                                 } else if (possible_swap_moves[ij] == 1) {
                                   swap_white--;
                                   var temp = curr_status[ij]!;
@@ -161,15 +190,19 @@ class _BoardState extends State<Board> {
                                   possible_moves = {};
                                   possible_swap_moves = {};
                                   whites_turn = !whites_turn;
-                                  FirebaseFirestore.instance
-                                      .collection('test')
-                                      .doc('game')
-                                      .update({ij: curr_status[ij]});
+                                  print("moved2");
+                                  updateMove(ij);
+                                  // FirebaseFirestore.instance
+                                  //     .collection('test')
+                                  //     .doc('game')
+                                  //     .update({ij: curr_status[ij]});
+
                                 } else {
                                   first_click = ij;
                                   possible_moves = {};
                                   possible_swap_moves = {};
                                   update_suggestions(i, j);
+                                  print("moved3");
                                 }
                               });
                             } else if (first_click != '' &&
@@ -183,11 +216,8 @@ class _BoardState extends State<Board> {
                                 whites_turn = false;
                                 possible_moves = {};
                                 possible_swap_moves = {};
-
-                                FirebaseFirestore.instance
-                                    .collection('test')
-                                    .doc('game')
-                                    .update({ij: curr_status[ij]});
+                                print("moved4");
+                                updateMove(ij);
                               });
                             } else {
                               setState(() {
@@ -195,6 +225,7 @@ class _BoardState extends State<Board> {
                                 second_click = '';
                                 possible_moves = {};
                                 possible_swap_moves = {};
+                                print("moved5");
                               });
                             }
                           } else {
@@ -215,10 +246,11 @@ class _BoardState extends State<Board> {
                                   possible_moves = {};
                                   possible_swap_moves = {};
                                   whites_turn = !whites_turn;
-                                  FirebaseFirestore.instance
-                                      .collection('test')
-                                      .doc('game')
-                                      .update({ij: curr_status[ij]});
+                                  // FirebaseFirestore.instance
+                                  //     .collection('test')
+                                  //     .doc('game')
+                                  //     .update({ij: curr_status[ij]});
+                                  updateMove(ij);
                                 } else {
                                   first_click = ij;
                                   possible_moves = {};
@@ -238,10 +270,11 @@ class _BoardState extends State<Board> {
                                 possible_moves = {};
                                 possible_swap_moves = {};
 
-                                FirebaseFirestore.instance
-                                    .collection('test')
-                                    .doc('game')
-                                    .update({ij: curr_status[ij]});
+                                // FirebaseFirestore.instance
+                                //     .collection('test')
+                                //     .doc('game')
+                                //     .update({ij: curr_status[ij]});
+                                updateMove(ij);
                               });
                             } else {
                               setState(() {
