@@ -102,7 +102,7 @@ class _BoardState extends State<Board> {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         var ij = (i).toString() + (j).toString();
-        game2firebase(ij);
+        game2firebase(ij,ij);
       }
     }
   }
@@ -123,11 +123,11 @@ class _BoardState extends State<Board> {
     });
   }
 
-  void game2firebase(String ij) {
+  void game2firebase(String ij1, ij2) {
     FirebaseFirestore.instance
         .collection('test')
         .doc('game')
-        .update({ij: curr_status[ij]});
+        .update({ij1: curr_status[ij1], ij2: curr_status[ij2]});
   }
 
   @override
@@ -173,9 +173,8 @@ class _BoardState extends State<Board> {
                                   swap_white--;
                                   var temp = curr_status[ij]!;
                                   curr_status[ij] = curr_status[first_click]!;
-                                  game2firebase(ij);
                                   curr_status[first_click] = temp;
-                                  game2firebase(first_click);
+                                  game2firebase(ij, first_click);
                                   first_click = '';
                                   second_click = '';
                                   possible_moves = {};
@@ -196,9 +195,8 @@ class _BoardState extends State<Board> {
                                 second_click = ij;
                                 curr_status[second_click] =
                                     curr_status[first_click]!;
-                                game2firebase(ij);
                                 curr_status[first_click] = 0;
-                                game2firebase(first_click);
+                                game2firebase(ij,first_click);
                                 first_click = '';
                                 whites_turn = false;
                                 possible_moves = {};
@@ -226,9 +224,8 @@ class _BoardState extends State<Board> {
                                   swap_black--;
                                   var temp = curr_status[ij]!;
                                   curr_status[ij] = curr_status[first_click]!;
-                                  game2firebase(ij);
                                   curr_status[first_click] = temp;
-                                  game2firebase(first_click);
+                                  game2firebase(ij,first_click);
                                   first_click = '';
                                   second_click = '';
                                   possible_moves = {};
@@ -247,9 +244,8 @@ class _BoardState extends State<Board> {
                                 second_click = ij;
                                 curr_status[second_click] =
                                     curr_status[first_click]!;
-                                game2firebase(ij);
                                 curr_status[first_click] = 0;
-                                game2firebase(first_click);
+                                game2firebase(ij,first_click);
                                 first_click = '';
                                 whites_turn = true;
                                 possible_moves = {};
