@@ -90,6 +90,7 @@ class _BoardState extends State<Board> {
   var boardPadding = 100.0;
   var textStream;
   var counter = 0;
+  var flag = 0;
 
   @override
   void initState() {
@@ -97,46 +98,33 @@ class _BoardState extends State<Board> {
     initialize();
   }
 
-  void initialize() async {
+  void initialize() {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         var ij = (i).toString() + (j).toString();
-
-        await FirebaseFirestore.instance
-            .collection('test')
-            .doc('game')
-            .update({ij: curr_status[ij]});
-        //.then((value) => print("success")).onError((error, stackTrace) => print(error));
-
+        game2firebase(ij);
       }
     }
-    //update1(curr_status);
   }
 
-  // void update1(Map currStatus) {
-  //   FirebaseFirestore.instance
-  //       .collection('test')
-  //       .doc('game')
-  //       .snapshots()
-  //       .listen((event) {
-  //     // setState(() {
-  //     print(event.data());
-  //     print("aaaaaaaaaaa");
-  //     for (int i = 0; i < 8; i++) {
-  //       for (int j = 0; j < 8; j++) {
-  //         var ij = i.toString() + j.toString();
-  //         curr_status[ij] = event.data()![ij];
-  //       }
-  //     }
-  //     // });
-  //   });
-  // }
+  void firebase2game() {
+    FirebaseFirestore.instance
+        .collection('test')
+        .doc('game')
+        .snapshots()
+        .listen((event) {
+      for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+          var ij = i.toString() + j.toString();
+          curr_status[ij] = event.data()![ij];
+          setState(() {});
+        }
+      }
+    });
+  }
 
-  void updateMove(String ij) async {
-    print('called');
-    print(ij);
-    print(curr_status[ij]);
-    await FirebaseFirestore.instance
+  void game2firebase(String ij) {
+    FirebaseFirestore.instance
         .collection('test')
         .doc('game')
         .update({ij: curr_status[ij]});
@@ -150,6 +138,7 @@ class _BoardState extends State<Board> {
     boardLength = boardLength - boardPadding;
     boardSquare = boardLength / 8;
 
+    firebase2game();
     return Stack(children: [
       const Image(
         image: AssetImage('assets/homepage/homeScreen_background.png'),
@@ -184,19 +173,15 @@ class _BoardState extends State<Board> {
                                   swap_white--;
                                   var temp = curr_status[ij]!;
                                   curr_status[ij] = curr_status[first_click]!;
+                                  game2firebase(ij);
                                   curr_status[first_click] = temp;
+                                  game2firebase(first_click);
                                   first_click = '';
                                   second_click = '';
                                   possible_moves = {};
                                   possible_swap_moves = {};
                                   whites_turn = !whites_turn;
                                   print("moved2");
-                                  updateMove(ij);
-                                  // FirebaseFirestore.instance
-                                  //     .collection('test')
-                                  //     .doc('game')
-                                  //     .update({ij: curr_status[ij]});
-
                                 } else {
                                   first_click = ij;
                                   possible_moves = {};
@@ -211,13 +196,14 @@ class _BoardState extends State<Board> {
                                 second_click = ij;
                                 curr_status[second_click] =
                                     curr_status[first_click]!;
+                                game2firebase(ij);
                                 curr_status[first_click] = 0;
+                                game2firebase(first_click);
                                 first_click = '';
                                 whites_turn = false;
                                 possible_moves = {};
                                 possible_swap_moves = {};
                                 print("moved4");
-                                updateMove(ij);
                               });
                             } else {
                               setState(() {
@@ -240,17 +226,14 @@ class _BoardState extends State<Board> {
                                   swap_black--;
                                   var temp = curr_status[ij]!;
                                   curr_status[ij] = curr_status[first_click]!;
+                                  game2firebase(ij);
                                   curr_status[first_click] = temp;
+                                  game2firebase(first_click);
                                   first_click = '';
                                   second_click = '';
                                   possible_moves = {};
                                   possible_swap_moves = {};
                                   whites_turn = !whites_turn;
-                                  // FirebaseFirestore.instance
-                                  //     .collection('test')
-                                  //     .doc('game')
-                                  //     .update({ij: curr_status[ij]});
-                                  updateMove(ij);
                                 } else {
                                   first_click = ij;
                                   possible_moves = {};
@@ -264,17 +247,13 @@ class _BoardState extends State<Board> {
                                 second_click = ij;
                                 curr_status[second_click] =
                                     curr_status[first_click]!;
+                                game2firebase(ij);
                                 curr_status[first_click] = 0;
+                                game2firebase(first_click);
                                 first_click = '';
                                 whites_turn = true;
                                 possible_moves = {};
                                 possible_swap_moves = {};
-
-                                // FirebaseFirestore.instance
-                                //     .collection('test')
-                                //     .doc('game')
-                                //     .update({ij: curr_status[ij]});
-                                updateMove(ij);
                               });
                             } else {
                               setState(() {
