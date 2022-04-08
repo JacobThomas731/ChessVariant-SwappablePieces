@@ -1,6 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:timer_builder/timer_builder.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class Board extends StatefulWidget {
   const Board({Key? key}) : super(key: key);
@@ -91,7 +93,8 @@ class _BoardState extends State<Board> {
   var textStream;
   var boardPadding = 100.0;
   var counter = 0;
-  var flag = 0;
+
+  // var count = 0;
 
   @override
   void initState() {
@@ -99,6 +102,7 @@ class _BoardState extends State<Board> {
       print('called once');
     }
     initialize();
+    super.initState();
   }
 
   void initialize() async {
@@ -119,6 +123,9 @@ class _BoardState extends State<Board> {
         }
       }
     }
+    if (kDebugMode) {
+      print('Initialize');
+    }
   }
 
   void firebase2game() {
@@ -135,7 +142,10 @@ class _BoardState extends State<Board> {
           }
         }
       }
-      setState(() {});
+      if (kDebugMode) {
+        print('firebase2game');
+      }
+      // setState(() {});
     });
   }
 
@@ -146,168 +156,177 @@ class _BoardState extends State<Board> {
     } else {
       db.update({ij1: currStatus[ij1], ij2: currStatus[ij2]});
     }
+    if (kDebugMode) {
+      print('game2firebase');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    if (kDebugMode) {
+      print('Rebuild');
+    }
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
     boardLength = screenHeight < screenWidth ? screenHeight : screenWidth;
     boardLength = boardLength - boardPadding;
     boardSquare = boardLength / 8;
 
-    firebase2game();
-    return Stack(children: [
-      const Image(
-        image: AssetImage('assets/homepage/homeScreen_background.png'),
-        fit: BoxFit.cover,
-        height: double.infinity,
-        width: double.infinity,
-        alignment: Alignment.center,
-      ),
-      Center(
-        child: Container(
-          color: Colors.brown[700],
-          height: boardLength,
-          width: boardLength,
-          child: Column(
-            children: [
-              for (int i = 0; i < 8; i++)
-                Row(
-                  children: [
-                    for (int j = 0; j < 8; j++)
-                      GestureDetector(
-                        onTap: () {
-                          var ij = i.toString() + j.toString();
-                          if (firstClick == '') {
-                            if (currStatus[ij]! > 0) {
-                              whitesTurn = true;
-                            } else if (currStatus[ij]! < 0) {
-                              whitesTurn = false;
-                            }
-                          }
-                          if (whitesTurn) {
-                            if (currStatus[ij]! > 0) {
-                              // if (currStatus[ij]! > 0 || currStatus[ij]! < 0) {
-                              setState(() {
-                                if (firstClick == ij) {
-                                  firstClick = '';
-                                  possibleMoves = {};
-                                  possibleSwapMoves = {};
-                                } else if (possibleSwapMoves[ij] == 1) {
-                                  swapWhite--;
-                                  var temp = currStatus[ij]!;
-                                  currStatus[ij] = currStatus[firstClick]!;
-                                  currStatus[firstClick] = temp;
-                                  game2firebase(ij, firstClick);
-                                  firstClick = '';
-                                  secondClick = '';
-                                  possibleMoves = {};
-                                  possibleSwapMoves = {};
-                                  whitesTurn = !whitesTurn;
-                                } else {
-                                  firstClick = ij;
-                                  possibleMoves = {};
-                                  possibleSwapMoves = {};
-                                  updateSuggestions(i, j);
-                                }
-                              });
-                            } else if (firstClick != '' &&
-                                possibleMoves[ij] != null) {
-                              setState(() {
-                                secondClick = ij;
-                                currStatus[secondClick] =
-                                    currStatus[firstClick]!;
-                                currStatus[firstClick] = 0;
-                                game2firebase(ij, firstClick);
-                                firstClick = '';
-                                whitesTurn = false;
-                                possibleMoves = {};
-                                possibleSwapMoves = {};
-                              });
-                            } else {
-                              setState(() {
-                                firstClick = '';
-                                secondClick = '';
-                                possibleMoves = {};
-                                possibleSwapMoves = {};
-                                if (kDebugMode) {
-                                  print("moved5");
-                                }
-                              });
-                            }
-                          } else {
-                            //black's turn
-
-                            if (currStatus[ij]! < 0) {
-                              // if (currStatus[ij]! < 0 || currStatus[ij]! > 0) {
-                              setState(() {
-                                if (firstClick == ij) {
-                                  firstClick = '';
-                                  possibleMoves = {};
-                                  possibleSwapMoves = {};
-                                } else if (possibleSwapMoves[ij] == 1) {
-                                  swapBlack--;
-                                  var temp = currStatus[ij]!;
-                                  currStatus[ij] = currStatus[firstClick]!;
-                                  currStatus[firstClick] = temp;
-                                  game2firebase(ij, firstClick);
-                                  firstClick = '';
-                                  secondClick = '';
-                                  possibleMoves = {};
-                                  possibleSwapMoves = {};
-                                  whitesTurn = !whitesTurn;
-                                } else {
-                                  firstClick = ij;
-                                  possibleMoves = {};
-                                  possibleSwapMoves = {};
-                                  updateSuggestions(i, j);
-                                }
-                              });
-                            } else if (firstClick != '' &&
-                                possibleMoves[ij] != null) {
-                              setState(() {
-                                secondClick = ij;
-                                currStatus[secondClick] =
-                                    currStatus[firstClick]!;
-                                currStatus[firstClick] = 0;
-                                game2firebase(ij, firstClick);
-                                firstClick = '';
+    // firebase2game();
+    return TimerBuilder.periodic(
+        const Duration(seconds: 1), //updates every second
+        builder: (context) {
+      firebase2game();
+      return Stack(children: [
+        const Image(
+          image: AssetImage('assets/homepage/homeScreen_background.png'),
+          fit: BoxFit.cover,
+          height: double.infinity,
+          width: double.infinity,
+          alignment: Alignment.center,
+        ),
+        Center(
+          child: Container(
+            color: Colors.brown[700],
+            height: boardLength,
+            width: boardLength,
+            child: Column(
+              children: [
+                for (int i = 0; i < 8; i++)
+                  Row(
+                    children: [
+                      for (int j = 0; j < 8; j++)
+                        GestureDetector(
+                          onTap: () {
+                            var ij = i.toString() + j.toString();
+                            if (firstClick == '') {
+                              if (currStatus[ij]! > 0) {
                                 whitesTurn = true;
-                                possibleMoves = {};
-                                possibleSwapMoves = {};
-                              });
-                            } else {
-                              setState(() {
-                                firstClick = '';
-                                secondClick = '';
-                                possibleMoves = {};
-                                possibleSwapMoves = {};
-                              });
+                              } else if (currStatus[ij]! < 0) {
+                                whitesTurn = false;
+                              }
                             }
-                          }
-                        },
-                        child: Container(
-                          height: boardSquare,
-                          width: boardSquare,
-                          color: tileColor(i, j),
-                          alignment: Alignment.center,
-                          child: Image(
-                            image: AssetImage(
-                              piece(i, j),
+                            if (whitesTurn) {
+                              if (currStatus[ij]! > 0) {
+                                // if (currStatus[ij]! > 0 || currStatus[ij]! < 0) {
+                                setState(() {
+                                  if (firstClick == ij) {
+                                    firstClick = '';
+                                    possibleMoves = {};
+                                    possibleSwapMoves = {};
+                                  } else if (possibleSwapMoves[ij] == 1) {
+                                    swapWhite--;
+                                    var temp = currStatus[ij]!;
+                                    currStatus[ij] = currStatus[firstClick]!;
+                                    currStatus[firstClick] = temp;
+                                    game2firebase(ij, firstClick);
+                                    firstClick = '';
+                                    secondClick = '';
+                                    possibleMoves = {};
+                                    possibleSwapMoves = {};
+                                    whitesTurn = !whitesTurn;
+                                  } else {
+                                    firstClick = ij;
+                                    possibleMoves = {};
+                                    possibleSwapMoves = {};
+                                    updateSuggestions(i, j);
+                                  }
+                                });
+                              } else if (firstClick != '' &&
+                                  possibleMoves[ij] != null) {
+                                setState(() {
+                                  secondClick = ij;
+                                  currStatus[secondClick] =
+                                      currStatus[firstClick]!;
+                                  currStatus[firstClick] = 0;
+                                  game2firebase(ij, firstClick);
+                                  firstClick = '';
+                                  whitesTurn = false;
+                                  possibleMoves = {};
+                                  possibleSwapMoves = {};
+                                });
+                              } else {
+                                setState(() {
+                                  firstClick = '';
+                                  secondClick = '';
+                                  possibleMoves = {};
+                                  possibleSwapMoves = {};
+                                  if (kDebugMode) {
+                                    print("moved5");
+                                  }
+                                });
+                              }
+                            } else {
+                              //black's turn
+                              if (currStatus[ij]! < 0) {
+                                setState(() {
+                                  if (firstClick == ij) {
+                                    firstClick = '';
+                                    possibleMoves = {};
+                                    possibleSwapMoves = {};
+                                  } else if (possibleSwapMoves[ij] == 1) {
+                                    swapBlack--;
+                                    var temp = currStatus[ij]!;
+                                    currStatus[ij] = currStatus[firstClick]!;
+                                    currStatus[firstClick] = temp;
+                                    game2firebase(ij, firstClick);
+                                    firstClick = '';
+                                    secondClick = '';
+                                    possibleMoves = {};
+                                    possibleSwapMoves = {};
+                                    whitesTurn = !whitesTurn;
+                                  } else {
+                                    firstClick = ij;
+                                    possibleMoves = {};
+                                    possibleSwapMoves = {};
+                                    updateSuggestions(i, j);
+                                  }
+                                });
+                              } else if (firstClick != '' &&
+                                  possibleMoves[ij] != null) {
+                                setState(() {
+                                  secondClick = ij;
+                                  currStatus[secondClick] =
+                                      currStatus[firstClick]!;
+                                  currStatus[firstClick] = 0;
+                                  game2firebase(ij, firstClick);
+                                  firstClick = '';
+                                  whitesTurn = true;
+                                  possibleMoves = {};
+                                  possibleSwapMoves = {};
+                                });
+                              } else {
+                                setState(() {
+                                  firstClick = '';
+                                  secondClick = '';
+                                  possibleMoves = {};
+                                  possibleSwapMoves = {};
+                                });
+                              }
+                            }
+                          },
+                          child: Container(
+                            height: boardSquare,
+                            width: boardSquare,
+                            color: tileColor(i, j),
+                            alignment: Alignment.center,
+                            child: Image(
+                              image: AssetImage(
+                                piece(i, j),
+                              ),
+                              height: boardSquare / 1.45,
+                              width: boardSquare / 1.45,
                             ),
-                            height: boardSquare / 1.45,
-                            width: boardSquare / 1.45,
                           ),
                         ),
-                      ),
-                  ],
-                ),
-            ],
+                    ],
+                  ),
+              ],
+            ),
           ),
         ),
-      ),
-    ]);
+      ]);
+    });
   }
 
   String piece(int i, int j) {
