@@ -2,7 +2,7 @@
 
 import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:chess_variant_swappable_pieces/chess_board.dart';
+import 'package:chess_variant_swappable_pieces/board/chess_board.dart';
 
 import 'auth_button.dart';
 import 'menu_button.dart';
@@ -62,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                             MenuButton(
                                 text: "Challenge Anyone", pageRoute: '/board'),
                             MenuButton(
-                                text: "Challenge Friend", pageRoute: '/board'),
+                                text: "Challenge Friend", pageRoute: '/board2'),
                             MenuButton(text: "Check Lobby", pageRoute: '/auth'),
                             MenuButton(text: "Settings", pageRoute: '/board'),
                             MenuButton(text: "Quit Game", pageRoute: '/board')

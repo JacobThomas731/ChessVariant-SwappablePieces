@@ -1,4 +1,4 @@
-import 'package:chess_variant_swappable_pieces/chess_board.dart';
+import 'package:chess_variant_swappable_pieces/board/chess_board.dart';
 import 'package:flutter/material.dart';
 import '../UI/auth_page/auth_page.dart';
 import '../UI/homepage/home_page.dart';
@@ -14,6 +14,11 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const HomePage());
 
       case '/board':
+        return MaterialPageRoute(builder: (_) {
+          return const Board();
+        });
+
+      case '/board2':
         return MaterialPageRoute(builder: (_) {
           return const Board();
         });
