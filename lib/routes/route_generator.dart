@@ -1,3 +1,4 @@
+import 'package:chess_variant_swappable_pieces/UI/board/chess_board_ui.dart';
 import 'package:chess_variant_swappable_pieces/board/chess_board.dart';
 import 'package:flutter/material.dart';
 import '../UI/auth_page/auth_page.dart';
@@ -8,7 +9,9 @@ class RouteGenerator {
     final args = settings.arguments;
     switch (settings.name) {
       case '/':
-        return MaterialPageRoute(builder: (_) => const AuthPage());
+        return MaterialPageRoute(
+            builder: (_) =>
+                ChessBoardUi('white')); // change to const AuthPage());
 
       case '/homepage':
         return MaterialPageRoute(builder: (_) => const HomePage());
