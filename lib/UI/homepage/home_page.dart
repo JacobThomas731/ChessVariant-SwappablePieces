@@ -62,7 +62,8 @@ class _HomePageState extends State<HomePage> {
                             MenuButton(
                                 text: "Challenge Anyone", pageRoute: '/board'),
                             MenuButton(
-                                text: "Challenge Friend", pageRoute: '/board2'),
+                                text: "Challenge Friend",
+                                pageRoute: '/boardController'),
                             MenuButton(text: "Check Lobby", pageRoute: '/auth'),
                             MenuButton(text: "Settings", pageRoute: '/board'),
                             MenuButton(text: "Quit Game", pageRoute: '/board')

@@ -6,6 +6,7 @@ class SquareUI extends StatefulWidget {
   final Color color;
   final String position;
   final BoardController boardController;
+  late Square square;
 
   SquareUI(this.color, this.position, this.boardController);
 
@@ -14,6 +15,8 @@ class SquareUI extends StatefulWidget {
 }
 
 class _SquareState extends State<SquareUI> {
+  AssetImage image = AssetImage('assets/pro/wR.png');
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -21,11 +24,15 @@ class _SquareState extends State<SquareUI> {
     return GestureDetector(
       onTap: () {
         widget.boardController.onPressed(widget.position);
+        setState(() {
+          widget.square.setImage("assets/pro/wK.png");
+        });
       },
       child: Container(
         height: (height * 0.75) / 8,
         width: (height * 0.75) / 8,
         color: widget.color,
+        child: Image(image: widget.square.image),
       ),
     );
   }

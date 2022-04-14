@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 class ChessBoardUi extends StatefulWidget {
   final String color;
-  late BoardController boardController = BoardController(color);
+  BoardController boardController;
 
-  ChessBoardUi(this.color, {Key? key}) : super(key: key);
+  ChessBoardUi(this.color, this.boardController, {Key? key}) : super(key: key);
 
   @override
   State<ChessBoardUi> createState() => _ChessBoardUiState();
