@@ -10,8 +10,9 @@ class Square {
   AssetImage image;
   BoardController boardController;
 
-  Square(this.color, this.position, this.piece, this.occupied, this.image,
-      this.boardController);
+  Square(this.color, this.position, this.piece, this.occupied, this.image, this.boardController);
+
+
 
   void setImage(String s) {
     image = AssetImage(s);

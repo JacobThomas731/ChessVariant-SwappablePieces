@@ -15,6 +15,7 @@ class RouteGenerator {
       case '/boardController':
         return MaterialPageRoute(
             builder: (_) => BoardController('white', 'normal').initialize());
+
       case '/homepage':
         return MaterialPageRoute(builder: (_) => const HomePage());
 

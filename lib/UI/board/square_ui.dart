@@ -20,7 +20,7 @@ class _SquareState extends State<SquareUI> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
+    // double width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: () {
         widget.boardController.onPressed(widget.position);
