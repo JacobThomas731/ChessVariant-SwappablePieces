@@ -7,8 +7,10 @@ class SquareUI extends StatefulWidget {
   final String position;
   Square square;
   final BoardController boardController;
+  var refresh;
 
-  SquareUI(this.color, this.position, this.square, this.boardController);
+  SquareUI(this.color, this.position, this.square, this.boardController,
+      this.refresh);
 
   @override
   State<SquareUI> createState() => _SquareState();
@@ -25,7 +27,8 @@ class _SquareState extends State<SquareUI> {
       onTap: () {
         bool changed = widget.boardController.onPressed(widget.square);
         if (changed) {
-          setState(() {});
+          //setState(() {});
+          widget.refresh();
         }
       },
       child: Container(

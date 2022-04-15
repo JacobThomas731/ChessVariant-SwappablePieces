@@ -10,6 +10,9 @@ class ChessBoardUi extends StatefulWidget {
   Map<String, Square> pieceSquareMap;
   BoardController boardController;
 
+  static _ChessBoardUiState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_ChessBoardUiState>();
+
   ChessBoardUi(this.color, this.pieceSquareMap, this.boardController,
       {Key? key})
       : super(key: key);

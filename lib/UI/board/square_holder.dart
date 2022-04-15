@@ -32,16 +32,22 @@ class _SquareHolderState extends State<SquareHolder> {
                       whitePlayer,
                       i.toString() + j.toString(),
                       widget.pieceSquareMap[i.toString() + j.toString()]!,
-                      widget.boardController)
+                      widget.boardController,
+                      refresh)
                 else
                   SquareUI(
                       blackPlayer,
                       i.toString() + j.toString(),
                       widget.pieceSquareMap[i.toString() + j.toString()]!,
-                      widget.boardController)
+                      widget.boardController,
+                      refresh)
             ],
           )
       ],
     );
+  }
+
+  refresh() {
+    setState(() {});
   }
 }
