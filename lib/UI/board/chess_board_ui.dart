@@ -3,11 +3,16 @@ import 'package:chess_variant_swappable_pieces/UI/board/square_holder.dart';
 import 'package:chess_variant_swappable_pieces/board/board_controller.dart';
 import 'package:flutter/material.dart';
 
+import '../../board/square.dart';
+
 class ChessBoardUi extends StatefulWidget {
   final String color;
+  Map<String, Square> pieceSquareMap;
   BoardController boardController;
 
-  ChessBoardUi(this.color, this.boardController, {Key? key}) : super(key: key);
+  ChessBoardUi(this.color, this.pieceSquareMap, this.boardController,
+      {Key? key})
+      : super(key: key);
 
   @override
   State<ChessBoardUi> createState() => _ChessBoardUiState();
@@ -39,9 +44,13 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
           height: height * 0.75,
           width: height * 0.75,
           color: boardColor,
-          child: SquareHolder(widget.boardController),
+          child: SquareHolder(widget.pieceSquareMap, widget.boardController),
         ),
       ),
     ]);
+  }
+
+  void update() {
+    setState(() {});
   }
 }

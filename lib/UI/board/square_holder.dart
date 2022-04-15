@@ -2,10 +2,14 @@ import 'package:chess_variant_swappable_pieces/UI/board/square_ui.dart';
 import 'package:chess_variant_swappable_pieces/board/board_controller.dart';
 import 'package:flutter/material.dart';
 
+import '../../board/square.dart';
+
 class SquareHolder extends StatefulWidget {
+  final Map<String, Square> pieceSquareMap;
   final BoardController boardController;
 
-  const SquareHolder(this.boardController, {Key? key}) : super(key: key);
+  SquareHolder(this.pieceSquareMap, this.boardController, {Key? key})
+      : super(key: key);
 
   @override
   State<SquareHolder> createState() => _SquareHolderState();
@@ -24,10 +28,16 @@ class _SquareHolderState extends State<SquareHolder> {
             children: [
               for (int j = 0; j < 8; j++)
                 if ((i + j) % 2 == 1)
-                  SquareUI(whitePlayer, i.toString() + j.toString(),
+                  SquareUI(
+                      whitePlayer,
+                      i.toString() + j.toString(),
+                      widget.pieceSquareMap[i.toString() + j.toString()]!,
                       widget.boardController)
                 else
-                  SquareUI(blackPlayer, i.toString() + j.toString(),
+                  SquareUI(
+                      blackPlayer,
+                      i.toString() + j.toString(),
+                      widget.pieceSquareMap[i.toString() + j.toString()]!,
                       widget.boardController)
             ],
           )

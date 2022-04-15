@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 class SquareUI extends StatefulWidget {
   final Color color;
   final String position;
+  Square square;
   final BoardController boardController;
-  late Square square;
 
-  SquareUI(this.color, this.position, this.boardController);
+  SquareUI(this.color, this.position, this.square, this.boardController);
 
   @override
   State<SquareUI> createState() => _SquareState();
@@ -23,10 +23,8 @@ class _SquareState extends State<SquareUI> {
     // double width = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: () {
-        widget.boardController.onPressed(widget.position);
-        setState(() {
-          widget.square.setImage("assets/pro/wK.png");
-        });
+        widget.boardController.onPressed(widget.square);
+        widget.square.setImage("assets/pro/wK.png");
       },
       child: Container(
         height: (height * 0.75) / 8,

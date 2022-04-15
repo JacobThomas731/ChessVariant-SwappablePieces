@@ -15,7 +15,7 @@ class BoardController {
   BoardController(this.color, this.mode) {
     pieceSquareMap = mapPieceSquare();
 
-    chessBoardUi = ChessBoardUi(color, this);
+    chessBoardUi = ChessBoardUi(color, pieceSquareMap, this);
 
     // initialization stuff.
     // 1) Set up the pieceSquareMap Map
@@ -26,7 +26,9 @@ class BoardController {
     return chessBoardUi;
   }
 
-  void onPressed(String position) {
+  void onPressed(Square square) {
+    print('pressed');
+    chessBoardUi.createState();
     if (suggestionShowing) {
       // if second click is on valid suggestion then play the move
     } else {
@@ -42,7 +44,7 @@ class BoardController {
         color = (i + j) % 2 == 0 ? 'black' : 'white';
         String ij = i.toString() + j.toString();
         pieceSquareMap[ij] = Square(color, ij, 'empty', false,
-            const AssetImage('assets/pro/empty.png'), this);
+            const AssetImage('assets/images/empty.png'), this);
       }
     }
     pieceSquareMap['00'] = Square(
