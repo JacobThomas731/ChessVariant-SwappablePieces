@@ -2,17 +2,22 @@ import 'dart:ui';
 
 import 'package:chess_variant_swappable_pieces/UI/board/chess_board_ui.dart';
 import 'package:chess_variant_swappable_pieces/board/square.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/src/painting/image_resolution.dart';
 
 class BoardController {
   final String color;
+  String turnColor = 'white'; //whose turn it is, black or white
   int swapsAvailable = 3;
   bool suggestionShowing = false;
+  Map<String, String> suggestionList = {};
+  late Square clickedPiece;
   late ChessBoardUi chessBoardUi;
   String mode;
   Map<String, Square> pieceSquareMap = {};
 
   BoardController(this.color, this.mode) {
+    firebase2game();
     pieceSquareMap = mapPieceSquare();
 
     chessBoardUi = ChessBoardUi(color, pieceSquareMap, this);
@@ -26,14 +31,46 @@ class BoardController {
     return chessBoardUi;
   }
 
-  void onPressed(Square square) {
-    print('pressed');
+  bool onPressed(Square square) {
+    bool changed = false;
+    if (turnColor == color) {
+      // then only proceed with the accepting the clicks
+      // dont forget to toggle the turnColor
+      if (suggestionShowing) {
+        print('suggestionShowing');
+        AssetImage tempImage = square.image;
+        String tempPiece = square.piece;
+        square.image = clickedPiece.image;
+        //clickedPiece.setImage(square.image);
+        square.piece = clickedPiece.piece;
+        clickedPiece.image = tempImage;
+        //clickedPiece.setImage(tempImage);
+        clickedPiece.piece = tempPiece;
+        changed = true;
+        print(square.piece);
+      } else {
+        clickedPiece = square;
+      }
+      suggestionShowing = suggestionShowing ? false : true;
+    } else {
+      //ignore the clicks as it is not my turn
+    }
     chessBoardUi.createState();
     if (suggestionShowing) {
       // if second click is on valid suggestion then play the move
     } else {
       // if click is on player's piece then show suggestions
     }
+    return changed;
+  }
+
+  void firebase2game() {
+    //toggle the turnColor on listening
+    FirebaseFirestore.instance
+        .collection('test')
+        .doc('game')
+        .snapshots()
+        .listen((event) {});
   }
 
   Map<String, Square> mapPieceSquare() {

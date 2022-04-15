@@ -5,16 +5,15 @@ import 'package:flutter/cupertino.dart';
 class Square {
   final String color;
   final String position;
-  String piece; //piece coods or null
+  String piece; //piece name or null
   bool occupied;
   AssetImage image;
-  BoardController boardController;
+  final BoardController boardController;
 
-  Square(this.color, this.position, this.piece, this.occupied, this.image, this.boardController);
+  Square(this.color, this.position, this.piece, this.occupied, this.image,
+      this.boardController);
 
-
-
-  void setImage(String s) {
-    image = AssetImage(s);
+  void setImage(AssetImage s) {
+    image = s;
   }
 }
