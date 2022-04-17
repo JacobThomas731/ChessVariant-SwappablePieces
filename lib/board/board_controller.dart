@@ -1,8 +1,7 @@
-import 'dart:ui';
-
 import 'package:chess_variant_swappable_pieces/UI/board/chess_board_ui.dart';
 import 'package:chess_variant_swappable_pieces/board/square.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/src/painting/image_resolution.dart';
 
 class BoardController {
@@ -37,7 +36,7 @@ class BoardController {
     bool changed = false;
     if (whichColorTurn == color) {
       // then only proceed with the accepting the clicks
-      // dont forget to toggle the turnColor
+      // don't forget to toggle the turnColor
       if (suggestionShowing) {
         AssetImage tempImage = square.image;
         String tempPiece = square.piece;
@@ -46,8 +45,10 @@ class BoardController {
         clickedPiece.image = tempImage;
         clickedPiece.piece = tempPiece;
         changed = true;
+        suggestionList={};
       } else {
         clickedPiece = square;
+        makeSuggestion();
       }
       suggestionShowing = suggestionShowing ? false : true;
     } else {
@@ -148,5 +149,63 @@ class BoardController {
         'Black', '77', 'wR', true, const AssetImage('assets/pro/wR.png'), this);
 
     return pieceSquareMap;
+  }
+
+  void makeSuggestion() {
+    if (clickedPiece.piece == 'bP') {
+      bPieceSuggestion();
+    }
+    if (clickedPiece.piece == 'wP') {
+      wPieceSuggestion();
+    }
+  }
+
+  void bPieceSuggestion() {
+    var pos;
+    if (clickedPiece.position[0] == '2') {
+      pos = positionChange(clickedPiece.position, 1, 0);
+      if (pieceSquareMap[pos]?.piece == 'empty') {
+        suggestionList[pos] = 'movable';
+        pos = positionChange(clickedPiece.position, 2, 0);
+        print(pos);
+        if (pieceSquareMap[pos]?.piece == 'empty') {
+          suggestionList[pos] = 'movable';
+        }
+      } else {
+        pos = positionChange(clickedPiece.position, 1, 0);
+        if (pieceSquareMap[pos]?.piece == 'empty') {
+          suggestionList[pos] = 'movable';
+        }
+      }
+    }
+    print(suggestionList);
+
+  }
+  void wPieceSuggestion() {
+    var pos;
+    print(clickedPiece.position[0]);
+    if (clickedPiece.position[0] == '6') {
+      pos = positionChange(clickedPiece.position, -1, 0);
+      print(pieceSquareMap[pos]?.piece);
+      if (pieceSquareMap[pos]?.piece == 'empty') {
+        suggestionList[pos] = 'movable';
+        pos = positionChange(clickedPiece.position, -2, 0);
+        if (pieceSquareMap[pos]?.piece == 'empty') {
+          suggestionList[pos] = 'movable';
+        }
+      } else {
+        pos = positionChange(clickedPiece.position, -1, 0);
+        if (pieceSquareMap[pos]?.piece == 'empty') {
+          suggestionList[pos] = 'movable';
+        }
+      }
+    }
+    print(suggestionList);
+  }
+
+  String positionChange(pos, r, c) {
+    pos =
+        (int.parse(pos[0]) + r).toString() + (int.parse(pos[1]) + c).toString();
+    return pos;
   }
 }

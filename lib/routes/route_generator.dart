@@ -20,14 +20,10 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const HomePage());
 
       case '/board':
-        return MaterialPageRoute(builder: (_) {
-          return const Board();
-        });
+        return MaterialPageRoute(builder: (_) => const Board());
 
       case '/board2':
-        return MaterialPageRoute(builder: (_) {
-          return const Board();
-        });
+        return MaterialPageRoute(builder: (_) => const Board());
 
       default:
         return _errorRoute();
