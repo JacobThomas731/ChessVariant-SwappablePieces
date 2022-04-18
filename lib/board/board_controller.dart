@@ -80,11 +80,15 @@ class BoardController {
         .doc('game')
         .snapshots()
         .listen((event) {
-      print('changed');
+      if (kDebugMode) {
+        print('changed');
+      }
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
           String currentKey = i.toString() + j.toString();
-          print(pieceSquareMap[currentKey]?.piece);
+          if (kDebugMode) {
+            print(pieceSquareMap[currentKey]?.piece);
+          }
           pieceSquareMap[currentKey]?.piece =
               event.data()![currentKey] as String;
         }
@@ -220,6 +224,7 @@ class BoardController {
   }
 
   void bPawnSuggestion() {
+    // movable
     if (clickedPiece.position[0] == '1') {
       var pos = positionChange(clickedPiece.position, 1, 0);
       if (pieceSquareMap[pos]?.piece == 'empty') {
@@ -234,13 +239,30 @@ class BoardController {
           suggestionList[pos] = 'movable';
         }
       }
+    } else {
+      var pos = positionChange(clickedPiece.position, 1, 0);
+      if (pieceSquareMap[pos]?.piece == 'empty') {
+        suggestionList[pos] = 'movable';
+      }
     }
     if (kDebugMode) {
       print(suggestionList);
     }
+    // capturable
+    var pos = positionChange(clickedPiece.position, 1, 1);
+    if (pieceSquareMap[pos]?.piece != 'empty' &&
+        pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
+    }
+    pos = positionChange(clickedPiece.position, 1, -1);
+    if (pieceSquareMap[pos]?.piece != 'empty' &&
+        pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
+    }
   }
 
   void wPawnSuggestion() {
+    // movable
     if (clickedPiece.position[0] == '6') {
       var pos = positionChange(clickedPiece.position, -1, 0);
       if (pieceSquareMap[pos]?.piece == 'empty') {
@@ -255,10 +277,26 @@ class BoardController {
           suggestionList[pos] = 'movable';
         }
       }
+    } else {
+      var pos = positionChange(clickedPiece.position, -1, 0);
+      if (pieceSquareMap[pos]?.piece == 'empty') {
+        suggestionList[pos] = 'movable';
+      }
     }
 
     if (kDebugMode) {
       print(suggestionList);
+    }
+    // capturable
+    var pos = positionChange(clickedPiece.position, -1, 1);
+    if (pieceSquareMap[pos]?.piece != 'empty' &&
+        pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
+    }
+    pos = positionChange(clickedPiece.position, -1, -1);
+    if (pieceSquareMap[pos]?.piece != 'empty' &&
+        pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
   }
 
@@ -266,34 +304,50 @@ class BoardController {
     var pos = positionChange(clickedPiece.position, 1, 1);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, 1, -1);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, -1, 1);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, -1, -1);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, 0, 1);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, 0, -1);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, 1, 0);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, -1, 0);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     if (kDebugMode) {
       print(suggestionList);
@@ -312,34 +366,50 @@ class BoardController {
     var pos = positionChange(clickedPiece.position, 1, 2);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, 1, -2);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, -1, 2);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, -1, -2);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, 2, 1);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, 2, -1);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, -2, 1);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, -2, -1);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
+    } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     if (kDebugMode) {
       print(suggestionList);
@@ -352,20 +422,32 @@ class BoardController {
       suggestionList[pos] = 'movable';
       pos = positionChange(pos, 1, 1);
     }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
+    }
     pos = positionChange(clickedPiece.position, 1, -1);
     while (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
       pos = positionChange(pos, 1, -1);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, -1, 1);
     while (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
       pos = positionChange(pos, -1, 1);
     }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
+    }
     pos = positionChange(clickedPiece.position, -1, -1);
     while (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
       pos = positionChange(pos, -1, -1);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     if (kDebugMode) {
       print(suggestionList);
@@ -378,20 +460,32 @@ class BoardController {
       suggestionList[pos] = 'movable';
       pos = positionChange(pos, 1, 0);
     }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
+    }
     pos = positionChange(clickedPiece.position, -1, 0);
     while (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
       pos = positionChange(pos, -1, 0);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     pos = positionChange(clickedPiece.position, 0, 1);
     while (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
       pos = positionChange(pos, 0, 1);
     }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
+    }
     pos = positionChange(clickedPiece.position, 0, -1);
     while (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
       pos = positionChange(pos, 0, -1);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
+      suggestionList[pos] = 'capturable';
     }
     if (kDebugMode) {
       print(suggestionList);
