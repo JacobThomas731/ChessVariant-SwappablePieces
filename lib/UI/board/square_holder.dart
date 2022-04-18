@@ -16,8 +16,8 @@ class SquareHolder extends StatefulWidget {
 }
 
 class _SquareHolderState extends State<SquareHolder> {
-  Color whitePlayer = const Color(0xcc8e6d58);
-  Color blackPlayer = const Color(0x618e6d58);
+  Color whitePlayer = const Color(0x998e6d58);
+  Color blackPlayer = const Color(0xff60463f);
 
   @override
   Widget build(BuildContext context) {

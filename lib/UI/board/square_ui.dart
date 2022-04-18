@@ -1,3 +1,4 @@
+import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 import 'package:chess_variant_swappable_pieces/board/board_controller.dart';
 import 'package:chess_variant_swappable_pieces/board/square.dart';
 import 'package:flutter/material.dart';
@@ -23,19 +24,48 @@ class _SquareState extends State<SquareUI> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     // double width = MediaQuery.of(context).size.width;
+
+    Widget movable = Container(
+      height: (height * 0.75) / 32,
+      width: (height * 0.75) / 32,
+      decoration:
+          const BoxDecoration(color: Colors.green, shape: BoxShape.circle),
+    );
+
+    Widget capturable = Container(
+      height: (height * 0.75) / 8,
+      width: (height * 0.75) / 8,
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.red[800]!, width: height * 0.006)),
+    );
+
+    Widget suggestionMode = Container();
+    if (widget.square.suggestionMode == 'movable') {
+      suggestionMode = movable;
+    } else if (widget.square.suggestionMode == 'capturable') {
+      suggestionMode = capturable;
+    }
     return GestureDetector(
       onTap: () {
         bool changed = widget.boardController.onPressed(widget.square);
+        widget.refresh();
         if (changed) {
           //setState(() {});
-          widget.refresh();
+
         }
       },
       child: Container(
         height: (height * 0.75) / 8,
         width: (height * 0.75) / 8,
         color: widget.color,
-        child: Image(image: widget.square.image),
+        child: Stack(children: [
+          Center(
+            child: Padding(
+                padding: EdgeInsets.all(height * 0.008),
+                child: Image(image: widget.square.image)),
+          ),
+          Center(child: suggestionMode)
+        ]),
       ),
     );
   }

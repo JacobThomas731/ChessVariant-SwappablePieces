@@ -26,7 +26,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    Color boardBackground = const Color(0xff34211e);
+    Color boardBackground = const Color(0xff3f2c2d);
     Color boardColor = const Color(0xcc8e6d58);
     AssetImage background =
         const AssetImage('assets/homepage/homeScreen_background.png');

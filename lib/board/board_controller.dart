@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:chess_variant_swappable_pieces/UI/board/chess_board_ui.dart';
 import 'package:chess_variant_swappable_pieces/board/square.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -19,8 +21,11 @@ class BoardController {
   Map<String, Square> pieceSquareMap = {}; // maintains Main square-piece map
 
   BoardController(this.color, this.mode) {
-    firebase2game();
-    pieceSquareMap = mapPieceSquare();
+    if (color == 'white') {
+      pieceSquareMap = mapPieceSquare();
+      //game2firebase();
+    }
+    //firebase2game();
 
     chessBoardUi = ChessBoardUi(color, pieceSquareMap, this);
 
@@ -29,7 +34,9 @@ class BoardController {
     // 2) Update the chess_board_ui with the new board setup
   }
 
-  ChessBoardUi initialize() {
+  void initialize() async {}
+
+  ChessBoardUi getChessBoardUiObj() {
     return chessBoardUi;
   }
 
@@ -37,7 +44,7 @@ class BoardController {
     bool changed = false;
     if (whichColorTurn == color) {
       // then only proceed with the accepting the clicks
-      // don't forget to toggle the turnColor
+      // don't forget to toggle the whichColorTurn
       if (suggestionShowing) {
         AssetImage tempImage = square.image;
         String tempPiece = square.piece;
@@ -55,7 +62,9 @@ class BoardController {
     } else {
       //ignore the clicks as it is not my turn
     }
-    chessBoardUi.createState();
+    modifySuggestionUI(); // changes the suggestions in the UI
+    //game2firebase();
+    //whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
     if (suggestionShowing) {
       // if second click is on valid suggestion then play the move
     } else {
@@ -70,7 +79,27 @@ class BoardController {
         .collection('test')
         .doc('game')
         .snapshots()
-        .listen((event) {});
+        .listen((event) {
+      print('changed');
+      for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+          String currentKey = i.toString() + j.toString();
+          print(pieceSquareMap[currentKey]?.piece);
+          pieceSquareMap[currentKey]?.piece =
+              event.data()![currentKey] as String;
+        }
+      }
+    });
+  }
+
+  void game2firebase() async {
+    var db = FirebaseFirestore.instance.collection('test').doc('game');
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        String currentKey = i.toString() + j.toString();
+        await db.update({currentKey: pieceSquareMap[currentKey]?.piece});
+      }
+    }
   }
 
   Map<String, Square> mapPieceSquare() {
@@ -173,6 +202,20 @@ class BoardController {
     }
     if (clickedPiece.piece == 'bK' || clickedPiece.piece == 'wK') {
       kingSuggestion();
+    }
+  }
+
+  void modifySuggestionUI() {
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        String currentKey = i.toString() + j.toString();
+        Square tempSquare = pieceSquareMap[currentKey]!;
+        if (suggestionList.containsKey(currentKey)) {
+          tempSquare.suggestionMode = suggestionList[currentKey]!;
+        } else {
+          tempSquare.suggestionMode = 'null';
+        }
+      }
     }
   }
 

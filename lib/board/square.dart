@@ -9,6 +9,7 @@ class Square {
   bool occupied;
   AssetImage image;
   final BoardController boardController;
+  String suggestionMode = 'null'; // movable, swappable, capturable
 
   Square(this.color, this.position, this.piece, this.occupied, this.image,
       this.boardController);
