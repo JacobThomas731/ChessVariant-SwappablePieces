@@ -14,7 +14,8 @@ class RouteGenerator {
 
       case '/boardController':
         return MaterialPageRoute(
-            builder: (_) => BoardController('white', 'normal').initialize());
+            builder: (_) =>
+                BoardController('white', 'normal').getChessBoardUiObj());
 
       case '/homepage':
         return MaterialPageRoute(builder: (_) => const HomePage());
