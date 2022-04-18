@@ -2,6 +2,7 @@ import 'package:chess_variant_swappable_pieces/UI/board/chess_board_ui.dart';
 import 'package:chess_variant_swappable_pieces/board/square.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/src/painting/image_resolution.dart';
 
 class BoardController {
@@ -45,7 +46,7 @@ class BoardController {
         clickedPiece.image = tempImage;
         clickedPiece.piece = tempPiece;
         changed = true;
-        suggestionList={};
+        suggestionList = {};
       } else {
         clickedPiece = square;
         makeSuggestion();
@@ -153,21 +154,34 @@ class BoardController {
 
   void makeSuggestion() {
     if (clickedPiece.piece == 'bP') {
-      bPieceSuggestion();
+      bPawnSuggestion();
     }
     if (clickedPiece.piece == 'wP') {
-      wPieceSuggestion();
+      wPawnSuggestion();
+    }
+    if (clickedPiece.piece == 'bR' || clickedPiece.piece == 'wR') {
+      rookSuggestion();
+    }
+    if (clickedPiece.piece == 'bN' || clickedPiece.piece == 'wN') {
+      knightSuggestion();
+    }
+    if (clickedPiece.piece == 'bB' || clickedPiece.piece == 'wB') {
+      bishopSuggestion();
+    }
+    if (clickedPiece.piece == 'bQ' || clickedPiece.piece == 'wQ') {
+      queenSuggestion();
+    }
+    if (clickedPiece.piece == 'bK' || clickedPiece.piece == 'wK') {
+      kingSuggestion();
     }
   }
 
-  void bPieceSuggestion() {
-    var pos;
-    if (clickedPiece.position[0] == '2') {
-      pos = positionChange(clickedPiece.position, 1, 0);
+  void bPawnSuggestion() {
+    if (clickedPiece.position[0] == '1') {
+      var pos = positionChange(clickedPiece.position, 1, 0);
       if (pieceSquareMap[pos]?.piece == 'empty') {
         suggestionList[pos] = 'movable';
         pos = positionChange(clickedPiece.position, 2, 0);
-        print(pos);
         if (pieceSquareMap[pos]?.piece == 'empty') {
           suggestionList[pos] = 'movable';
         }
@@ -178,15 +192,14 @@ class BoardController {
         }
       }
     }
-    print(suggestionList);
-
+    if (kDebugMode) {
+      print(suggestionList);
+    }
   }
-  void wPieceSuggestion() {
-    var pos;
-    print(clickedPiece.position[0]);
+
+  void wPawnSuggestion() {
     if (clickedPiece.position[0] == '6') {
-      pos = positionChange(clickedPiece.position, -1, 0);
-      print(pieceSquareMap[pos]?.piece);
+      var pos = positionChange(clickedPiece.position, -1, 0);
       if (pieceSquareMap[pos]?.piece == 'empty') {
         suggestionList[pos] = 'movable';
         pos = positionChange(clickedPiece.position, -2, 0);
@@ -200,7 +213,146 @@ class BoardController {
         }
       }
     }
-    print(suggestionList);
+
+    if (kDebugMode) {
+      print(suggestionList);
+    }
+  }
+
+  void kingSuggestion() {
+    var pos = positionChange(clickedPiece.position, 1, 1);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, 1, -1);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, -1, 1);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, -1, -1);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, 0, 1);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, 0, -1);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, 1, 0);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, -1, 0);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    if (kDebugMode) {
+      print(suggestionList);
+    }
+  }
+
+  void queenSuggestion() {
+    rookSuggestion();
+    bishopSuggestion();
+    if (kDebugMode) {
+      print(suggestionList);
+    }
+  }
+
+  void knightSuggestion() {
+    var pos = positionChange(clickedPiece.position, 1, 2);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, 1, -2);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, -1, 2);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, -1, -2);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, 2, 1);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, 2, -1);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, -2, 1);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    pos = positionChange(clickedPiece.position, -2, -1);
+    if (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+    }
+    if (kDebugMode) {
+      print(suggestionList);
+    }
+  }
+
+  void bishopSuggestion() {
+    var pos = positionChange(clickedPiece.position, 1, 1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+      pos = positionChange(pos, 1, 1);
+    }
+    pos = positionChange(clickedPiece.position, 1, -1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+      pos = positionChange(pos, 1, -1);
+    }
+    pos = positionChange(clickedPiece.position, -1, 1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+      pos = positionChange(pos, -1, 1);
+    }
+    pos = positionChange(clickedPiece.position, -1, -1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+      pos = positionChange(pos, -1, -1);
+    }
+    if (kDebugMode) {
+      print(suggestionList);
+    }
+  }
+
+  void rookSuggestion() {
+    var pos = positionChange(clickedPiece.position, 1, 0);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+      pos = positionChange(pos, 1, 0);
+    }
+    pos = positionChange(clickedPiece.position, -1, 0);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+      pos = positionChange(pos, -1, 0);
+    }
+    pos = positionChange(clickedPiece.position, 0, 1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+      pos = positionChange(pos, 0, 1);
+    }
+    pos = positionChange(clickedPiece.position, 0, -1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList[pos] = 'movable';
+      pos = positionChange(pos, 0, -1);
+    }
+    if (kDebugMode) {
+      print(suggestionList);
+    }
   }
 
   String positionChange(pos, r, c) {
