@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../authentication/authentication.dart';
+import 'package:chess_variant_swappable_pieces/authentication/authentication.dart';
 
 class AuthButton extends StatefulWidget {
   final String text;

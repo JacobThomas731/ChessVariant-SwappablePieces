@@ -23,7 +23,7 @@ class BoardController {
   BoardController(this.color, this.mode) {
     if (color == 'white') {
       pieceSquareMap = mapPieceSquare();
-      //game2firebase();
+      game2firebase();
     }
     //firebase2game();
 
@@ -98,6 +98,7 @@ class BoardController {
 
   void game2firebase() async {
     var db = FirebaseFirestore.instance.collection('test').doc('game');
+    print(db);
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         String currentKey = i.toString() + j.toString();

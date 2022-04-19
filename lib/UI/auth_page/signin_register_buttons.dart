@@ -1,4 +1,4 @@
-import 'package:chess_variant_swappable_pieces/UI/authentication/authentication.dart';
+import 'package:chess_variant_swappable_pieces/authentication/authentication.dart';
 
 import 'package:flutter/cupertino.dart';
 

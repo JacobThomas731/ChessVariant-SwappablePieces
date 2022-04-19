@@ -16,10 +16,10 @@ Future main() async {
   }
   await Firebase.initializeApp(
       options: const FirebaseOptions(
-          apiKey: "AIzaSyDXrMQtCgS-8hG1rfMIAm1cHFEindllBVM",
-          appId: "1:307380759063:web:ef32b9acae47108506ca52",
-          messagingSenderId: "307380759063",
-          projectId: "chess-swappable-pieces"));
+          apiKey: "AIzaSyA2iqm-qa5oR46U2Po9JvirazRGe9QG8pE",
+          appId: "1:583070078948:web:a33a2d8f0e1ec986e759f1",
+          messagingSenderId: "583070078948",
+          projectId: "multiplayer-chess-variant"));
   runApp(const MyApp());
 }
 
