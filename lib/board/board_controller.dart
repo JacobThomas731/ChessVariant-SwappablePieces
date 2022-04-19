@@ -19,17 +19,18 @@ class BoardController {
   String mode; // normal, swappable, bishop pair
   var pinSuggestion; // for pin detection
   Map<String, Square> pieceSquareMap = {}; // maintains Main square-piece map
-  late var refreshCallback;
+  // late var refreshCallback;
 
   BoardController(this.color, this.mode) {
-    if (color == 'white') {
-      pieceSquareMap = mapPieceSquare();
-      game2firebase();
-    }
+    // if (color == 'white') {
+    pieceSquareMap = mapPieceSquare();
+    game2firebase();
+
+    // }
 
     chessBoardUi = ChessBoardUi(color, pieceSquareMap, this);
-    //refreshCallback = chessBoardUi.refresh;
-    firebase2game();
+    // refreshCallback = chessBoardUi.refresh;
+    // firebase2game();
     // initialization stuff.
     // 1) Set up the pieceSquareMap Map
     // 2) Update the chess_board_ui with the new board setup
@@ -42,32 +43,35 @@ class BoardController {
   }
 
   bool onPressed(Square square) {
+
     bool changed = false;
-    if (whichColorTurn == color) {
-      // then only proceed with the accepting the clicks
-      // don't forget to toggle the whichColorTurn
-      if (suggestionShowing) {
-        AssetImage tempImage = square.image;
-        String tempPiece = square.piece;
-        square.image = clickedPiece.image;
-        square.piece = clickedPiece.piece;
-        clickedPiece.image = tempImage;
-        clickedPiece.piece = tempPiece;
+    // if (whichColorTurn == color) {
+    // then only proceed with the accepting the clicks
+    // don't forget to toggle the whichColorTurn
+    if (suggestionShowing) {
+      AssetImage tempImage = square.image;
+      String tempPiece = square.piece;
+      square.image = clickedPiece.image;
+      square.piece = clickedPiece.piece;
+      clickedPiece.image = tempImage;
+      clickedPiece.piece = tempPiece;
 
-        //swapPieces(square, clickedPiece);
-        changed = true;
-        suggestionList = {};
-        game2firebase();
-        //whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
-      } else {
-        clickedPiece = square;
-        makeSuggestion();
-      }
-      suggestionShowing = suggestionShowing ? false : true;
+      //swapPieces(square, clickedPiece);
+      changed = true;
+      suggestionList = {};
+      game2firebase();
+      //whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
     } else {
-      //ignore the clicks as it is not my turn
-
+      clickedPiece = square;
+      makeSuggestion();
+      
     }
+    suggestionShowing = suggestionShowing ? false : true;
+    // }
+    // else {
+    //ignore the clicks as it is not my turn
+
+    // }
     modifySuggestionUI(); // changes the suggestions in the UI
 
     //whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
@@ -76,6 +80,7 @@ class BoardController {
     } else {
       // if click is on player's piece then show suggestions
     }
+    firebase2game();
     return changed;
   }
 
@@ -85,32 +90,20 @@ class BoardController {
         FirebaseFirestore.instance.collection('test').doc('game').snapshots();
 
     snaps.listen((event) {
-      if (kDebugMode) {
-        print('changed');
-      }
+      print('firebase2game');
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
           String currentKey = i.toString() + j.toString();
-          if (kDebugMode) {
-            //print(pieceSquareMap[currentKey]?.piece);
-          }
           if (pieceSquareMap[currentKey]?.piece !=
               event.data()![currentKey] as String) {
-            //print('differen');
-            print(event.data()![currentKey] as String);
             pieceSquareMap[currentKey]
                 ?.setPiece(event.data()![currentKey] as String);
             chessBoardUi.pieceSquareMap[currentKey]
                 ?.setPiece(event.data()![currentKey] as String);
-          } else {
-            //print('same');
           }
         }
       }
-
       chessBoardUi.refresh();
-
-      //modifySuggestionUI();
     });
   }
 
@@ -125,12 +118,14 @@ class BoardController {
 
   void game2firebase() async {
     var db = FirebaseFirestore.instance.collection('test').doc('game');
+
     var data = await db.get();
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         String currentKey = i.toString() + j.toString();
         if (data[currentKey] != pieceSquareMap[currentKey]?.piece) {
-          await db.update({currentKey: pieceSquareMap[currentKey]?.piece});
+          db.update({currentKey: pieceSquareMap[currentKey]?.piece}
+          );
         }
       }
     }
@@ -146,14 +141,6 @@ class BoardController {
         } else {
           tempSquare.suggestionMode = 'null';
         }
-      }
-    }
-  }
-
-  void modifyUI() {
-    for (int i = 0; i < 8; i++) {
-      for (int j = 0; j < 8; j++) {
-        String currentKey = i.toString() + j.toString();
       }
     }
   }
@@ -283,9 +270,6 @@ class BoardController {
         suggestionList[pos] = 'movable';
       }
     }
-    if (kDebugMode) {
-      //print(suggestionList);
-    }
     // capturable
     var pos = positionChange(clickedPiece.position, 1, 1);
     if (pieceSquareMap[pos]?.piece != 'empty' &&
@@ -322,9 +306,6 @@ class BoardController {
       }
     }
 
-    if (kDebugMode) {
-      //print(suggestionList);
-    }
     // capturable
     var pos = positionChange(clickedPiece.position, -1, 1);
     if (pieceSquareMap[pos]?.piece != 'empty' &&
@@ -387,17 +368,11 @@ class BoardController {
     } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
       suggestionList[pos] = 'capturable';
     }
-    if (kDebugMode) {
-      //print(suggestionList);
-    }
   }
 
   void queenSuggestion() {
     rookSuggestion();
     bishopSuggestion();
-    if (kDebugMode) {
-      //print(suggestionList);
-    }
   }
 
   void knightSuggestion() {
@@ -449,9 +424,6 @@ class BoardController {
     } else if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
       suggestionList[pos] = 'capturable';
     }
-    if (kDebugMode) {
-      //print(suggestionList);
-    }
   }
 
   void bishopSuggestion() {
@@ -487,9 +459,6 @@ class BoardController {
     if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
       suggestionList[pos] = 'capturable';
     }
-    if (kDebugMode) {
-      //print(suggestionList);
-    }
   }
 
   void rookSuggestion() {
@@ -524,9 +493,6 @@ class BoardController {
     }
     if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
       suggestionList[pos] = 'capturable';
-    }
-    if (kDebugMode) {
-      //print(suggestionList);
     }
   }
 
