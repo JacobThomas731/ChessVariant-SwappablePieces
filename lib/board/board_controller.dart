@@ -26,11 +26,10 @@ class BoardController {
       pieceSquareMap = mapPieceSquare();
       game2firebase();
     }
-    //firebase2game();
 
     chessBoardUi = ChessBoardUi(color, pieceSquareMap, this);
     //refreshCallback = chessBoardUi.refresh;
-
+    firebase2game();
     // initialization stuff.
     // 1) Set up the pieceSquareMap Map
     // 2) Update the chess_board_ui with the new board setup
@@ -54,10 +53,12 @@ class BoardController {
         square.piece = clickedPiece.piece;
         clickedPiece.image = tempImage;
         clickedPiece.piece = tempPiece;
+
+        //swapPieces(square, clickedPiece);
         changed = true;
         suggestionList = {};
         game2firebase();
-        whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
+        //whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
       } else {
         clickedPiece = square;
         makeSuggestion();
@@ -80,13 +81,12 @@ class BoardController {
 
   void firebase2game() {
     //toggle the turnColor on listening
-    FirebaseFirestore.instance
-        .collection('test')
-        .doc('game')
-        .snapshots()
-        .listen((event) {
+    var snaps =
+        FirebaseFirestore.instance.collection('test').doc('game').snapshots();
+
+    snaps.listen((event) {
       if (kDebugMode) {
-        //print('changed');
+        print('changed');
       }
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
@@ -96,19 +96,31 @@ class BoardController {
           }
           if (pieceSquareMap[currentKey]?.piece !=
               event.data()![currentKey] as String) {
-            print('differen');
+            //print('differen');
             print(event.data()![currentKey] as String);
+            pieceSquareMap[currentKey]
+                ?.setPiece(event.data()![currentKey] as String);
+            chessBoardUi.pieceSquareMap[currentKey]
+                ?.setPiece(event.data()![currentKey] as String);
           } else {
             //print('same');
           }
-          pieceSquareMap[currentKey]?.piece =
-              event.data()![currentKey] as String;
         }
       }
+
       chessBoardUi.refresh();
 
       //modifySuggestionUI();
     });
+  }
+
+  void swapPieces(Square s1, Square s2) {
+    AssetImage tempImage = s1.image;
+    String tempPiece = s1.piece;
+    s1.image = s2.image;
+    s1.piece = s2.piece;
+    s2.image = tempImage;
+    s2.piece = tempPiece;
   }
 
   void game2firebase() async {

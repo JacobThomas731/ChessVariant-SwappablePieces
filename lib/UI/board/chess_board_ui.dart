@@ -11,8 +11,8 @@ class ChessBoardUi extends StatefulWidget {
   BoardController boardController;
   late var refresh;
 
-  static ChessBoardUiState? of(BuildContext context) =>
-      context.findAncestorStateOfType<ChessBoardUiState>();
+  static _ChessBoardUiState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_ChessBoardUiState>();
 
   ChessBoardUi(this.color, this.pieceSquareMap, this.boardController,
       {Key? key})
@@ -20,13 +20,15 @@ class ChessBoardUi extends StatefulWidget {
 
   @override
   State<ChessBoardUi> createState() {
-    var obj = ChessBoardUiState();
+    var obj = _ChessBoardUiState();
     refresh = obj.refresh;
     return obj;
   }
 }
 
-class ChessBoardUiState extends State<ChessBoardUi> {
+class _ChessBoardUiState extends State<ChessBoardUi> {
+  late SquareHolder squareHolder;
+
   @override
   Widget build(BuildContext context) {
     Map<String, Square> pieceSquareMap = widget.pieceSquareMap;
@@ -34,6 +36,7 @@ class ChessBoardUiState extends State<ChessBoardUi> {
     double width = MediaQuery.of(context).size.width;
     Color boardBackground = const Color(0xff3f2c2d);
     Color boardColor = const Color(0xcc8e6d58);
+    squareHolder = SquareHolder(widget.pieceSquareMap, widget.boardController);
     AssetImage background =
         const AssetImage('assets/homepage/homeScreen_background.png');
     return Stack(alignment: Alignment.center, children: [
@@ -53,15 +56,15 @@ class ChessBoardUiState extends State<ChessBoardUi> {
           height: height * 0.75,
           width: height * 0.75,
           color: boardColor,
-          child: SquareHolder(widget.pieceSquareMap, widget.boardController),
-        ),
+            child: squareHolder),
       ),
     ]);
   }
 
   void refresh() {
+    squareHolder = SquareHolder(widget.pieceSquareMap, widget.boardController);
     setState(() {
-      widget.pieceSquareMap;
+      squareHolder;
     });
     //print('setstate');
   }
