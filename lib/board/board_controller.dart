@@ -43,7 +43,6 @@ class BoardController {
   }
 
   bool onPressed(Square square) {
-
     bool changed = false;
     // if (whichColorTurn == color) {
     // then only proceed with the accepting the clicks
@@ -64,7 +63,6 @@ class BoardController {
     } else {
       clickedPiece = square;
       makeSuggestion();
-      
     }
     suggestionShowing = suggestionShowing ? false : true;
     // }
@@ -80,7 +78,8 @@ class BoardController {
     } else {
       // if click is on player's piece then show suggestions
     }
-    firebase2game();
+    // firebase2game();
+
     return changed;
   }
 
@@ -90,7 +89,6 @@ class BoardController {
         FirebaseFirestore.instance.collection('test').doc('game').snapshots();
 
     snaps.listen((event) {
-      print('firebase2game');
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
           String currentKey = i.toString() + j.toString();
@@ -107,6 +105,32 @@ class BoardController {
     });
   }
 
+  void game2firebase() async {
+    var db = FirebaseFirestore.instance.collection('test').doc('game');
+
+    var data = await db.get();
+    var key1 = '', key2;
+    var value1, value2;
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        String currentKey = i.toString() + j.toString();
+        if (data[currentKey] != pieceSquareMap[currentKey]?.piece) {
+          if (key1 == '') {
+            key1 = currentKey;
+            value1 = pieceSquareMap[currentKey]?.piece;
+          }
+          else {
+            key2 = currentKey;
+            value2 = pieceSquareMap[currentKey]?.piece;
+          }
+        }
+      }
+    }
+    db.update({key1: value1, key2: value2});
+
+    firebase2game();
+  }
+
   void swapPieces(Square s1, Square s2) {
     AssetImage tempImage = s1.image;
     String tempPiece = s1.piece;
@@ -114,21 +138,6 @@ class BoardController {
     s1.piece = s2.piece;
     s2.image = tempImage;
     s2.piece = tempPiece;
-  }
-
-  void game2firebase() async {
-    var db = FirebaseFirestore.instance.collection('test').doc('game');
-
-    var data = await db.get();
-    for (int i = 0; i < 8; i++) {
-      for (int j = 0; j < 8; j++) {
-        String currentKey = i.toString() + j.toString();
-        if (data[currentKey] != pieceSquareMap[currentKey]?.piece) {
-          db.update({currentKey: pieceSquareMap[currentKey]?.piece}
-          );
-        }
-      }
-    }
   }
 
   void modifySuggestionUI() {
