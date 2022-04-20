@@ -56,7 +56,7 @@ class Square {
     if (piece == 'wP') {
       image = const AssetImage('assets/pro/wP.png');
     }
-    if (piece == 'null') {
+    if (piece == 'empty') {
       image = const AssetImage('assets/images/empty.png');
     }
   }
