@@ -38,7 +38,9 @@ class _SquareState extends State<SquareUI> {
       decoration: BoxDecoration(
           border: Border.all(color: Colors.red[800]!, width: height * 0.006)),
     );
-
+    // if(widget.boardController.pieceSquareMap['00']?.piece == 'bQ'){
+    //   widget.refresh();
+    // }
     Widget suggestionMode = Container();
     if (widget.square.suggestionMode == 'movable') {
       suggestionMode = movable;
