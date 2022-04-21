@@ -29,7 +29,7 @@ class BoardController {
   int firebaseCounter = 1;
 
   BoardController(this.color, this.mode) {
-    color = 'black';
+    color = 'white';
     pieceSquareMap = mapPieceSquare();
     if (color == 'black') {
       pieceSquareMap = invertMapPieceSquare();
@@ -93,7 +93,7 @@ class BoardController {
             if (color == 'black') {
               db.update({
                 getInvertedPositions(square.position): clickedPiece.piece,
-                getInvertedPositions(clickedPiece.position): square.piece
+                clickedPiece.position: square.piece
               });
             } else {
               db.update({
@@ -359,7 +359,7 @@ class BoardController {
 
   void bPawnSuggestion() {
     // movable
-    if (clickedPiece.position[0] == '1') {
+    if (clickedPiece.position[0] == '6') {
       var pos = positionChange(clickedPiece.position, -1, 0);
       if (pieceSquareMap[pos]?.piece == 'empty') {
         suggestionList[pos] = 'movable';
@@ -380,7 +380,7 @@ class BoardController {
       }
     }
     // capturable
-    var pos = positionChange(clickedPiece.position, -1, -1);
+    var pos = positionChange(clickedPiece.position, -1, 1);
     if (pieceSquareMap[pos]?.piece != 'empty' &&
         pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
       suggestionList[pos] = 'capturable';
