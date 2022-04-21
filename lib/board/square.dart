@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 class Square {
   final String color;
-  final String position;
+  String position;
   String piece; //piece name or empty
   bool occupied;
   AssetImage image;

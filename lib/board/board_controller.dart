@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/src/painting/image_resolution.dart';
 
 class BoardController {
-  final String color; // my game color, white or black
+   String color; // my game color, white or black
   String whichColorTurn = 'white'; //whose turn it is, black or white
   int swapsAvailable = 3;
   bool suggestionShowing =
@@ -23,25 +23,19 @@ class BoardController {
   // late var refreshCallback;
   int tempCounter = -1;
   var db = FirebaseFirestore.instance.collection('test').doc('game');
+  var snaps =
+      FirebaseFirestore.instance.collection('test').doc('game').snapshots();
   bool firstClick = false;
   int firebaseCounter = 1;
 
   BoardController(this.color, this.mode) {
-    // if (color == 'white') {
+    color = 'black';
     pieceSquareMap = mapPieceSquare();
+    if (color == 'black') {
+      pieceSquareMap = invertMapPieceSquare();
+    }
     initializeMoves();
-    //print('start time');
-    //delay(5200);
-    //print('end time');
-    //firebase2game();
-    // }
-
     chessBoardUi = ChessBoardUi(color, pieceSquareMap, this);
-    // refreshCallback = chessBoardUi.refresh;
-    // firebase2game();
-    // initialization stuff.
-    // 1) Set up the pieceSquareMap Map
-    // 2) Update the chess_board_ui with the new board setup
   }
 
   void delay(int milliseconds) async {
@@ -50,25 +44,35 @@ class BoardController {
   }
 
   void initializeMoves() async {
-    var db = FirebaseFirestore.instance.collection('test').doc('game');
-
     var data = await db.get();
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         String currentKey = i.toString() + j.toString();
-        if (data[currentKey] != pieceSquareMap[currentKey]?.piece) {
-          db.update({currentKey: pieceSquareMap[currentKey]?.piece});
+        if (color == 'white') {
+          if (data[currentKey] != pieceSquareMap[currentKey]?.piece) {
+            db.update({currentKey: pieceSquareMap[currentKey]?.piece});
+          }
+        } else {
+          String currentInvertedKey =
+              ((7 - i)).toString() + ((7 - j)).toString();
+          if (data[currentKey] != pieceSquareMap[currentInvertedKey]?.piece) {
+            db.update({currentKey: pieceSquareMap[currentInvertedKey]?.piece});
+          }
         }
       }
     }
-    if (firstClick == false) {
-      firebase2game();
-      firstClick = true;
-    }
+    firebase2game();
   }
 
   ChessBoardUi getChessBoardUiObj() {
     return chessBoardUi;
+  }
+
+  String getInvertedPositions(String position) {
+    String invertedPosition = (7 - (int.parse(position[0]))).toString() +
+        (7 - (int.parse(position[1]))).toString();
+
+    return invertedPosition;
   }
 
   bool onPressed(Square square) {
@@ -76,74 +80,89 @@ class BoardController {
     if (whichColorTurn == color) {
       // then only proceed with the accepting the clicks
       // don't forget to toggle the whichColorTurn
+      if (color == 'black') {
+        square.position = getInvertedPositions(square.position);
+      }
+      print('hi');
+      print(square.position);
       if (suggestionShowing) {
         if (square.position != clickedPiece.position &&
             suggestionList.containsKey(square.position) &&
             clickedPiece.pieceSide == whichColorTurn) {
           if (suggestionList[square.position] == 'movable') {
-            //String tempPiece = square.piece;
-            db.update({
-              square.position: clickedPiece.piece,
-              clickedPiece.position: square.piece
-            });
+            if (color == 'black') {
+              db.update({
+                getInvertedPositions(square.position): clickedPiece.piece,
+                getInvertedPositions(clickedPiece.position): square.piece
+              });
+            } else {
+              db.update({
+                square.position: clickedPiece.piece,
+                clickedPiece.position: square.piece
+              });
+            }
             //movePieces(square, clickedPiece);
           } else if (suggestionList[square.position] == 'capturable') {
-            capturePieces(square, clickedPiece);
+            if (color == 'black') {
+              db.update({
+                getInvertedPositions(square.position): clickedPiece.piece,
+                clickedPiece.position: 'empty'
+              });
+            } else {
+              // capturePieces(square, clickedPiece);
+              db.update({
+                square.position: clickedPiece.piece,
+                clickedPiece.position: 'empty'
+              });
+            }
           }
-          //game2firebase();
-          //whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
-          //print('turn swapped to $whichColorTurn');
           changed = true;
-        } else {
-          print('same move pressed');
-        }
-        suggestionList = {};
-        suggestionShowing = suggestionShowing ? false : true;
+         } else {}
+         suggestionList = {};
+         suggestionShowing = suggestionShowing ? false : true;
         //
       } else {
         if (square.pieceSide == whichColorTurn) {
           clickedPiece = square;
           makeSuggestion();
+          print(suggestionList);
           suggestionShowing = suggestionShowing ? false : true;
         }
       }
       modifySuggestionUI(); // changes the suggestions in the UI
-
+      if (color == 'black') {
+        square.position = getInvertedPositions(square.position);
+      }
     }
-    // else {
-    //ignore the clicks as it is not my turn
-
-    // }
-
-    //whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
-
     return changed;
   }
 
   void firebase2game() {
     //toggle the turnColor on listening
-    var snaps =
-        FirebaseFirestore.instance.collection('test').doc('game').snapshots();
 
     snaps.listen((event) {
-      tempCounter++;
-      if (tempCounter > 0 && tempCounter % 2 == 1) {
+      if (tempCounter != -1) {
         whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
-        //print('turn swapped to $whichColorTurn $tempCounter');
+        print('turn swapped to $whichColorTurn $tempCounter');
       }
+      tempCounter++;
       print(firebaseCounter++);
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
           String currentKey = i.toString() + j.toString();
-          if (pieceSquareMap[currentKey]?.piece !=
-              event.data()![currentKey] as String) {
-            tempCounter++;
-
-            //print(event.data()![currentKey] as String);
-            pieceSquareMap[currentKey]
-                ?.setPiece(event.data()![currentKey] as String);
-            //chessBoardUi.pieceSquareMap[currentKey]
-            //?.setPiece(event.data()![currentKey] as String);
+          if (color == 'white') {
+            if (pieceSquareMap[currentKey]?.piece !=
+                event.data()![currentKey] as String) {
+              pieceSquareMap[currentKey]
+                  ?.setPiece(event.data()![currentKey] as String);
+            }
+          } else {
+            String currentInvertedKey = (7 - i).toString() + (7 - j).toString();
+            if (pieceSquareMap[currentKey]?.piece !=
+                event.data()![currentInvertedKey] as String) {
+              pieceSquareMap[currentKey]
+                  ?.setPiece(event.data()![currentInvertedKey] as String);
+            }
           }
         }
       }
@@ -188,7 +207,6 @@ class BoardController {
         }
       }
     }
-    //firebase2game();
   }
 
   void movePieces(Square s1, Square s2) {
@@ -214,6 +232,18 @@ class BoardController {
         }
       }
     }
+  }
+
+  Map<String, Square> invertMapPieceSquare() {
+    Map<String, Square> pieceSquareMapInverted = {};
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        String current = i.toString() + j.toString();
+        String currentInverted = (7 - i).toString() + (7 - j).toString();
+        pieceSquareMapInverted[currentInverted] = pieceSquareMap[current]!;
+      }
+    }
+    return pieceSquareMapInverted;
   }
 
   Map<String, Square> mapPieceSquare() {
@@ -295,6 +325,14 @@ class BoardController {
     return pieceSquareMap;
   }
 
+  void inverseSuggestion() {
+    Map<String, String> suggestionListInverse = {};
+    suggestionList.forEach((key, value) {
+      suggestionListInverse[getInvertedPositions(key)] = value;
+    });
+    suggestionList = suggestionListInverse;
+  }
+
   void makeSuggestion() {
     if (clickedPiece.piece == 'bP') {
       bPawnSuggestion();
@@ -322,32 +360,32 @@ class BoardController {
   void bPawnSuggestion() {
     // movable
     if (clickedPiece.position[0] == '1') {
-      var pos = positionChange(clickedPiece.position, 1, 0);
+      var pos = positionChange(clickedPiece.position, -1, 0);
       if (pieceSquareMap[pos]?.piece == 'empty') {
         suggestionList[pos] = 'movable';
-        pos = positionChange(clickedPiece.position, 2, 0);
+        pos = positionChange(clickedPiece.position, -2, 0);
         if (pieceSquareMap[pos]?.piece == 'empty') {
           suggestionList[pos] = 'movable';
         }
       } else {
-        pos = positionChange(clickedPiece.position, 1, 0);
+        pos = positionChange(clickedPiece.position, -1, 0);
         if (pieceSquareMap[pos]?.piece == 'empty') {
           suggestionList[pos] = 'movable';
         }
       }
     } else {
-      var pos = positionChange(clickedPiece.position, 1, 0);
+      var pos = positionChange(clickedPiece.position, -1, 0);
       if (pieceSquareMap[pos]?.piece == 'empty') {
         suggestionList[pos] = 'movable';
       }
     }
     // capturable
-    var pos = positionChange(clickedPiece.position, 1, 1);
+    var pos = positionChange(clickedPiece.position, -1, -1);
     if (pieceSquareMap[pos]?.piece != 'empty' &&
         pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
       suggestionList[pos] = 'capturable';
     }
-    pos = positionChange(clickedPiece.position, 1, -1);
+    pos = positionChange(clickedPiece.position, -1, -1);
     if (pieceSquareMap[pos]?.piece != 'empty' &&
         pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
       suggestionList[pos] = 'capturable';
