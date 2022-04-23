@@ -9,7 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/src/painting/image_resolution.dart';
 
 class BoardController {
-   String color; // my game color, white or black
+  String color; // my game color, white or black
   String whichColorTurn = 'white'; //whose turn it is, black or white
   int swapsAvailable = 3;
   bool suggestionShowing =
@@ -27,6 +27,8 @@ class BoardController {
       FirebaseFirestore.instance.collection('test').doc('game').snapshots();
   bool firstClick = false;
   int firebaseCounter = 1;
+  Map<String, String> allAttacksPossible = {};
+  var swapCounter = 3;
 
   BoardController(this.color, this.mode) {
     color = 'white';
@@ -83,8 +85,8 @@ class BoardController {
       if (color == 'black') {
         square.position = getInvertedPositions(square.position);
       }
-      print('hi');
-      print(square.position);
+      // print('Hi');
+      // print(square.position);
       if (suggestionShowing) {
         if (square.position != clickedPiece.position &&
             suggestionList.containsKey(square.position) &&
@@ -117,23 +119,28 @@ class BoardController {
             }
           }
           changed = true;
-         } else {}
-         suggestionList = {};
-         suggestionShowing = suggestionShowing ? false : true;
+        } else {}
+
+        suggestionList = {};
+        suggestionShowing = suggestionShowing ? false : true;
+
         //
       } else {
         if (square.pieceSide == whichColorTurn) {
           clickedPiece = square;
+
           makeSuggestion();
-          print(suggestionList);
+          // print(suggestionList);
           suggestionShowing = suggestionShowing ? false : true;
         }
       }
+
       modifySuggestionUI(); // changes the suggestions in the UI
       if (color == 'black') {
         square.position = getInvertedPositions(square.position);
       }
     }
+
     return changed;
   }
 
@@ -143,10 +150,10 @@ class BoardController {
     snaps.listen((event) {
       if (tempCounter != -1) {
         whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
-        print('turn swapped to $whichColorTurn $tempCounter');
+        // print('turn swapped to $whichColorTurn $tempCounter');
       }
       tempCounter++;
-      print(firebaseCounter++);
+      // print(firebaseCounter++);
       for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
           String currentKey = i.toString() + j.toString();
@@ -335,31 +342,34 @@ class BoardController {
 
   void makeSuggestion() {
     if (clickedPiece.piece == 'bP') {
-      bPawnSuggestion();
+      uPawnSuggestion(clickedPiece);
     }
     if (clickedPiece.piece == 'wP') {
-      wPawnSuggestion();
+      uPawnSuggestion(clickedPiece);
     }
     if (clickedPiece.piece == 'bR' || clickedPiece.piece == 'wR') {
-      rookSuggestion();
+      rookSuggestion(clickedPiece);
     }
     if (clickedPiece.piece == 'bN' || clickedPiece.piece == 'wN') {
-      knightSuggestion();
+      knightSuggestion(clickedPiece);
     }
     if (clickedPiece.piece == 'bB' || clickedPiece.piece == 'wB') {
-      bishopSuggestion();
+      bishopSuggestion(clickedPiece);
     }
     if (clickedPiece.piece == 'bQ' || clickedPiece.piece == 'wQ') {
-      queenSuggestion();
+      queenSuggestion(clickedPiece);
     }
     if (clickedPiece.piece == 'bK' || clickedPiece.piece == 'wK') {
-      kingSuggestion();
+      kingSuggestion(clickedPiece);
+    }
+    if (mode == 'swappable') {
+      swapSuggestion();
     }
   }
 
-  void bPawnSuggestion() {
+  void uPawnSuggestion(clickedPiece) {
     // movable
-    if (clickedPiece.position[0] == '6') {
+    if (clickedPiece.position[0] == '6' || clickedPiece.position[0] == '1') {
       var pos = positionChange(clickedPiece.position, -1, 0);
       if (pieceSquareMap[pos]?.piece == 'empty') {
         suggestionList[pos] = 'movable';
@@ -392,43 +402,43 @@ class BoardController {
     }
   }
 
-  void wPawnSuggestion() {
+  void dPawnSuggestion(clickedPiece) {
     // movable
-    if (clickedPiece.position[0] == '6') {
-      var pos = positionChange(clickedPiece.position, -1, 0);
+    if (clickedPiece.position[0] == '6' || clickedPiece.position[0] == '1') {
+      var pos = positionChange(clickedPiece.position, 1, 0);
       if (pieceSquareMap[pos]?.piece == 'empty') {
         suggestionList[pos] = 'movable';
-        pos = positionChange(clickedPiece.position, -2, 0);
+        pos = positionChange(clickedPiece.position, 2, 0);
         if (pieceSquareMap[pos]?.piece == 'empty') {
           suggestionList[pos] = 'movable';
         }
       } else {
-        pos = positionChange(clickedPiece.position, -1, 0);
+        pos = positionChange(clickedPiece.position, 1, 0);
         if (pieceSquareMap[pos]?.piece == 'empty') {
           suggestionList[pos] = 'movable';
         }
       }
     } else {
-      var pos = positionChange(clickedPiece.position, -1, 0);
+      var pos = positionChange(clickedPiece.position, 1, 0);
       if (pieceSquareMap[pos]?.piece == 'empty') {
         suggestionList[pos] = 'movable';
       }
     }
 
     // capturable
-    var pos = positionChange(clickedPiece.position, -1, 1);
+    var pos = positionChange(clickedPiece.position, 1, 1);
     if (pieceSquareMap[pos]?.piece != 'empty' &&
         pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
       suggestionList[pos] = 'capturable';
     }
-    pos = positionChange(clickedPiece.position, -1, -1);
+    pos = positionChange(clickedPiece.position, 1, -1);
     if (pieceSquareMap[pos]?.piece != 'empty' &&
         pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
       suggestionList[pos] = 'capturable';
     }
   }
 
-  void kingSuggestion() {
+  void kingSuggestion(clickedPiece) {
     var pos = positionChange(clickedPiece.position, 1, 1);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
@@ -479,12 +489,12 @@ class BoardController {
     }
   }
 
-  void queenSuggestion() {
-    rookSuggestion();
-    bishopSuggestion();
+  void queenSuggestion(clickedPiece) {
+    rookSuggestion(clickedPiece);
+    bishopSuggestion(clickedPiece);
   }
 
-  void knightSuggestion() {
+  void knightSuggestion(clickedPiece) {
     var pos = positionChange(clickedPiece.position, 1, 2);
     if (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
@@ -535,7 +545,7 @@ class BoardController {
     }
   }
 
-  void bishopSuggestion() {
+  void bishopSuggestion(clickedPiece) {
     var pos = positionChange(clickedPiece.position, 1, 1);
     while (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
@@ -570,7 +580,7 @@ class BoardController {
     }
   }
 
-  void rookSuggestion() {
+  void rookSuggestion(clickedPiece) {
     var pos = positionChange(clickedPiece.position, 1, 0);
     while (pieceSquareMap[pos]?.piece == 'empty') {
       suggestionList[pos] = 'movable';
@@ -609,5 +619,76 @@ class BoardController {
     pos =
         (int.parse(pos[0]) + r).toString() + (int.parse(pos[1]) + c).toString();
     return pos;
+  }
+
+  void allAttackable(colorTurn) {
+    for (var i = 0; i < 8; i++) {
+      for (var j = 0; j < 8; j++) {
+        var pos = i.toString() + j.toString();
+        if (pieceSquareMap[pos]?.piece[0] != colorTurn[0]) {
+          if (pieceSquareMap[pos]?.piece[1] == 'P') {
+            dPawnSuggestion(pieceSquareMap[pos]);
+          } else if (pieceSquareMap[pos]?.piece[1] == 'R') {
+            rookSuggestion(pieceSquareMap[pos]);
+          } else if (pieceSquareMap[pos]?.piece[1] == 'B') {
+            bishopSuggestion(pieceSquareMap[pos]);
+          } else if (pieceSquareMap[pos]?.piece[1] == 'N') {
+            knightSuggestion(pieceSquareMap[pos]);
+          } else if (pieceSquareMap[pos]?.piece[1] == 'Q') {
+            queenSuggestion(pieceSquareMap[pos]);
+          } else if (pieceSquareMap[pos]?.piece[1] == 'K') {
+            kingSuggestion(pieceSquareMap[pos]);
+          }
+        }
+      }
+    }
+    for (var i = 0; i < 8; i++) {
+      for (var j = 0; j < 8; j++) {
+        var pos = i.toString() + j.toString();
+        if (suggestionList[pos] == 'capturable') {
+          allAttacksPossible[pos] = 'capturable';
+        }
+      }
+    }
+    // print(suggestionList);
+    // print(allAttacksPossible);
+    suggestionList.clear();
+  }
+
+  void ckeckPrint() {
+    allAttackable('black');
+    allAttackable('white');
+    // print(allAttacksPossible);
+    for (var i = 0; i < 8; i++) {
+      for (var j = 0; j < 8; j++) {
+        var pos = i.toString() + j.toString();
+        if (pieceSquareMap[pos]?.piece[1] == 'K') {
+          if (allAttacksPossible[pos] == 'capturable') {
+            print('check');
+            allAttacksPossible.clear();
+            return;
+          }
+        }
+      }
+    }
+  }
+
+  void swapSuggestion() {
+    if (swapCounter > 0 &&
+        (pieceSquareMap[clickedPiece.position]?.piece == color[0] + 'R' ||
+            pieceSquareMap[clickedPiece.position]?.piece == color[0] + 'B' ||
+            pieceSquareMap[clickedPiece.position]?.piece == color[0] + 'N')) {
+      for (var i = 0; i < 8; i++) {
+        for (var j = 0; j < 8; j++) {
+          var pos = i.toString() + j.toString();
+          if (clickedPiece.position != pos &&
+              (pieceSquareMap[pos]?.piece == color[0] + 'R' ||
+                  pieceSquareMap[pos]?.piece == color[0] + 'B' ||
+                  pieceSquareMap[pos]?.piece == color[0] + 'N')) {
+            suggestionList[pos] = 'movable';
+          }
+        }
+      }
+    }
   }
 }
