@@ -3,7 +3,7 @@ import '../../board/square.dart';
 import 'package:flutter/material.dart';
 import 'package:chess_variant_swappable_pieces/UI/board/square_holder.dart';
 import 'package:chess_variant_swappable_pieces/board/board_controller.dart';
-
+import 'dart:async';
 
 class ChessBoardUi extends StatefulWidget {
   final String color;
@@ -53,27 +53,46 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
           // left panel
           top: height * 0.05,
           left: width * 0.075,
-          child: Container(
+          child: SizedBox(
             //color: Colors.purple,
             height: height * 0.9,
             width: width * 0.175,
             child: Column(
               children: [
                 Container(
-                  // Timer
-                  // 1
                   color: boardBackground,
                   height: height * 0.075,
+                  child: const TimerCreate(),
                 ),
                 Container(
                   // swapped performed
-                  // 2
+
                   height: height * 0.02,
                 ),
                 Container(
                   // 3
+
                   height: height * 0.075,
                   color: boardBackground,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        'Swapped Performed:',
+                        style: TextStyle(
+                          fontSize: height * 0.025,
+                          color: boardColor,
+                        ),
+                      ),
+                      Text(
+                        '2',
+                        style: TextStyle(
+                          fontSize: height * 0.025 * 2,
+                          color: boardColor,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                     // 4
@@ -180,6 +199,25 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   // 3
                   height: height * 0.075,
                   color: boardBackground,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        'Swapped Performed:',
+                        style: TextStyle(
+                          fontSize: height * 0.025,
+                          color: boardColor,
+                        ),
+                      ),
+                      Text(
+                        '2',
+                        style: TextStyle(
+                          fontSize: height * 0.025 * 2,
+                          color: boardColor,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   // Swaps
@@ -191,6 +229,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   // 1
                   color: boardBackground,
                   height: height * 0.075,
+                  child: const TimerCreate(),
                 ),
               ],
             ),
@@ -232,4 +271,78 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
   }
 
   void refreshTimers() {}
+}
+
+class TimerCreate extends StatefulWidget {
+  const TimerCreate({Key? key}) : super(key: key);
+
+  @override
+  State<TimerCreate> createState() => _TimerCreateState();
+}
+
+class _TimerCreateState extends State<TimerCreate> {
+  late Timer _timer;
+  int _start = 180;
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start--;
+          });
+        }
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.076,
+          width: MediaQuery.of(context).size.width * 0.175,
+          // color background
+          color: const Color(0xff3f2c2d),
+          child: Row(
+            children: <Widget>[
+              TextButton(
+                onPressed: () {
+                  startTimer();
+                },
+                child: const Text(
+                  "start",
+                  style: TextStyle(color: Colors.green),
+                ),
+              ),
+              // display the current value of the timer in hours:minutes
+              Text(
+                '${_start ~/ 60}:${_start % 60}',
+              ),
+              // pause button
+              TextButton(
+                onPressed: () {
+                  _timer.cancel();
+                },
+                child: const Text("pause", style: TextStyle(color: Colors.red)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }

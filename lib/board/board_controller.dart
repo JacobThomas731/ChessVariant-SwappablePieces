@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chess_variant_swappable_pieces/board/square.dart';
 import 'package:chess_variant_swappable_pieces/UI/board/chess_board_ui.dart';
 
-// import 'dart:math';
+// // // // import 'dart:math';
 // import 'package:flutter/foundation.dart';
 // import 'package:flutter/src/painting/image_resolution.dart';
 // import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
@@ -31,7 +31,7 @@ class BoardController {
   var swapCounter = 3;
 
   BoardController(this.color, this.mode) {
-    color = 'white';
+    color = 'black';
     pieceSquareMap = mapPieceSquare();
     if (color == 'black') {
       pieceSquareMap = invertMapPieceSquare();
