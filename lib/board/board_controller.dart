@@ -130,7 +130,8 @@ class BoardController {
           clickedPiece = square;
 
           makeSuggestion();
-          // print(suggestionList);
+          suggestionList.addAll({square.position: 'self'});
+          print(suggestionList);
           suggestionShowing = suggestionShowing ? false : true;
         }
       }
@@ -685,7 +686,7 @@ class BoardController {
               (pieceSquareMap[pos]?.piece == color[0] + 'R' ||
                   pieceSquareMap[pos]?.piece == color[0] + 'B' ||
                   pieceSquareMap[pos]?.piece == color[0] + 'N')) {
-            suggestionList[pos] = 'movable';
+            suggestionList[pos] = 'swappable';
           }
         }
       }

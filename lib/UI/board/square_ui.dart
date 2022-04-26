@@ -24,7 +24,7 @@ class _SquareState extends State<SquareUI> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     // double width = MediaQuery.of(context).size.width;
-
+    bool togglePressed = false;
     Widget movable = Container(
       height: (height * 0.75) / 32,
       width: (height * 0.75) / 32,
@@ -36,8 +36,24 @@ class _SquareState extends State<SquareUI> {
       height: (height * 0.75) / 8,
       width: (height * 0.75) / 8,
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.red[800]!, width: height * 0.006)),
+          border: Border.all(color: Colors.red[800]!, width: height * 0.005)),
     );
+
+    Widget swappable = Container(
+      height: (height * 0.75) / 8,
+      width: (height * 0.75) / 8,
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.green[800]!, width: height * 0.005)),
+    );
+
+    Widget selfPressed = Container(
+      height: (height * 0.75) / 8,
+      width: (height * 0.75) / 8,
+      decoration: BoxDecoration(
+          border:
+              Border.all(color: Colors.yellow[800]!, width: height * 0.005)),
+    );
+
     // if(widget.boardController.pieceSquareMap['00']?.piece == 'bQ'){
     //   widget.refresh();
     // }
@@ -46,11 +62,16 @@ class _SquareState extends State<SquareUI> {
       suggestionMode = movable;
     } else if (widget.square.suggestionMode == 'capturable') {
       suggestionMode = capturable;
+    } else if (widget.square.suggestionMode == 'swappable') {
+      suggestionMode = swappable;
+    } else if (widget.square.suggestionMode == 'self') {
+      suggestionMode = selfPressed;
     }
     return GestureDetector(
       onTap: () {
         bool changed = widget.boardController.onPressed(widget.square);
         widget.refresh();
+
         if (changed) {
           //setState(() {});
 
