@@ -30,6 +30,9 @@ class ChessBoardUi extends StatefulWidget {
 class _ChessBoardUiState extends State<ChessBoardUi> {
   late SquareHolder squareHolder;
 
+  var count = 3;
+  
+
   @override
   Widget build(BuildContext context) {
     Map<String, Square> pieceSquareMap = widget.pieceSquareMap;
@@ -60,8 +63,9 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
             child: Column(
               children: [
                 Container(
-                  color: boardBackground,
+                  // color: boardBackground,
                   height: height * 0.075,
+
                   child: const TimerCreate(),
                 ),
                 Container(
@@ -85,7 +89,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                         ),
                       ),
                       Text(
-                        '2',
+                        '$count',
                         style: TextStyle(
                           fontSize: height * 0.025 * 2,
                           color: boardColor,
@@ -210,7 +214,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                         ),
                       ),
                       Text(
-                        '2',
+                        '$count',
                         style: TextStyle(
                           fontSize: height * 0.025 * 2,
                           color: boardColor,
@@ -227,7 +231,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                 Container(
                   // Timer
                   // 1
-                  color: boardBackground,
+                  // color: boardBackground,
                   height: height * 0.075,
                   child: const TimerCreate(),
                 ),
@@ -313,8 +317,8 @@ class _TimerCreateState extends State<TimerCreate> {
     return Scaffold(
       body: Center(
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.076,
-          width: MediaQuery.of(context).size.width * 0.175,
+          height: MediaQuery.of(context).size.height * 0.075,
+          // width: MediaQuery.of(context).size.width * 0.175,
           // color background
           color: const Color(0xff3f2c2d),
           child: Row(
@@ -337,7 +341,10 @@ class _TimerCreateState extends State<TimerCreate> {
                 onPressed: () {
                   _timer.cancel();
                 },
-                child: const Text("pause", style: TextStyle(color: Colors.red)),
+                child: const Text(
+                  "pause",
+                  style: TextStyle(color: Colors.red),
+                ),
               ),
             ],
           ),
