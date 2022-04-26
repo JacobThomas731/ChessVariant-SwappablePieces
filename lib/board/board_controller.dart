@@ -1,12 +1,12 @@
-import 'dart:math';
-
-import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
-import 'package:chess_variant_swappable_pieces/UI/board/chess_board_ui.dart';
-import 'package:chess_variant_swappable_pieces/board/square.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/src/painting/image_resolution.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:chess_variant_swappable_pieces/board/square.dart';
+import 'package:chess_variant_swappable_pieces/UI/board/chess_board_ui.dart';
+
+// import 'dart:math';
+// import 'package:flutter/foundation.dart';
+// import 'package:flutter/src/painting/image_resolution.dart';
+// import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 
 class BoardController {
   String color; // my game color, white or black
@@ -91,7 +91,8 @@ class BoardController {
         if (square.position != clickedPiece.position &&
             suggestionList.containsKey(square.position) &&
             clickedPiece.pieceSide == whichColorTurn) {
-          if (suggestionList[square.position] == 'movable') {
+          if (suggestionList[square.position] == 'movable' ||
+              suggestionList[square.position] == 'swappable') {
             if (color == 'black') {
               db.update({
                 getInvertedPositions(square.position): clickedPiece.piece,
@@ -147,7 +148,6 @@ class BoardController {
 
   void firebase2game() {
     //toggle the turnColor on listening
-
     snaps.listen((event) {
       if (tempCounter != -1) {
         whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
@@ -177,31 +177,6 @@ class BoardController {
       chessBoardUi.refresh();
     });
   }
-
-  // void game2firebase() async {
-  //   var db = FirebaseFirestore.instance.collection('test').doc('game');
-
-  //   var data = await db.get();
-  //   var key1 = '', key2;
-  //   var value1, value2;
-  //   for (int i = 0; i < 8; i++) {
-  //     for (int j = 0; j < 8; j++) {
-  //       String currentKey = i.toString() + j.toString();
-  //       if (data[currentKey] != pieceSquareMap[currentKey]?.piece) {
-  //         if (key1 == '') {
-  //           key1 = currentKey;
-  //           value1 = pieceSquareMap[currentKey]?.piece;
-  //         } else {
-  //           key2 = currentKey;
-  //           value2 = pieceSquareMap[currentKey]?.piece;
-  //         }
-  //       }
-  //     }
-  //   }
-  //   db.update({key1: value1, key2: value2});
-
-  //   // firebase2game();
-  // }
 
   void game2firebase() async {
     var db = FirebaseFirestore.instance.collection('test').doc('game');

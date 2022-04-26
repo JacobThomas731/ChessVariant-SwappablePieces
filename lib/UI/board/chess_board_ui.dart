@@ -1,9 +1,9 @@
 // chess board ui does here. Integrates with with chess_board.dart
+import '../../board/square.dart';
+import 'package:flutter/material.dart';
 import 'package:chess_variant_swappable_pieces/UI/board/square_holder.dart';
 import 'package:chess_variant_swappable_pieces/board/board_controller.dart';
-import 'package:flutter/material.dart';
 
-import '../../board/square.dart';
 
 class ChessBoardUi extends StatefulWidget {
   final String color;
