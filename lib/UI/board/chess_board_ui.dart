@@ -9,6 +9,7 @@ class ChessBoardUi extends StatefulWidget {
   final String color;
   Map<String, Square> pieceSquareMap;
   BoardController boardController;
+  late Map<String, String> playerDetails;
   late var refresh;
 
   static _ChessBoardUiState? of(BuildContext context) =>
@@ -59,11 +60,13 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
             child: Column(
               children: [
                 Container(
+                  // Timer
                   // 1
                   color: boardBackground,
                   height: height * 0.075,
                 ),
                 Container(
+                  // swapped performed
                   // 2
                   height: height * 0.02,
                 ),
@@ -85,24 +88,22 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   height: height * 0.07,
                 ),
                 Container(
+                  //rating
                   // 7
-                  height: height * 0.05,
-                  color: boardBackground,
-                  alignment: Alignment.center,
+                  height: height * 0.07,
+                  //color: boardBackground,
+                  alignment: Alignment.bottomCenter,
                   child: Text(
                     'rating: 1600',
                     style: TextStyle(
-                      color: const Color(0xff8e6d58),
-                      fontFamily: 'ol',
-                      fontSize: height * 0.02,
+                      color: boardBackground,
+                      fontFamily: 'o',
+                      fontSize: height * 0.028,
                     ),
                   ),
                 ),
                 Container(
-                  // 8
-                  height: height * 0.02,
-                ),
-                Container(
+                    // player name
                     // 9
                     height: height * 0.085,
                     width: width * 0.175,
@@ -111,7 +112,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                     child: Text(
                       'Ashutosh Kumar',
                       style: TextStyle(
-                        color: const Color(0xff8e6d58),
+                        color: boardColor,
                         fontFamily: 'ol',
                         fontSize: height * 0.045,
                       ),
@@ -123,7 +124,11 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                 ),
                 Container(
                   height: height * 0.01,
-                  color: boardBackground,
+                  alignment: Alignment.center,
+                  child: Container(
+                    height: height * 0.005,
+                    color: boardBackground,
+                  ),
                 ),
                 Container(
                   // 10
@@ -131,6 +136,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   //color: boardBackground,
                 ),
                 Container(
+                    // player name
                     // 9
                     height: height * 0.085,
                     //color: boardBackground,
@@ -144,20 +150,17 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                       ),
                     )),
                 Container(
-                  // 8
-                  height: height * 0.02,
-                ),
-                Container(
+                  // rating
                   // 7
-                  height: height * 0.05,
-                  color: boardBackground,
-                  alignment: Alignment.center,
+                  height: height * 0.07,
+                  //color: boardBackground,
+                  alignment: Alignment.topCenter,
                   child: Text(
                     'rating: 1830',
                     style: TextStyle(
-                      color: const Color(0xff8e6d58),
-                      fontFamily: 'ol',
-                      fontSize: height * 0.020,
+                      color: boardBackground,
+                      fontFamily: 'o',
+                      fontSize: height * 0.027,
                     ),
                   ),
                 ),
@@ -179,10 +182,12 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   color: boardBackground,
                 ),
                 Container(
+                  // Swaps
                   // 2
                   height: height * 0.02,
                 ),
                 Container(
+                  // Timer
                   // 1
                   color: boardBackground,
                   height: height * 0.075,
