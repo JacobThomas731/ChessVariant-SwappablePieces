@@ -1,4 +1,6 @@
 // chess board ui does here. Integrates with with chess_board.dart
+import 'package:chess_variant_swappable_pieces/timer/game_timer.dart';
+
 import '../../board/square.dart';
 import 'package:flutter/material.dart';
 import 'package:chess_variant_swappable_pieces/UI/board/square_holder.dart';
@@ -11,11 +13,11 @@ class ChessBoardUi extends StatefulWidget {
   BoardController boardController;
   late Map<String, String> playerDetails;
   late var refresh;
+  late var whiteTimer;
+  late var blackTimer;
+  late int time;
 
-  static _ChessBoardUiState? of(BuildContext context) =>
-      context.findAncestorStateOfType<_ChessBoardUiState>();
-
-  ChessBoardUi(this.color, this.pieceSquareMap, this.boardController,
+  ChessBoardUi(this.color, this.pieceSquareMap, this.boardController, this.time,
       {Key? key})
       : super(key: key);
 
@@ -23,15 +25,20 @@ class ChessBoardUi extends StatefulWidget {
   State<ChessBoardUi> createState() {
     var obj = _ChessBoardUiState();
     refresh = obj.refresh;
+    obj.whiteTimer = GameTimer(time);
+    obj.blackTimer = GameTimer(time);
+    whiteTimer = obj.whiteTimer;
+    blackTimer = obj.blackTimer;
     return obj;
   }
 }
 
 class _ChessBoardUiState extends State<ChessBoardUi> {
+  late int time;
   late SquareHolder squareHolder;
-
+  var whiteTimer;
+  var blackTimer;
   var count = 3;
-  
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +49,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
     Color boardColor = const Color(0xcc8e6d58);
     squareHolder = SquareHolder(widget.pieceSquareMap, widget.boardController);
     AssetImage background =
-        const AssetImage('assets/homepage/homeScreen_background.png');
+    const AssetImage('assets/homepage/homeScreen_background.png');
     return Scaffold(
       body: Stack(alignment: Alignment.center, children: [
         Image(
@@ -66,7 +73,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   // color: boardBackground,
                   height: height * 0.075,
 
-                  child: const TimerCreate(),
+                  child: widget.color == 'white' ? blackTimer : whiteTimer,
                 ),
                 Container(
                   // swapped performed
@@ -99,7 +106,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   ),
                 ),
                 Container(
-                    // 4
+                  // 4
                     height: height * 0.02),
                 Container(
                   // 5
@@ -126,8 +133,8 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   ),
                 ),
                 Container(
-                    // player name
-                    // 9
+                  // player name
+                  // 9
                     height: height * 0.085,
                     width: width * 0.175,
                     //color: boardBackground,
@@ -159,8 +166,8 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   //color: boardBackground,
                 ),
                 Container(
-                    // player name
-                    // 9
+                  // player name
+                  // 9
                     height: height * 0.085,
                     //color: boardBackground,
                     alignment: Alignment.center,
@@ -197,7 +204,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   color: boardBackground,
                 ),
                 Container(
-                    // 4
+                  // 4
                     height: height * 0.02),
                 Container(
                   // 3
@@ -233,7 +240,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   // 1
                   // color: boardBackground,
                   height: height * 0.075,
-                  child: const TimerCreate(),
+                  child: widget.color == 'white' ? whiteTimer : blackTimer,
                 ),
               ],
             ),
@@ -251,7 +258,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
               child: squareHolder),
         ),
         Positioned(
-            // right panel
+          // right panel
             top: height * 0.05,
             left: width * 0.75,
             child: Container(

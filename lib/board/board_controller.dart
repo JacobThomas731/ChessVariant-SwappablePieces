@@ -31,13 +31,13 @@ class BoardController {
   var swapCounter = 3;
 
   BoardController(this.color, this.mode) {
-    color = 'black';
+    color = 'white';
     pieceSquareMap = mapPieceSquare();
     if (color == 'black') {
       pieceSquareMap = invertMapPieceSquare();
     }
     initializeMoves();
-    chessBoardUi = ChessBoardUi(color, pieceSquareMap, this);
+    chessBoardUi = ChessBoardUi(color, pieceSquareMap, this, 300);
   }
 
   void delay(int milliseconds) async {
@@ -52,13 +52,14 @@ class BoardController {
         String currentKey = i.toString() + j.toString();
         if (color == 'white') {
           if (data[currentKey] != pieceSquareMap[currentKey]?.piece) {
-            db.update({currentKey: pieceSquareMap[currentKey]?.piece});
+            await db.update({currentKey: pieceSquareMap[currentKey]?.piece});
           }
         } else {
           String currentInvertedKey =
               ((7 - i)).toString() + ((7 - j)).toString();
           if (data[currentKey] != pieceSquareMap[currentInvertedKey]?.piece) {
-            db.update({currentKey: pieceSquareMap[currentInvertedKey]?.piece});
+            await db.update(
+                {currentKey: pieceSquareMap[currentInvertedKey]?.piece});
           }
         }
       }
@@ -174,7 +175,21 @@ class BoardController {
           }
         }
       }
+      if (tempCounter > 0) {
+        print('called');
+        if (whichColorTurn == 'white') {
+          chessBoardUi.blackTimer.pause();
+          chessBoardUi.whiteTimer.start();
+        } else {
+          if (tempCounter > 1) {
+            chessBoardUi.whiteTimer.pause();
+          }
+          chessBoardUi.blackTimer.start();
+        }
+      }
       chessBoardUi.refresh();
+
+      print(chessBoardUi.whiteTimer);
     });
   }
 
