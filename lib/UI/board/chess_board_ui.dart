@@ -49,7 +49,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
     Color boardColor = const Color(0xcc8e6d58);
     squareHolder = SquareHolder(widget.pieceSquareMap, widget.boardController);
     AssetImage background =
-    const AssetImage('assets/homepage/homeScreen_background.png');
+        const AssetImage('assets/homepage/homeScreen_background.png');
     return Scaffold(
       body: Stack(alignment: Alignment.center, children: [
         Image(
@@ -106,7 +106,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   ),
                 ),
                 Container(
-                  // 4
+                    // 4
                     height: height * 0.02),
                 Container(
                   // 5
@@ -133,8 +133,8 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   ),
                 ),
                 Container(
-                  // player name
-                  // 9
+                    // player name
+                    // 9
                     height: height * 0.085,
                     width: width * 0.175,
                     //color: boardBackground,
@@ -166,8 +166,8 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   //color: boardBackground,
                 ),
                 Container(
-                  // player name
-                  // 9
+                    // player name
+                    // 9
                     height: height * 0.085,
                     //color: boardBackground,
                     alignment: Alignment.center,
@@ -204,7 +204,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   color: boardBackground,
                 ),
                 Container(
-                  // 4
+                    // 4
                     height: height * 0.02),
                 Container(
                   // 3
@@ -259,13 +259,93 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
         ),
         Positioned(
           // right panel
-            top: height * 0.05,
-            left: width * 0.75,
-            child: Container(
-              color: Colors.purple,
-              height: height * 0.9,
-              width: width * 0.23,
-            ))
+          top: height * 0.05 + height * 0.02 * 2,
+          left: width * 0.75,
+          child: Column(
+            children: [
+              Container(
+                // color: boardBackground,
+                height: height * 0.9 - height * 0.075 - height * 0.02 * 5,
+                width: width * 0.23,
+                color: boardBackground,
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Chat',
+                        style: TextStyle(
+                          fontSize: height * 0.03,
+                          color: boardColor,
+                        ),
+                      ),
+
+                      // chat window
+                      Container(
+                        height: height * 0.9 -
+                            height * 0.075 -
+                            height * 0.02 * 5 -
+                            height * 0.03 * 3,
+                        width: width * 0.23 - height * 0.04,
+                        color: boardColor,
+                      ),
+                    ]),
+              ),
+              SizedBox(
+                // color: boardBackground,
+                height: height * 0.02,
+                width: width * 0.23,
+              ),
+              Row(children: [
+                Container(
+                  height: height * 0.075,
+                  width: width * 0.23 / 4,
+                  color: boardBackground,
+                  child: Center(
+                    child: Text(
+                      'Offer Draw',
+                      style: TextStyle(
+                        color: boardColor,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: width * 0.23 / 8,
+                ),
+                Container(
+                  height: height * 0.075,
+                  width: width * 0.23 / 4,
+                  color: boardBackground,
+                  child: Center(
+                    child: Text(
+                      'Resign',
+                      style: TextStyle(
+                        color: boardColor,
+                      ),
+                    ),
+                  ),
+                ),
+                Container(
+                  width: width * 0.23 / 8,
+                ),
+                Container(
+                  height: height * 0.075,
+                  width: width * 0.23 / 4,
+                  color: boardBackground,
+                  child: Center(
+                    child: Text(
+                      'Take Back',
+                      style: TextStyle(
+                        color: boardColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ]),
+            ],
+          ),
+        )
       ]),
     );
   }
@@ -284,79 +364,79 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
   void refreshTimers() {}
 }
 
-class TimerCreate extends StatefulWidget {
-  const TimerCreate({Key? key}) : super(key: key);
+// class TimerCreate extends StatefulWidget {
+//   const TimerCreate({Key? key}) : super(key: key);
 
-  @override
-  State<TimerCreate> createState() => _TimerCreateState();
-}
+//   @override
+//   State<TimerCreate> createState() => _TimerCreateState();
+// }
 
-class _TimerCreateState extends State<TimerCreate> {
-  late Timer _timer;
-  int _start = 180;
+// class _TimerCreateState extends State<TimerCreate> {
+//   late Timer _timer;
+//   int _start = 180;
 
-  void startTimer() {
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_start == 0) {
-          setState(() {
-            timer.cancel();
-          });
-        } else {
-          setState(() {
-            _start--;
-          });
-        }
-      },
-    );
-  }
+//   void startTimer() {
+//     const oneSec = Duration(seconds: 1);
+//     _timer = Timer.periodic(
+//       oneSec,
+//       (Timer timer) {
+//         if (_start == 0) {
+//           setState(() {
+//             timer.cancel();
+//           });
+//         } else {
+//           setState(() {
+//             _start--;
+//           });
+//         }
+//       },
+//     );
+//   }
 
-  @override
-  void dispose() {
-    _timer.cancel();
-    super.dispose();
-  }
+//   @override
+//   void dispose() {
+//     _timer.cancel();
+//     super.dispose();
+//   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.075,
-          // width: MediaQuery.of(context).size.width * 0.175,
-          // color background
-          color: const Color(0xff3f2c2d),
-          child: Row(
-            children: <Widget>[
-              TextButton(
-                onPressed: () {
-                  startTimer();
-                },
-                child: const Text(
-                  "start",
-                  style: TextStyle(color: Colors.green),
-                ),
-              ),
-              // display the current value of the timer in hours:minutes
-              Text(
-                '${_start ~/ 60}:${_start % 60}',
-              ),
-              // pause button
-              TextButton(
-                onPressed: () {
-                  _timer.cancel();
-                },
-                child: const Text(
-                  "pause",
-                  style: TextStyle(color: Colors.red),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       body: Center(
+//         child: Container(
+//           height: MediaQuery.of(context).size.height * 0.075,
+//           // width: MediaQuery.of(context).size.width * 0.175,
+//           // color background
+//           color: const Color(0xff3f2c2d),
+//           child: Row(
+//             children: <Widget>[
+//               // TextButton(
+//               //   onPressed: () {
+//               //     startTimer();
+//               //   },
+//               //   child: const Text(
+//               //     "start",
+//               //     style: TextStyle(color: Colors.green),
+//               //   ),
+//               // ),
+//               // display the current value of the timer in hours:minutes
+//               Text(
+//                 '${_start ~/ 60}:${_start % 60}',
+//               ),
+//               // pause button
+//               // TextButton(
+//               //   onPressed: () {
+//               //     _timer.cancel();
+//               //   },
+//               //   child: const Text(
+//               //     "pause",
+//               //     style: TextStyle(color: Colors.red),
+//               //   ),
+//               // ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
