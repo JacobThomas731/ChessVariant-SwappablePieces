@@ -48,53 +48,11 @@ class _GameTimerState extends State<GameTimer> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height * 0.075,
-        // width: MediaQuery.of(context).size.width * 0.175,
-        // color background
-        color: const Color(0xff3f2c2d),
-        child: Row(
-          children: <Widget>[
-            // TextButton(
-            //   onPressed: () {
-            //     startTimer();
-            //   },
-            //   child: const Text(
-            //     "start",
-            //     style: TextStyle(color: Colors.green),
-            //   ),
-            // ),
-            // display the current value of the timer in hours:minutes
-            Text(
-              "  Timer:         ",
-              style: TextStyle(
-                fontSize: MediaQuery.of(context).size.height * 0.025,
-                color: Color(0xcc8e6d58),
-              ),
-            ),
-            Center(
-              child: Text(
-                '${_start ~/ 60}:${_start % 60}',
-                style: TextStyle(
-                  fontSize: MediaQuery.of(context).size.height * 0.025 * 2,
-                  color: Color(0xcc8e6d58),
-                ),
-              ),
-            ),
-            // pause button
-            // TextButton(
-            //   onPressed: () {
-            //     _timer.cancel();
-            //   },
-            //   child: const Text(
-            //     "pause",
-            //     style: TextStyle(color: Colors.red),
-            //   ),
-            // ),
-          ],
-        ),
-      ),
-    );
+    double height = MediaQuery.of(context).size.height;
+    Color boardColor = const Color(0xcc8e6d58);
+
+    return Text('${_start ~/ 60}:${_start % 60}',
+        style: TextStyle(
+            fontSize: height * 0.04, fontFamily: 'ol', color: boardColor));
   }
 }

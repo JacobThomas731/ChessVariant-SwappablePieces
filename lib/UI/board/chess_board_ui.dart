@@ -70,10 +70,47 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
             child: Column(
               children: [
                 Container(
-                  // color: boardBackground,
+                  color: boardBackground,
                   height: height * 0.075,
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                width * 0.01, height * 0.004, 0, 0),
+                            child: Text(
+                              'Time',
+                              style: TextStyle(
+                                fontSize: height * 0.023,
+                                color: boardColor,
+                                fontFamily: 'ol',
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                width * 0.01, height * 0.004, 0, 0),
+                            child: Text(
+                              '(min:sec)',
+                              style: TextStyle(
+                                  fontFamily: 'ol',
+                                  color: boardColor,
+                                  fontSize: height * 0.02),
+                            ),
+                          )
+                        ],
+                      ),
+                      Expanded(
+                        child: Center(
+                          child:
+                              widget.color == 'white' ? blackTimer : whiteTimer,
+                        ),
+                      )
+                    ],
+                  ),
 
-                  child: widget.color == 'white' ? blackTimer : whiteTimer,
+                  // child: widget.color == 'white' ? blackTimer : whiteTimer,
                 ),
                 Container(
                   // swapped performed
@@ -86,27 +123,35 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   height: height * 0.075,
                   color: boardBackground,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text(
-                        'Swapped Performed:',
-                        style: TextStyle(
-                          fontSize: height * 0.025,
-                          color: boardColor,
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(width * 0.01, 0, 0, 0),
+                        child: Text(
+                          'Swaps Performed:',
+                          style: TextStyle(
+                            fontSize: height * 0.027,
+                            fontFamily: 'ol',
+                            color: boardColor,
+                          ),
                         ),
                       ),
-                      Text(
-                        '$count',
-                        style: TextStyle(
-                          fontSize: height * 0.025 * 2,
-                          color: boardColor,
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            '$count',
+                            style: TextStyle(
+                              fontSize: height * 0.042,
+                              fontFamily: 'ol',
+                              color: boardColor,
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                    // 4
+                  // 4
                     height: height * 0.02),
                 Container(
                   // 5
@@ -204,27 +249,35 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   color: boardBackground,
                 ),
                 Container(
-                    // 4
+                  // 4
                     height: height * 0.02),
                 Container(
                   // 3
                   height: height * 0.075,
                   color: boardBackground,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text(
-                        'Swapped Performed:',
-                        style: TextStyle(
-                          fontSize: height * 0.025,
-                          color: boardColor,
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(width * 0.01, 0, 0, 0),
+                        child: Text(
+                          'Swaps Performed:',
+                          style: TextStyle(
+                            fontSize: height * 0.027,
+                            fontFamily: 'ol',
+                            color: boardColor,
+                          ),
                         ),
                       ),
-                      Text(
-                        '$count',
-                        style: TextStyle(
-                          fontSize: height * 0.025 * 2,
-                          color: boardColor,
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            '$count',
+                            style: TextStyle(
+                              fontSize: height * 0.042,
+                              fontFamily: 'ol',
+                              color: boardColor,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -238,9 +291,45 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                 Container(
                   // Timer
                   // 1
-                  // color: boardBackground,
+                  color: boardBackground,
                   height: height * 0.075,
-                  child: widget.color == 'white' ? whiteTimer : blackTimer,
+                  child: Row(
+                    children: [
+                      Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                width * 0.01, height * 0.004, 0, 0),
+                            child: Text(
+                              'Time',
+                              style: TextStyle(
+                                fontSize: height * 0.023,
+                                color: boardColor,
+                                fontFamily: 'ol',
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(
+                                width * 0.01, height * 0.004, 0, 0),
+                            child: Text(
+                              '(min:sec)',
+                              style: TextStyle(
+                                  fontFamily: 'ol',
+                                  color: boardColor,
+                                  fontSize: height * 0.02),
+                            ),
+                          )
+                        ],
+                      ),
+                      Expanded(
+                        child: Center(
+                          child:
+                              widget.color == 'white' ? blackTimer : whiteTimer,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -258,94 +347,132 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
               child: squareHolder),
         ),
         Positioned(
-          // right panel
-          top: height * 0.05 + height * 0.02 * 2,
-          left: width * 0.75,
-          child: Column(
-            children: [
+            // right panel
+            top: height * 0.05,
+            left: width * 0.75,
+            child: Column(children: [
               Container(
-                // color: boardBackground,
-                height: height * 0.9 - height * 0.075 - height * 0.02 * 5,
-                width: width * 0.23,
                 color: boardBackground,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                height: height * 0.1,
+                width: width * 0.23,
+              ),
+              Container(
+                height: height * 0.05,
+                width: width * 0.23,
+              ),
+              Container(
+                  // chat
+                  color: boardBackground,
+                  height: height * 0.6,
+                  width: width * 0.23,
+                  child: Column(
                     children: [
-                      Text(
-                        'Chat',
-                        style: TextStyle(
-                          fontSize: height * 0.03,
+                      Container(
+                          height: height * 0.05,
+                          child: Center(
+                              child: Text(
+                            'chat',
+                            style: TextStyle(
+                                fontSize: height * 0.028,
+                                fontFamily: 'ol',
+                                color: boardColor),
+                          ))),
+                      Container(
+                        height: height * 0.45,
+                        width: width * 0.18,
+                        decoration: BoxDecoration(
                           color: boardColor,
+                          //borderRadius: BorderRadius.circular(height * 0.005),
                         ),
                       ),
-
-                      // chat window
                       Container(
-                        height: height * 0.9 -
-                            height * 0.075 -
-                            height * 0.02 * 5 -
-                            height * 0.03 * 3,
-                        width: width * 0.23 - height * 0.04,
-                        color: boardColor,
+                        height: height * 0.025,
                       ),
-                    ]),
-              ),
-              SizedBox(
-                // color: boardBackground,
-                height: height * 0.02,
+                      Container(
+                        height: height * 0.0524,
+                        width: width * 0.18,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                                height: height * 0.05,
+                                width: width * 0.15,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: boardColor, width: height * 0.001),
+                                  borderRadius: BorderRadius.circular(20),
+                                )),
+                            Container(
+                              height: height * 0.05,
+                              width: height * 0.05,
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle, color: boardColor),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  )),
+              Container(
+                height: height * 0.05,
                 width: width * 0.23,
               ),
-              Row(children: [
-                Container(
-                  height: height * 0.075,
-                  width: width * 0.23 / 4,
-                  color: boardBackground,
-                  child: Center(
-                    child: Text(
-                      'Offer Draw',
-                      style: TextStyle(
-                        color: boardColor,
+              Container(
+                //color: Colors.purple,
+                height: height * 0.1,
+                width: width * 0.23,
+                child: Row(children: [
+                  Container(
+                    height: height * 0.1,
+                    width: width * 0.23 / 4,
+                    color: boardBackground,
+                    child: Center(
+                      child: Text(
+                        'Offer Draw',
+                        style: TextStyle(
+                            color: boardColor,
+                            fontFamily: 'ol',
+                            fontSize: height * 0.025),
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  width: width * 0.23 / 8,
-                ),
-                Container(
-                  height: height * 0.075,
-                  width: width * 0.23 / 4,
-                  color: boardBackground,
-                  child: Center(
-                    child: Text(
-                      'Resign',
-                      style: TextStyle(
-                        color: boardColor,
+                  Container(
+                    width: width * 0.2 / 8,
+                  ),
+                  Container(
+                    height: height * 0.1,
+                    width: width * 0.23 / 4,
+                    color: boardBackground,
+                    child: Center(
+                      child: Text(
+                        'Resign',
+                        style: TextStyle(
+                            color: boardColor,
+                            fontFamily: 'ol',
+                            fontSize: height * 0.025),
                       ),
                     ),
                   ),
-                ),
-                Container(
-                  width: width * 0.23 / 8,
-                ),
-                Container(
-                  height: height * 0.075,
-                  width: width * 0.23 / 4,
-                  color: boardBackground,
-                  child: Center(
-                    child: Text(
-                      'Take Back',
-                      style: TextStyle(
-                        color: boardColor,
+                  Container(
+                    width: width * 0.2 / 8,
+                  ),
+                  Container(
+                    height: height * 0.1,
+                    width: width * 0.23 / 4,
+                    color: boardBackground,
+                    child: Center(
+                      child: Text(
+                        'Take Back',
+                        style: TextStyle(
+                            color: boardColor,
+                            fontFamily: 'ol',
+                            fontSize: height * 0.025),
                       ),
                     ),
                   ),
-                ),
-              ]),
-            ],
-          ),
-        )
+                ]),
+              ),
+            ]))
       ]),
     );
   }
@@ -363,80 +490,3 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
 
   void refreshTimers() {}
 }
-
-// class TimerCreate extends StatefulWidget {
-//   const TimerCreate({Key? key}) : super(key: key);
-
-//   @override
-//   State<TimerCreate> createState() => _TimerCreateState();
-// }
-
-// class _TimerCreateState extends State<TimerCreate> {
-//   late Timer _timer;
-//   int _start = 180;
-
-//   void startTimer() {
-//     const oneSec = Duration(seconds: 1);
-//     _timer = Timer.periodic(
-//       oneSec,
-//       (Timer timer) {
-//         if (_start == 0) {
-//           setState(() {
-//             timer.cancel();
-//           });
-//         } else {
-//           setState(() {
-//             _start--;
-//           });
-//         }
-//       },
-//     );
-//   }
-
-//   @override
-//   void dispose() {
-//     _timer.cancel();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: Center(
-//         child: Container(
-//           height: MediaQuery.of(context).size.height * 0.075,
-//           // width: MediaQuery.of(context).size.width * 0.175,
-//           // color background
-//           color: const Color(0xff3f2c2d),
-//           child: Row(
-//             children: <Widget>[
-//               // TextButton(
-//               //   onPressed: () {
-//               //     startTimer();
-//               //   },
-//               //   child: const Text(
-//               //     "start",
-//               //     style: TextStyle(color: Colors.green),
-//               //   ),
-//               // ),
-//               // display the current value of the timer in hours:minutes
-//               Text(
-//                 '${_start ~/ 60}:${_start % 60}',
-//               ),
-//               // pause button
-//               // TextButton(
-//               //   onPressed: () {
-//               //     _timer.cancel();
-//               //   },
-//               //   child: const Text(
-//               //     "pause",
-//               //     style: TextStyle(color: Colors.red),
-//               //   ),
-//               // ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
