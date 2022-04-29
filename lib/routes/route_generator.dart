@@ -1,4 +1,5 @@
 import 'package:chess_variant_swappable_pieces/UI/board/chess_board_ui.dart';
+import 'package:chess_variant_swappable_pieces/UI/play_friend.dart';
 import 'package:chess_variant_swappable_pieces/board/board_controller.dart';
 import 'package:chess_variant_swappable_pieces/board/chess_board.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,9 @@ class RouteGenerator {
 
       case '/board2':
         return MaterialPageRoute(builder: (_) => const Board());
+
+      case '/playFriend':
+        return MaterialPageRoute(builder: (_) => PlayFriend());
 
       default:
         return _errorRoute();

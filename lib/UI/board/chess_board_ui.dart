@@ -325,7 +325,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                       Expanded(
                         child: Center(
                           child:
-                              widget.color == 'white' ? blackTimer : whiteTimer,
+                              widget.color == 'white' ? whiteTimer : blackTimer,
                         ),
                       )
                     ],

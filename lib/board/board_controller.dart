@@ -150,6 +150,7 @@ class BoardController {
   void firebase2game() {
     //toggle the turnColor on listening
     snaps.listen((event) {
+      print('listened');
       if (tempCounter != -1) {
         whichColorTurn = whichColorTurn == 'white' ? 'black' : 'white';
         // print('turn swapped to $whichColorTurn $tempCounter');
@@ -189,7 +190,7 @@ class BoardController {
       }
       chessBoardUi.refresh();
 
-      print(chessBoardUi.whiteTimer);
+      print(chessBoardUi.blackTimer);
     });
   }
 
