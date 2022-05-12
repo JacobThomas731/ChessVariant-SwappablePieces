@@ -34,15 +34,15 @@ class _SignInRegisterButtonsState extends State<SignInRegisterButtons> {
     double screenHeight = MediaQuery.of(context).size.height;
     String text = widget.text;
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
         String userName = widget.userNameController.text;
         String email = widget.emailController.text;
         String password = widget.passwordController.text;
         if (widget.text == 'Register') {
-          widget.auth.registerUser(userName, email, password);
+          await widget.auth.registerUser(userName, email, password);
           Navigator.of(context).pushNamed('/homepage', arguments: '');
         } else {
-          widget.auth.signInEmailPass(userName, email, password);
+          await widget.auth.signInEmailPass(userName, email, password);
           Navigator.of(context).pushNamed('/homepage', arguments: '');
         }
       },

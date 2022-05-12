@@ -9,6 +9,9 @@ import 'package:chess_variant_swappable_pieces/UI/board/chess_board_ui.dart';
 // import 'package:assorted_layout_widgets/assorted_layout_widgets.dart';
 
 class BoardController {
+  String opponentEmailId;
+  int time;
+  String gameId;
   String color; // my game color, white or black
   String whichColorTurn = 'white'; //whose turn it is, black or white
   int swapsAvailable = 3;
@@ -22,22 +25,26 @@ class BoardController {
   Map<String, Square> pieceSquareMap = {}; // maintains Main square-piece map
   // late var refreshCallback;
   int tempCounter = -1;
-  var db = FirebaseFirestore.instance.collection('test').doc('game');
-  var snaps =
-      FirebaseFirestore.instance.collection('test').doc('game').snapshots();
+  var db;
+  var snaps;
   bool firstClick = false;
   int firebaseCounter = 1;
   Map<String, String> allAttacksPossible = {};
   var swapCounter = 3;
 
-  BoardController(this.color, this.mode) {
+  BoardController(
+      this.color, this.mode, this.time, this.gameId, this.opponentEmailId) {
+    db = FirebaseFirestore.instance.collection('games').doc(gameId);
+    snaps =
+        FirebaseFirestore.instance.collection('games').doc(gameId).snapshots();
     color = 'white';
     pieceSquareMap = mapPieceSquare();
     if (color == 'black') {
       pieceSquareMap = invertMapPieceSquare();
     }
     initializeMoves();
-    chessBoardUi = ChessBoardUi(color, pieceSquareMap, this, 300);
+    chessBoardUi =
+        ChessBoardUi(color, pieceSquareMap, this, time, opponentEmailId);
   }
 
   void delay(int milliseconds) async {
@@ -195,7 +202,7 @@ class BoardController {
   }
 
   void game2firebase() async {
-    var db = FirebaseFirestore.instance.collection('test').doc('game');
+    //var db = FirebaseFirestore.instance.collection('test').doc('game');
 
     var data = await db.get();
     for (int i = 0; i < 8; i++) {

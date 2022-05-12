@@ -20,7 +20,7 @@ class _PlayFriendState extends State<PlayFriend> {
         .collection('users')
         .doc(FirebaseAuth.instance.currentUser?.email)
         .get();
-    print(currentUserDetail.data());
+    //print(currentUserDetail.data());
     //map = currentUserDetail.data()!;
     return currentUserDetail.data();
   }
@@ -40,61 +40,18 @@ class _PlayFriendState extends State<PlayFriend> {
     AssetImage background =
     const AssetImage('assets/homepage/homeScreen_background.png');
 
-    Widget tile = Padding(
-      padding: EdgeInsets.fromLTRB(
-          width * 0.01, height * 0.01, width * 0.01, height * 0.01),
-      child: Container(
-        height: height * 0.09,
-        width: width * 0.275,
-        decoration: BoxDecoration(
-          //borderRadius: BorderRadius.circular(height * 0.005),
-          color: boardColor,
-        ),
-        child: Row(
-          children: [
-            Container(
-              height: height * 0.07,
-              width: height * 0.07,
-              margin: EdgeInsets.fromLTRB(height * 0.01, 0, height * 0.05, 0),
-              color: Colors.brown,
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    'Ashutosh Kumar',
-                    style: TextStyle(
-                      fontSize: height * 0.035,
-                      fontFamily: 'ol',
-                      color: boardBackground,
-                    ),
-                  ),
-                  Text(
-                    'ashutoshkumar@gmail.com | online',
-                    style: TextStyle(
-                      fontSize: height * 0.018,
-                      fontFamily: 'ol',
-                      color: boardBackground,
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-
 
     return FutureBuilder(
         future: getDetails(),
         builder: (context, snapshots) {
           if (snapshots.hasData) {
+            //print(snapshots.data);
+            List friendList = [];
             Map<String, dynamic> m = snapshots.data as Map<String, dynamic>;
-            Map<String, String> frnLst = m['friendList'];
-            List friendList = m['friendList'];
+            print(m);
+            m['friendList'].forEach((k, v) => friendList.add([k, v]));
+            print(friendList);
+
             return Scaffold(
               body: Stack(alignment: Alignment.center, children: [
                 Image(
@@ -126,60 +83,101 @@ class _PlayFriendState extends State<PlayFriend> {
                         height: height * 0.7,
                         child: SingleChildScrollView(
                           child: Column(children: [
-
-                            frnLst.forEach((key, value) {
-                              Padding(
-
-                                padding: EdgeInsets.fromLTRB(width * 0.01,
-                                    height * 0.01, width * 0.01, height * 0.01),
-                                child: Container(
-                                  height: height * 0.09,
-                                  width: width * 0.275,
-                                  decoration: BoxDecoration(
-                                    //borderRadius: BorderRadius.circular(height * 0.005),
-                                    color: boardColor,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: height * 0.07,
-                                        width: height * 0.07,
-                                        margin: EdgeInsets.fromLTRB(
-                                            height * 0.01, 0, height * 0.05, 0),
-                                        color: Colors.brown,
-                                      ),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              friendList[i],
-                                              style: TextStyle(
-                                                fontSize: height * 0.035,
-                                                fontFamily: 'ol',
-                                                color: boardBackground,
-                                              ),
-                                            ),
-                                            Text(
-                                              friendList[i] + ' | online',
-                                              style: TextStyle(
-                                                fontSize: height * 0.018,
-                                                fontFamily: 'ol',
-                                                color: boardBackground,
-                                              ),
-                                            ),
-                                          ],
+                            for (int i = 0; i < friendList.length; i++)
+                              GestureDetector(
+                                onTap: () async {
+                                  String? currentEmail =
+                                      FirebaseAuth.instance.currentUser?.email;
+                                  String gameMode = 'swappable';
+                                  String gameColor = 'black';
+                                  String time = '500';
+                                  String friendEmail = friendList[i][1];
+                                  String gameId =
+                                      currentEmail! + '_' + friendEmail;
+                                  await FirebaseFirestore.instance
+                                      .collection('games')
+                                      .doc(gameId)
+                                      .set({});
+                                  await FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc(friendEmail)
+                                      .update({
+                                    'challenges': m['username'] +
+                                        '-$gameMode' +
+                                        '-$gameColor' +
+                                        '-$time' +
+                                        '-$gameId' +
+                                        '-$currentEmail'
+                                  });
+                                },
+                                onPanStart: (e) {
+                                  setState(() {
+                                    color:
+                                    Colors.red;
+                                  });
+                                },
+                                onPanEnd: (e) {
+                                  setState(() {
+                                    color:
+                                    boardColor;
+                                  });
+                                },
+                                child: Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      width * 0.01,
+                                      height * 0.01,
+                                      width * 0.01,
+                                      height * 0.01),
+                                  child: Container(
+                                    height: height * 0.09,
+                                    width: width * 0.275,
+                                    decoration: BoxDecoration(
+                                      //borderRadius: BorderRadius.circular(height * 0.005),
+                                      color: boardColor,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: height * 0.07,
+                                          width: height * 0.07,
+                                          margin: EdgeInsets.fromLTRB(
+                                              height * 0.01,
+                                              0,
+                                              height * 0.05,
+                                              0),
+                                          color: Colors.brown,
                                         ),
-                                      )
-                                    ],
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                friendList[i][0],
+                                                style: TextStyle(
+                                                  fontSize: height * 0.030,
+                                                  fontFamily: 'ol',
+                                                  color: boardBackground,
+                                                ),
+                                              ),
+                                              Text(
+                                                friendList[i][1] + ' | online',
+                                                style: TextStyle(
+                                                  fontSize: height * 0.02,
+                                                  fontFamily: 'ol',
+                                                  color: boardBackground,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               )
-                            })
-
                           ]),
                         ),
                       ),
@@ -190,6 +188,7 @@ class _PlayFriendState extends State<PlayFriend> {
             );
           }
           else {
+            print('nope');
             return Container();
           }
         });

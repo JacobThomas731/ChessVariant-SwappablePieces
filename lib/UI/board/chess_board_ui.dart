@@ -1,5 +1,7 @@
 // chess board ui does here. Integrates with with chess_board.dart
 import 'package:chess_variant_swappable_pieces/timer/game_timer.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../board/square.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,7 @@ class ChessBoardUi extends StatefulWidget {
   final String color;
   Map<String, Square> pieceSquareMap;
   BoardController boardController;
+  String opponentEmailId;
   late Map<String, String> playerDetails;
   late var refresh;
   late var whiteTimer;
@@ -18,6 +21,7 @@ class ChessBoardUi extends StatefulWidget {
   late int time;
 
   ChessBoardUi(this.color, this.pieceSquareMap, this.boardController, this.time,
+      this.opponentEmailId,
       {Key? key})
       : super(key: key);
 
@@ -168,14 +172,32 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   height: height * 0.07,
                   //color: boardBackground,
                   alignment: Alignment.bottomCenter,
-                  child: Text(
-                    'rating: 1600',
-                    style: TextStyle(
-                      color: boardBackground,
-                      fontFamily: 'o',
-                      fontSize: height * 0.028,
-                    ),
-                  ),
+                  child: FutureBuilder(
+                      future: (FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(widget.opponentEmailId)
+                          .get() as dynamic),
+                      builder: (context, snapshots) {
+                        String oppRating = '';
+                        if (snapshots.hasData) {
+                          dynamic data = snapshots.data;
+
+                          if (data.data() != null) {
+                            Map<String, dynamic> m =
+                                (snapshots.data! as dynamic).data()
+                                    as Map<String, dynamic>;
+                            oppRating = m['rating'];
+                          }
+                        }
+                        return Text(
+                          'rating: $oppRating',
+                          style: TextStyle(
+                            color: boardBackground,
+                            fontFamily: 'o',
+                            fontSize: height * 0.028,
+                          ),
+                        );
+                      }),
                 ),
                 Container(
                     // player name
@@ -184,14 +206,32 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                     width: width * 0.175,
                     //color: boardBackground,
                     alignment: Alignment.center,
-                    child: Text(
-                      'Ashutosh Kumar',
-                      style: TextStyle(
-                        color: boardColor,
-                        fontFamily: 'ol',
-                        fontSize: height * 0.045,
-                      ),
-                    )),
+                    child: FutureBuilder(
+                        future: (FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(widget.opponentEmailId)
+                            .get() as dynamic),
+                        builder: (context, snapshots) {
+                          String oppUserName = '';
+                          if (snapshots.hasData) {
+                            dynamic data = snapshots.data;
+
+                            if (data.data() != null) {
+                              Map<String, dynamic> m =
+                                  (snapshots.data! as dynamic).data()
+                                      as Map<String, dynamic>;
+                              oppUserName = m['username'];
+                            }
+                          }
+                          return Text(
+                            oppUserName,
+                            style: TextStyle(
+                              color: boardColor,
+                              fontFamily: 'ol',
+                              fontSize: height * 0.045,
+                            ),
+                          );
+                        })),
                 Container(
                   // 10
                   height: height * (0.215 - 0.205),
@@ -216,28 +256,64 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                     height: height * 0.085,
                     //color: boardBackground,
                     alignment: Alignment.center,
-                    child: Text(
-                      'Jacob Thomas',
-                      style: TextStyle(
-                        color: const Color(0xff8e6d58),
-                        fontFamily: 'ol',
-                        fontSize: height * 0.045,
-                      ),
-                    )),
+                    child: FutureBuilder(
+                        future: (FirebaseFirestore.instance
+                            .collection('users')
+                            .doc(FirebaseAuth.instance.currentUser?.email)
+                            .get() as dynamic),
+                        builder: (context, snapshots) {
+                          String ownUserName = '';
+                          if (snapshots.hasData) {
+                            dynamic data = snapshots.data;
+
+                            if (data.data() != null) {
+                              Map<String, dynamic> m =
+                                  (snapshots.data! as dynamic).data()
+                                      as Map<String, dynamic>;
+                              ownUserName = m['username'];
+                            }
+                          }
+                          return Text(
+                            ownUserName,
+                            style: TextStyle(
+                              color: const Color(0xff8e6d58),
+                              fontFamily: 'ol',
+                              fontSize: height * 0.045,
+                            ),
+                          );
+                        })),
                 Container(
                   // rating
                   // 7
                   height: height * 0.07,
                   //color: boardBackground,
                   alignment: Alignment.topCenter,
-                  child: Text(
-                    'rating: 1830',
-                    style: TextStyle(
-                      color: boardBackground,
-                      fontFamily: 'o',
-                      fontSize: height * 0.027,
-                    ),
-                  ),
+                  child: FutureBuilder(
+                      future: (FirebaseFirestore.instance
+                          .collection('users')
+                          .doc(FirebaseAuth.instance.currentUser?.email)
+                          .get() as dynamic),
+                      builder: (context, snapshots) {
+                        String ownRating = '';
+                        if (snapshots.hasData) {
+                          dynamic data = snapshots.data;
+
+                          if (data.data() != null) {
+                            Map<String, dynamic> m =
+                                (snapshots.data! as dynamic).data()
+                                    as Map<String, dynamic>;
+                            ownRating = m['rating'];
+                          }
+                        }
+                        return Text(
+                          'rating: $ownRating',
+                          style: TextStyle(
+                            color: boardBackground,
+                            fontFamily: 'o',
+                            fontSize: height * 0.027,
+                          ),
+                        );
+                      }),
                 ),
                 Container(
                   // 6

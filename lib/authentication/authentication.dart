@@ -24,11 +24,13 @@ class Authentication {
         "gamesPlayed": "0",
         "onlineStatus": "online",
         "rating": "1500",
-        "username": username
+        "username": username,
+        "challenges": "",
+        "challengeAccepted": "declined"
       };
       var emailRef = FirebaseAuth.instance.currentUser?.email;
       var ref = FirebaseFirestore.instance.collection('users').doc(emailRef);
-      print(ref.set(myJSONObj));
+      await ref.set(myJSONObj);
     } catch (e) {
       print(e);
     }
@@ -37,6 +39,17 @@ class Authentication {
   signInEmailPass(String username, String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      var db = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.email)
+          .get();
+      Map<String, dynamic> m = db.data() as Map<String, dynamic>;
+      m['online'] = 'online';
+      print(m);
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.email)
+          .update(m);
     } catch (e) {
       print(e);
     }
@@ -44,6 +57,17 @@ class Authentication {
 
   signOut() async {
     try {
+      var db = await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.email)
+          .get();
+      Map<String, dynamic> m =
+          (db.data()?["onlineStatus"] = "offline") as Map<String, dynamic>;
+      print(m);
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser?.email)
+          .update(m);
       await _auth.signOut();
     } catch (e) {
       print(e);
