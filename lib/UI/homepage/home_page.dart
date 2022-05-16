@@ -108,14 +108,15 @@ class _HomePageState extends State<HomePage> {
                                   challengesAccepted.split('-')[4];
                               gameColor =
                                   gameColor == 'black' ? 'white' : 'black';
-                              Navigator.of(context)
-                                  .pushNamed('boardControllerArgs', arguments: [
-                                gameColor,
-                                gameMode,
-                                gameTime,
-                                gameId,
-                                oppEmailId
-                              ]);
+                              Navigator.of(context).pushNamed(
+                                  '/boardControllerArgs',
+                                  arguments: [
+                                    gameColor,
+                                    gameMode,
+                                    gameTime,
+                                    gameId,
+                                    oppEmailId
+                                  ]);
                             }
                             String challenges = m['challenges'];
                             print(challenges);
@@ -178,7 +179,7 @@ class _HomePageState extends State<HomePage> {
                                           });
 
                                           Navigator.of(context).pushNamed(
-                                              'boardControllerArgs',
+                                              '/boardControllerArgs',
                                               arguments: [
                                                 gameColor,
                                                 gameMode,
