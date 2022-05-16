@@ -91,8 +91,8 @@ class _HomePageState extends State<HomePage> {
                                 (snapshots.data! as dynamic).data()
                                     as Map<String, dynamic>;
                             String challengesAccepted = m['challengeAccepted'];
-                            if (challengesAccepted.isEmpty ||
-                                challengesAccepted == 'declined') {
+                            if (challengesAccepted != '' &&
+                                challengesAccepted != 'declined') {
                               FirebaseFirestore.instance
                                   .collection('users')
                                   .doc(FirebaseAuth.instance.currentUser?.email)
