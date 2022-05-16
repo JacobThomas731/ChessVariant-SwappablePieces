@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                               FirebaseFirestore.instance
                                   .collection('users')
                                   .doc(FirebaseAuth.instance.currentUser?.email)
-                                  .update({'challenges': ''});
+                                  .update({'challengesAccepted': ''});
                               String gameId = challengesAccepted.split('-')[0];
                               String gameColor =
                                   challengesAccepted.split('-')[1];

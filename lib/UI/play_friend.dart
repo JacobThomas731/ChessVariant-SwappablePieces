@@ -91,7 +91,7 @@ class _PlayFriendState extends State<PlayFriend> {
                                   String gameMode = 'swappable';
                                   String gameColor = 'black';
                                   String time = '500';
-                                  String friendEmail = friendList[i][1];
+                                  String friendEmail = friendList[i][0];
                                   String gameId =
                                       currentEmail! + '_' + friendEmail;
                                   await FirebaseFirestore.instance
