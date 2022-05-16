@@ -20,13 +20,13 @@ class Authentication {
           email: email, password: password);
       var myJSONObj = {
         "email": email,
-        "friendList": [],
+        "friendList": {},
         "gamesPlayed": "0",
         "onlineStatus": "online",
         "rating": "1500",
         "username": username,
         "challenges": "",
-        "challengeAccepted": "declined"
+        "challengeAccepted": "" //empty or declined
       };
       var emailRef = FirebaseAuth.instance.currentUser?.email;
       var ref = FirebaseFirestore.instance.collection('users').doc(emailRef);

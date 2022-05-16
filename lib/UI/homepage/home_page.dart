@@ -90,24 +90,54 @@ class _HomePageState extends State<HomePage> {
                             Map<String, dynamic> m =
                                 (snapshots.data! as dynamic).data()
                                     as Map<String, dynamic>;
+                            String challengesAccepted = m['challengeAccepted'];
+                            if (challengesAccepted.isEmpty ||
+                                challengesAccepted == 'declined') {
+                              FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(FirebaseAuth.instance.currentUser?.email)
+                                  .update({'challenges': ''});
+                              String gameId = challengesAccepted.split('-')[0];
+                              String gameColor =
+                                  challengesAccepted.split('-')[1];
+                              String gameMode =
+                                  challengesAccepted.split('-')[2];
+                              String gameTime =
+                                  challengesAccepted.split('-')[3];
+                              String oppEmailId =
+                                  challengesAccepted.split('-')[4];
+                              gameColor =
+                                  gameColor == 'black' ? 'white' : 'black';
+                              Navigator.of(context)
+                                  .pushNamed('boardControllerArgs', arguments: [
+                                gameColor,
+                                gameMode,
+                                gameTime,
+                                gameId,
+                                oppEmailId
+                              ]);
+                            }
                             String challenges = m['challenges'];
                             print(challenges);
-                            String challengerName = challenges.split('-')[0];
-                            String gameMode = challenges.split('-')[1];
-                            String gameColor = challenges.split('-')[2];
-                            String gameTime = challenges.split('-')[3];
-                            String gameId = challenges.split('-')[4];
-                            String opponentEmailId = challenges.split('-')[5];
-                            return Row(children: [
-                              Container(
-                                height: screenHeight * 0.1,
-                                width: screenWidth * 0.140,
-                                color: darkBrown,
-                                padding: EdgeInsets.fromLTRB(
-                                    screenWidth * 0.004, 0, 0, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
+                            if (challenges.isNotEmpty) {
+                              String challengerName = challenges.split('-')[0];
+                              String gameMode = challenges.split('-')[1];
+                              String gameColor = challenges.split('-')[2];
+                              String gameTime = challenges.split('-')[3];
+                              String gameId = challenges.split('-')[4];
+                              String opponentEmailId = challenges.split('-')[5];
+
+                              return Row(children: [
+                                Container(
+                                  height: screenHeight * 0.1,
+                                  width: screenWidth * 0.140,
+                                  color: darkBrown,
+                                  padding: EdgeInsets.fromLTRB(
+                                      screenWidth * 0.004, 0, 0, 0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
@@ -135,28 +165,28 @@ class _HomePageState extends State<HomePage> {
                                     GestureDetector(
                                       onTap: () {
                                         String? currentEmail = FirebaseAuth
-                                            .instance.currentUser?.email;
-                                        FirebaseFirestore.instance
-                                            .collection('users')
-                                            .doc(opponentEmailId)
-                                            .update({
-                                          'challengeAccepted':
-                                              '$currentEmail-$gameColor-$gameMode-$gameTime-$gameTime'
-                                        });
-                                        Navigator.of(context).pushNamed(
-                                            'boardControllerArgs',
-                                            arguments: [
-                                              gameColor,
-                                              gameMode,
-                                              gameTime,
-                                              gameId,
-                                              opponentEmailId
-                                            ]);
-                                        FirebaseFirestore.instance
-                                            .collection('users')
-                                            .doc(currentEmail)
-                                            .update({'challenges': ''});
-                                      },
+                                              .instance.currentUser?.email;
+                                          FirebaseFirestore.instance
+                                              .collection('users')
+                                              .doc(opponentEmailId)
+                                              .update({
+                                            'challengeAccepted':
+                                                '$gameId-$gameColor-$gameMode-$gameTime-$currentEmail'
+                                            //'$currentEmail-$gameColor-$gameMode-$gameTime-$gameTime'
+                                            ,
+                                            'challenges': ''
+                                          });
+
+                                          Navigator.of(context).pushNamed(
+                                              'boardControllerArgs',
+                                              arguments: [
+                                                gameColor,
+                                                gameMode,
+                                                gameTime,
+                                                gameId,
+                                                opponentEmailId
+                                              ]);
+                                        },
                                       child: Container(
                                         height: screenHeight * 0.045,
                                         width: screenWidth * 0.075,
@@ -183,17 +213,20 @@ class _HomePageState extends State<HomePage> {
                                       child: Center(
                                         child: Text(
                                           'Decline',
-                                          style: TextStyle(
-                                              fontSize: screenHeight * 0.02,
-                                              fontFamily: 'ol',
-                                              color: lightBrown),
+                                            style: TextStyle(
+                                                fontSize: screenHeight * 0.02,
+                                                fontFamily: 'ol',
+                                                color: lightBrown),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ]);
+                                    ],
+                                  ),
+                                )
+                              ]);
+                            } else {
+                              return Container();
+                            }
                           } else {
                             return Container();
                           }
