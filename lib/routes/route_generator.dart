@@ -24,7 +24,7 @@ class RouteGenerator {
         List args = arguments as List;
         return MaterialPageRoute(
             builder: (_) =>
-                BoardController(args[0], args[1], args[2], args[3], args[4])
+                BoardController(args[0], args[1], args[2] as int , args[3], args[4])
                     .getChessBoardUiObj());
       case '/homepage':
         return MaterialPageRoute(builder: (_) => HomePage());
