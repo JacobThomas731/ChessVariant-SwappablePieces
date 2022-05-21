@@ -94,10 +94,10 @@ class _PlayFriendState extends State<PlayFriend> {
                                   String friendEmail = friendList[i][0];
                                   String gameId =
                                       currentEmail! + '_' + friendEmail;
-                                  await FirebaseFirestore.instance
-                                      .collection('games')
-                                      .doc(gameId)
-                                      .set({});
+                                  // await FirebaseFirestore.instance
+                                  //     .collection('games')
+                                  //     .doc(gameId)
+                                  //     .set({});
                                   await FirebaseFirestore.instance
                                       .collection('users')
                                       .doc(friendEmail)

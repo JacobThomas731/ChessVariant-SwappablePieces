@@ -27,21 +27,6 @@ class _HomePageState extends State<HomePage> {
   Color darkBrown = const Color(0x6634211e);
   String username = "abc";
 Map<String, dynamic> m = {};
-  String challengeListener() {
-    String? email = FirebaseAuth.instance.currentUser?.email;
-    print(email);
-    String challenger = '';
-    var snaps =
-        FirebaseFirestore.instance.collection('users').doc(email).snapshots();
-    Map<String, dynamic>? data;
-    snaps.listen((event) {
-      data = event.data();
-      if (data!['challenges'] != "") {
-        challenger = data!['challenges'] as String;
-      }
-    });
-    return challenger;
-  }
 
   @override
   void initState() {
@@ -173,34 +158,45 @@ Map<String, dynamic> m = {};
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      challengerName,
-                                      style: TextStyle(
-                                          color: lightBrown,
-                                          fontFamily: 'ol',
-                                          fontSize: screenHeight * 0.03),
-                                    ),
-                                    Text(
-                                      '$gameMode | $gameColor | $gameTime min',
-                                      style: TextStyle(
-                                          color: lightBrown,
-                                          fontFamily: 'ol',
-                                          fontSize: screenHeight * 0.02),
-                                    )
-                                  ],
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        challengerName,
+                                        style: TextStyle(
+                                            color: lightBrown,
+                                            fontFamily: 'ol',
+                                            fontSize: screenHeight * 0.03),
+                                      ),
+                                      Text(
+                                        '$gameMode | $gameColor | $gameTime min',
+                                        style: TextStyle(
+                                            color: lightBrown,
+                                            fontFamily: 'ol',
+                                            fontSize: screenHeight * 0.02),
+                                      )
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                    screenWidth * 0.004, 0, 0, 0),
-                                child: Column(
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        String? currentEmail = FirebaseAuth
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      screenWidth * 0.004, 0, 0, 0),
+                                  child: Column(
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () async {
+                                          String? currentEmail = FirebaseAuth
                                               .instance.currentUser?.email;
+                                          // gameMode = 'swappable';
+                                          //String gameColor = 'black';
+                                          //String time = '500';
+                                          //String friendEmail = friendList[i][0];
+                                          //String gameId =
+                                          //currentEmail! + '_' + friendEmail;
+                                          await FirebaseFirestore.instance
+                                              .collection('games')
+                                              .doc(gameId)
+                                              .set({});
+
                                           FirebaseFirestore.instance
                                               .collection('users')
                                               .doc(opponentEmailId)
@@ -222,32 +218,32 @@ Map<String, dynamic> m = {};
                                                 opponentEmailId
                                               ]);
                                         },
-                                      child: Container(
+                                        child: Container(
+                                          height: screenHeight * 0.045,
+                                          width: screenWidth * 0.075,
+                                          color: darkBrown,
+                                          child: Center(
+                                            child: Text(
+                                              'Accept',
+                                              style: TextStyle(
+                                                  fontSize: screenHeight * 0.02,
+                                                  fontFamily: 'ol',
+                                                  color: lightBrown),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        height: screenHeight * 0.01,
+                                        width: screenWidth * 0.075,
+                                      ),
+                                      Container(
                                         height: screenHeight * 0.045,
                                         width: screenWidth * 0.075,
                                         color: darkBrown,
                                         child: Center(
                                           child: Text(
-                                            'Accept',
-                                            style: TextStyle(
-                                                fontSize: screenHeight * 0.02,
-                                                fontFamily: 'ol',
-                                                color: lightBrown),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Container(
-                                      height: screenHeight * 0.01,
-                                      width: screenWidth * 0.075,
-                                    ),
-                                    Container(
-                                      height: screenHeight * 0.045,
-                                      width: screenWidth * 0.075,
-                                      color: darkBrown,
-                                      child: Center(
-                                        child: Text(
-                                          'Decline',
+                                            'Decline',
                                             style: TextStyle(
                                                 fontSize: screenHeight * 0.02,
                                                 fontFamily: 'ol',
