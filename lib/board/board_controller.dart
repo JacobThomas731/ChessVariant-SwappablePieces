@@ -37,7 +37,7 @@ class BoardController {
     db = FirebaseFirestore.instance.collection('games').doc(gameId);
     snaps =
         FirebaseFirestore.instance.collection('games').doc(gameId).snapshots();
-    color = 'white';
+    //color = 'white';
     pieceSquareMap = mapPieceSquare();
     if (color == 'black') {
       pieceSquareMap = invertMapPieceSquare();
@@ -54,24 +54,34 @@ class BoardController {
 
   void initializeMoves() async {
     var data = await db.get();
-    for (int i = 0; i < 8; i++) {
-      for (int j = 0; j < 8; j++) {
-        String currentKey = i.toString() + j.toString();
-        if (color == 'white') {
-          if (data[currentKey] != pieceSquareMap[currentKey]?.piece) {
-            await db.update({currentKey: pieceSquareMap[currentKey]?.piece});
-          }
-        } else {
-          String currentInvertedKey =
-              ((7 - i)).toString() + ((7 - j)).toString();
-          if (data[currentKey] != pieceSquareMap[currentInvertedKey]?.piece) {
-            await db.update(
-                {currentKey: pieceSquareMap[currentInvertedKey]?.piece});
-          }
-        }
-      }
+    if (color == 'white') {
+      // for (int i = 0; i < 8; i++) {
+      //   for (int j = 0; j < 8; j++) {
+      //     String currentKey = i.toString() + j.toString();
+      //     await db.update({currentKey: pieceSquareMap[currentKey]?.piece});
+      //   }
+      //   }
+      await db.add(pieceSquareMap);
     }
-    firebase2game();
+
+    // for (int i = 0; i < 8; i++) {
+    //   for (int j = 0; j < 8; j++) {
+    //     String currentKey = i.toString() + j.toString();
+    //     if (color == 'white') {
+    //       if (data[currentKey] != pieceSquareMap[currentKey]?.piece) {
+    //         await db.update({currentKey: pieceSquareMap[currentKey]?.piece});
+    //       }
+    //     } else {
+    //       String currentInvertedKey =
+    //           ((7 - i)).toString() + ((7 - j)).toString();
+    //       if (data[currentKey] != pieceSquareMap[currentInvertedKey]?.piece) {
+    //         await db.update(
+    //             {currentKey: pieceSquareMap[currentInvertedKey]?.piece});
+    //       }
+    //     }
+    //   }
+    // }
+    await firebase2game();
   }
 
   ChessBoardUi getChessBoardUiObj() {
@@ -86,6 +96,12 @@ class BoardController {
   }
 
   bool onPressed(Square square) {
+    if (firstClick == false) {
+      if (color == 'black') {
+        //firebase2game();
+      }
+      firstClick = true;
+    }
     bool changed = false;
     if (whichColorTurn == color) {
       // then only proceed with the accepting the clicks
@@ -154,8 +170,11 @@ class BoardController {
     return changed;
   }
 
-  void firebase2game() {
+  Future<void> firebase2game() async {
     //toggle the turnColor on listening
+    if (color == 'black') {
+      await Future.delayed(const Duration(milliseconds: 4000));
+    }
     snaps.listen((event) {
       print('listened');
       if (tempCounter != -1) {

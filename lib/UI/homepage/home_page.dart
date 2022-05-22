@@ -207,7 +207,7 @@ Map<String, dynamic> m = {};
                                             ,
                                             'challenges': ''
                                           });
-
+                                          //gameColor = gameColor == 'white'? 'black':'white';
                                           Navigator.of(context).pushNamed(
                                               '/boardControllerArgs',
                                               arguments: [
