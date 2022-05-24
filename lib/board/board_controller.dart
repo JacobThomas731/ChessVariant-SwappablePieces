@@ -52,7 +52,11 @@ class BoardController {
     await Future.delayed(const Duration(seconds: 5), () {});
   }
 
-  void initializeMoves() async {
+  void start() async {
+    await initializeMoves();
+  }
+
+  Future<void> initializeMoves() async {
     Map<String, String>? tempMap;
     print('started');
     // if (color == 'white') {
@@ -173,11 +177,7 @@ class BoardController {
 
   Future<void> firebase2game() async {
     //toggle the turnColor on listening
-    if (color == 'black') {
-      await Future.delayed(const Duration(seconds: 10), () {
-        print('secs');
-      });
-    }
+
     snaps.listen((event) {
       print('listened');
       if (tempCounter != -1) {
