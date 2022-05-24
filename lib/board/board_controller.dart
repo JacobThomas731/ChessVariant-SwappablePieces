@@ -53,34 +53,35 @@ class BoardController {
   }
 
   void initializeMoves() async {
-    var data = await db.get();
-    if (color == 'white') {
-      // for (int i = 0; i < 8; i++) {
-      //   for (int j = 0; j < 8; j++) {
-      //     String currentKey = i.toString() + j.toString();
-      //     await db.update({currentKey: pieceSquareMap[currentKey]?.piece});
-      //   }
-      //   }
-      await db.add(pieceSquareMap);
-    }
-
-    // for (int i = 0; i < 8; i++) {
-    //   for (int j = 0; j < 8; j++) {
-    //     String currentKey = i.toString() + j.toString();
-    //     if (color == 'white') {
-    //       if (data[currentKey] != pieceSquareMap[currentKey]?.piece) {
-    //         await db.update({currentKey: pieceSquareMap[currentKey]?.piece});
-    //       }
-    //     } else {
-    //       String currentInvertedKey =
-    //           ((7 - i)).toString() + ((7 - j)).toString();
-    //       if (data[currentKey] != pieceSquareMap[currentInvertedKey]?.piece) {
-    //         await db.update(
-    //             {currentKey: pieceSquareMap[currentInvertedKey]?.piece});
-    //       }
+    Map<String, String>? tempMap;
+    print('started');
+    // if (color == 'white') {
+    //   for (int i = 0; i < 8; i++) {
+    //     for (int j = 0; j < 8; j++) {
+    //       String currentKey = i.toString() + j.toString();
+    //
+    //       tempMap![currentKey] = pieceSquareMap[currentKey]!.piece;
+    //
+    //       //await db.update({currentKey: pieceSquareMap[currentKey]?.piece});
     //     }
-    //   }
+    //     }
+    //   print('I am here $tempMap');
+    //   await db.set(tempMap);
     // }
+
+    for (int i = 0; i < 8; i++) {
+      for (int j = 0; j < 8; j++) {
+        String currentKey = i.toString() + j.toString();
+        if (color == 'white') {
+          await db.update({currentKey: pieceSquareMap[currentKey]?.piece});
+        } else {
+          String currentInvertedKey =
+              ((7 - i)).toString() + ((7 - j)).toString();
+          await db
+              .update({currentKey: pieceSquareMap[currentInvertedKey]?.piece});
+        }
+      }
+    }
     await firebase2game();
   }
 
@@ -173,7 +174,9 @@ class BoardController {
   Future<void> firebase2game() async {
     //toggle the turnColor on listening
     if (color == 'black') {
-      await Future.delayed(const Duration(milliseconds: 4000));
+      await Future.delayed(const Duration(seconds: 10), () {
+        print('secs');
+      });
     }
     snaps.listen((event) {
       print('listened');
