@@ -126,7 +126,7 @@ Map<String, dynamic> m = {};
                                   challengesAccepted.split('-')[4];
                               gameColor =
                                   gameColor == 'black' ? 'white' : 'black';
-                              Navigator.of(context).pushNamed(
+                               Navigator.of(context).pushNamed(
                                   '/boardControllerArgs',
                                   arguments: [
                                     gameColor,
@@ -288,11 +288,12 @@ Map<String, dynamic> m = {};
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: const [
                             MenuButton(
-                                text: "Challenge Anyone", pageRoute: '/board'),
+                                text: "Check Lobby", pageRoute: '/board'),
                             MenuButton(
                                 text: "Challenge Friend",
-                                pageRoute: '/boardController'),
-                            MenuButton(text: "Check Lobby", pageRoute: '/auth'),
+                                pageRoute: '/playFriend'),
+                            MenuButton(
+                                text: "Game Rules", pageRoute: '/gamerules'),
                             MenuButton(
                                 text: "Settings", pageRoute: '/playFriend'),
                             MenuButton(text: "Quit Game", pageRoute: '/board')

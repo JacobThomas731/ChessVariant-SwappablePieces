@@ -178,7 +178,6 @@ class BoardController {
 
   Future<void> firebase2game() async {
     //toggle the turnColor on listening
-
     snaps.listen((event) {
       print('listened');
       if (tempCounter != -1) {
@@ -677,7 +676,7 @@ class BoardController {
     suggestionList.clear();
   }
 
-  void ckeckPrint() {
+  void checkPrint() {
     allAttackable('black');
     allAttackable('white');
     // print(allAttacksPossible);
