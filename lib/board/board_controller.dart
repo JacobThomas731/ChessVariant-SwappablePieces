@@ -42,7 +42,8 @@ class BoardController {
     if (color == 'black') {
       pieceSquareMap = invertMapPieceSquare();
     }
-    initializeMoves();
+    //initializeMoves();
+    start();
     chessBoardUi =
         ChessBoardUi(color, pieceSquareMap, this, time, opponentEmailId);
   }
@@ -52,7 +53,7 @@ class BoardController {
     await Future.delayed(const Duration(seconds: 5), () {});
   }
 
-  void start() async {
+  Future<void> start() async {
     await initializeMoves();
   }
 
