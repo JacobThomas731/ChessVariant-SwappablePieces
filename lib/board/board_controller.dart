@@ -195,6 +195,9 @@ class BoardController {
               pieceSquareMap[currentKey]
                   ?.setPiece(event.data()![currentKey] as String);
             }
+
+            // check for checkmate
+            findCheck(pieceSquareMap[currentKey]);
           } else {
             String currentInvertedKey = (7 - i).toString() + (7 - j).toString();
             if (pieceSquareMap[currentKey]?.piece !=
@@ -515,6 +518,13 @@ class BoardController {
     bishopSuggestion(clickedPiece);
   }
 
+  Map<String, String> queenSuggestion2(Square? square) {
+    Map<String, String> suggestionList2 = {};
+    suggestionList2.addAll(rookSuggestion2(square));
+    suggestionList2.addAll(bishopSuggestion2(square));
+    return suggestionList2;
+  }
+
   void knightSuggestion(clickedPiece) {
     var pos = positionChange(clickedPiece.position, 1, 2);
     if (pieceSquareMap[pos]?.piece == 'empty') {
@@ -601,6 +611,44 @@ class BoardController {
     }
   }
 
+  Map<String, String> bishopSuggestion2(square) {
+    Map<String, String> suggestionList2 = {};
+    var clickedPiece = pieceSquareMap[square.position];
+    var pos = positionChange(clickedPiece?.position, 1, 1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList2[pos] = 'movable';
+      pos = positionChange(pos, 1, 1);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece?.piece[0]) {
+      suggestionList2[pos] = 'capturable';
+    }
+    pos = positionChange(clickedPiece?.position, 1, -1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList2[pos] = 'movable';
+      pos = positionChange(pos, 1, -1);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece?.piece[0]) {
+      suggestionList2[pos] = 'capturable';
+    }
+    pos = positionChange(clickedPiece?.position, -1, 1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList2[pos] = 'movable';
+      pos = positionChange(pos, -1, 1);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece?.piece[0]) {
+      suggestionList2[pos] = 'capturable';
+    }
+    pos = positionChange(clickedPiece?.position, -1, -1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList2[pos] = 'movable';
+      pos = positionChange(pos, -1, -1);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece?.piece[0]) {
+      suggestionList2[pos] = 'capturable';
+    }
+    return suggestionList2;
+  }
+
   void rookSuggestion(clickedPiece) {
     var pos = positionChange(clickedPiece.position, 1, 0);
     while (pieceSquareMap[pos]?.piece == 'empty') {
@@ -634,6 +682,44 @@ class BoardController {
     if (pieceSquareMap[pos]?.piece[0] != clickedPiece.piece[0]) {
       suggestionList[pos] = 'capturable';
     }
+  }
+
+  Map<String, String> rookSuggestion2(square) {
+    Map<String, String> suggestionList2 = {};
+    var clickedPiece = pieceSquareMap[square.position];
+    var pos = positionChange(clickedPiece?.position, 1, 0);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList2[pos] = 'movable';
+      pos = positionChange(pos, 1, 0);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece?.piece[0]) {
+      suggestionList2[pos] = 'capturable';
+    }
+    pos = positionChange(clickedPiece?.position, -1, 0);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList2[pos] = 'movable';
+      pos = positionChange(pos, -1, 0);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece?.piece[0]) {
+      suggestionList2[pos] = 'capturable';
+    }
+    pos = positionChange(clickedPiece?.position, 0, 1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList2[pos] = 'movable';
+      pos = positionChange(pos, 0, 1);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece?.piece[0]) {
+      suggestionList2[pos] = 'capturable';
+    }
+    pos = positionChange(clickedPiece?.position, 0, -1);
+    while (pieceSquareMap[pos]?.piece == 'empty') {
+      suggestionList2[pos] = 'movable';
+      pos = positionChange(pos, 0, -1);
+    }
+    if (pieceSquareMap[pos]?.piece[0] != clickedPiece?.piece[0]) {
+      suggestionList2[pos] = 'capturable';
+    }
+    return suggestionList2;
   }
 
   String positionChange(pos, r, c) {
@@ -710,6 +796,48 @@ class BoardController {
           }
         }
       }
+    }
+  }
+
+  void findCheck(Square? square) {
+    if (square != null) {
+      if (square.piece[1] == 'Q') {
+        queenSuggestion2(square).forEach((key, value) {
+          if (value == 'capturable' && pieceSquareMap[key]?.piece[1] == 'K') {
+            print('check');
+            return;
+          }
+        });
+      } else if (square.piece[1] == 'R') {
+        rookSuggestion2(square).forEach((key, value) {
+          if (value == 'capturable' && pieceSquareMap[key]?.piece[1] == 'K') {
+            print('check');
+            return;
+          }
+        });
+      } else if (square.piece[1] == 'B') {
+        bishopSuggestion2(square).forEach((key, value) {
+          if (value == 'capturable' && pieceSquareMap[key]?.piece[1] == 'K') {
+            print('check');
+            return;
+          }
+        });
+      }
+      //  else if (square.piece[1] == 'N') {
+      //   knightSuggestion2(square).forEach((key, value) {
+      //     if (value == 'capturable' && pieceSquareMap[key]?.piece[1] == 'K') {
+      //       print('check');
+      //       return;
+      //     }
+      //   });
+      // } else if (square.piece[1] == 'P') {
+      //   dPawnSuggestion2(square).forEach((key, value) {
+      //     if (value == 'capturable' && pieceSquareMap[key]?.piece[1] == 'K') {
+      //       print('check');
+      //       return;
+      //     }
+      //   });
+      // }
     }
   }
 }
