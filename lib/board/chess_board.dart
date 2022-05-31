@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:timer_builder/timer_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class Board extends StatefulWidget {
   const Board({Key? key}) : super(key: key);
 

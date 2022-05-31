@@ -66,7 +66,7 @@ class _SignInRegisterButtonsState extends State<SignInRegisterButtons> {
           decoration: BoxDecoration(
               color: butUnhovered,
               borderRadius:
-              BorderRadius.all(Radius.circular(screenHeight * 0.002)),
+                  BorderRadius.all(Radius.circular(screenHeight * 0.002)),
               border: Border.all(color: theme2, width: screenHeight * 0.002)),
           child: Text(
             text,

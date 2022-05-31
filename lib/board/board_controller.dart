@@ -115,14 +115,17 @@ class BoardController {
       if (color == 'black') {
         square.position = getInvertedPositions(square.position);
       }
-      // print('Hi');
-      // print(square.position);
+
       if (suggestionShowing) {
         if (square.position != clickedPiece.position &&
             suggestionList.containsKey(square.position) &&
             clickedPiece.pieceSide == whichColorTurn) {
           if (suggestionList[square.position] == 'movable' ||
               suggestionList[square.position] == 'swappable') {
+            if (suggestionList[square.position] == 'swappable') {
+              swapCounter--;
+              chessBoardUi.decrementSwap();
+            }
             if (color == 'black') {
               db.update({
                 getInvertedPositions(square.position): clickedPiece.piece,
@@ -162,7 +165,6 @@ class BoardController {
 
           makeSuggestion();
           suggestionList.addAll({square.position: 'self'});
-          print(suggestionList);
           suggestionShowing = suggestionShowing ? false : true;
         }
       }
@@ -194,6 +196,7 @@ class BoardController {
                 event.data()![currentKey] as String) {
               pieceSquareMap[currentKey]
                   ?.setPiece(event.data()![currentKey] as String);
+              findCheck(pieceSquareMap![currentKey]);
             }
 
             // check for checkmate

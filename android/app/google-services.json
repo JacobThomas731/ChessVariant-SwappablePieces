@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "583070078948",
+    "project_id": "multiplayer-chess-variant",
+    "storage_bucket": "multiplayer-chess-variant.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:583070078948:android:cb69567dda25b37ce759f1",
+        "android_client_info": {
+          "package_name": "com.example.chess_variant_swappable_pieces"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "583070078948-bndici8ujuns5rtkghbv2jm1jc5qvqmu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDmluvjVi3VNgbB0L_wkDs0O6ewYSP8mGU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "583070078948-bndici8ujuns5rtkghbv2jm1jc5qvqmu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

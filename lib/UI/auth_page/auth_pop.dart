@@ -1,6 +1,7 @@
 import 'package:chess_variant_swappable_pieces/UI/auth_page/custom_text_field.dart';
 import 'package:chess_variant_swappable_pieces/UI/auth_page/signin_register_buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_io/io.dart' show Platform;
 
 class AuthPop extends StatefulWidget {
   const AuthPop({Key? key}) : super(key: key);
@@ -28,7 +29,8 @@ class _AuthPopState extends State<AuthPop> {
             border: Border.all(color: theme1, width: screenHeight * 0.002),
           ),
 
-          height: screenHeight / 1.95,
+          //height: screenHeight / 1.95,
+          height: Platform.isWindows ? screenHeight / 1.95 : double.infinity,
           width: screenWidth / 2.1,
           child: Scaffold(
             backgroundColor: theme1,

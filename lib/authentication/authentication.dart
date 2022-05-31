@@ -45,14 +45,11 @@ class Authentication {
           .get();
       Map<String, dynamic> m = db.data() as Map<String, dynamic>;
       m['online'] = 'online';
-      print(m);
       await FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser?.email)
           .update(m);
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 
   signOut() async {
@@ -63,14 +60,11 @@ class Authentication {
           .get();
       Map<String, dynamic> m =
           (db.data()?["onlineStatus"] = "offline") as Map<String, dynamic>;
-      print(m);
       await FirebaseFirestore.instance
           .collection('users')
           .doc(FirebaseAuth.instance.currentUser?.email)
           .update(m);
       await _auth.signOut();
-    } catch (e) {
-      print(e);
-    }
+    } catch (e) {}
   }
 }

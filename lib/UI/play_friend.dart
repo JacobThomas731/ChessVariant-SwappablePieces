@@ -27,19 +27,12 @@ class _PlayFriendState extends State<PlayFriend> {
 
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery
-        .of(context)
-        .size
-        .height;
-    double width = MediaQuery
-        .of(context)
-        .size
-        .width;
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     Color boardBackground = const Color(0xff3f2c2d);
     Color boardColor = const Color(0xcc8e6d58);
     AssetImage background =
-    const AssetImage('assets/homepage/homeScreen_background.png');
-
+        const AssetImage('assets/homepage/homeScreen_background.png');
 
     return FutureBuilder(
         future: getDetails(),
@@ -186,8 +179,7 @@ class _PlayFriendState extends State<PlayFriend> {
                 ),
               ]),
             );
-          }
-          else {
+          } else {
             print('nope');
             return Container();
           }

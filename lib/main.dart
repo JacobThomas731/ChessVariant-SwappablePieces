@@ -13,13 +13,15 @@ Future main() async {
   if (Platform.isAndroid || Platform.isIOS) {
     await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.landscapeLeft]);
+    await Firebase.initializeApp();
+  } else {
+    await Firebase.initializeApp(
+        options: const FirebaseOptions(
+            apiKey: "AIzaSyA2iqm-qa5oR46U2Po9JvirazRGe9QG8pE",
+            appId: "1:583070078948:web:a33a2d8f0e1ec986e759f1",
+            messagingSenderId: "583070078948",
+            projectId: "multiplayer-chess-variant"));
   }
-  await Firebase.initializeApp(
-      options: const FirebaseOptions(
-          apiKey: "AIzaSyA2iqm-qa5oR46U2Po9JvirazRGe9QG8pE",
-          appId: "1:583070078948:web:a33a2d8f0e1ec986e759f1",
-          messagingSenderId: "583070078948",
-          projectId: "multiplayer-chess-variant"));
   runApp(const MyApp());
 }
 

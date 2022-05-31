@@ -13,6 +13,11 @@ class GameRules extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+      ),
       body: Container(
           color: Colors.transparent,
           child: Stack(alignment: Alignment.center, children: [
@@ -52,8 +57,69 @@ class GameRules extends StatelessWidget {
                     child: Container(
                       color: darkBrown,
                       width: double.infinity,
+                      //height: double.infinity,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            screenHeight * 0.02,
+                            screenHeight * 0.01,
+                            screenHeight * 0.01,
+                            screenHeight * 0.01),
+                        child: Text(
+                          '1. The game has 2 modes as of now, the normal mode and the swappable mode.',
+                          style: TextStyle(
+                              fontSize: screenHeight * 0.04,
+                              color: lightBrown,
+                              fontFamily: 'ol'),
+                        ),
+                      ),
                     ),
-                  )
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(screenHeight * 0.04, 0,
+                        screenHeight * 0.04, screenHeight * 0.04),
+                    child: Container(
+                      color: darkBrown,
+                      width: double.infinity,
+                      //height: double.infinity,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            screenHeight * 0.03,
+                            screenHeight * 0.01,
+                            screenHeight * 0.01,
+                            screenHeight * 0.01),
+                        child: Text(
+                          '2. In swappable mode, you can swap your minor pieces, ie, rook, bishop and knight with each other.',
+                          style: TextStyle(
+                              fontSize: screenHeight * 0.04,
+                              color: lightBrown,
+                              fontFamily: 'ol'),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(screenHeight * 0.04, 0,
+                        screenHeight * 0.04, screenHeight * 0.04),
+                    child: Container(
+                      color: darkBrown,
+                      width: double.infinity,
+                      //height: double.infinity,
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            screenHeight * 0.03,
+                            screenHeight * 0.01,
+                            screenHeight * 0.01,
+                            screenHeight * 0.01),
+                        child: Text(
+                          '3. This operation can be done upto 3 times by each player.',
+                          style: TextStyle(
+                              fontSize: screenHeight * 0.04,
+                              color: lightBrown,
+                              fontFamily: 'ol'),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             )

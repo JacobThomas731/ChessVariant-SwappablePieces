@@ -26,42 +26,32 @@ class _HomePageState extends State<HomePage> {
   Color lightBrown = const Color(0xff8e6d58);
   Color darkBrown = const Color(0x6634211e);
   String username = "abc";
-Map<String, dynamic> m = {};
+  Map<String, dynamic> m = {};
 
   @override
   void initState() {
     super.initState();
 
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(FirebaseAuth.instance.currentUser?.email)
+        .snapshots()
+        .listen((event) {
+      var data = event.data() as dynamic;
+      m = (data as dynamic) as Map<String, dynamic>;
 
-                        FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(FirebaseAuth.instance.currentUser?.email)
-                          
-                       .snapshots()
-                       .listen((event) {
-                          var data = event.data() as dynamic;
-                          m = (data as dynamic)
-                          as Map<String, dynamic>;
-                          
-                          if (
-                            m['challenges'] != null &&
-                            m['challenges'] != "") {
-                            setState(() {
-                              challenges = true;
-                            });
-                          }
-                          if (m['challenges'] == "") {
-                            setState(() {
-                              challenges = false;
-                            });
-                          }
-                          
-                        });
-
-
+      if (m['challenges'] != null && m['challenges'] != "") {
+        setState(() {
+          challenges = true;
+        });
+      }
+      if (m['challenges'] == "") {
+        setState(() {
+          challenges = false;
+        });
+      }
+    });
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -92,17 +82,14 @@ Map<String, dynamic> m = {};
               Positioned(
                   top: screenHeight * 0.05,
                   left: screenWidth * 0.65,
-                  child: 
-                  FutureBuilder(
-                      future: (
-                        FirebaseFirestore.instance
+                  child: FutureBuilder(
+                      future: (FirebaseFirestore.instance
                           .collection('users')
                           .doc(FirebaseAuth.instance.currentUser?.email)
                           .get() as dynamic),
                       builder: (context, snapshots) {
                         if (snapshots.hasData) {
                           dynamic data = snapshots.data;
-
 
                           if (data.data() != null) {
                             Map<String, dynamic> m =
@@ -126,7 +113,7 @@ Map<String, dynamic> m = {};
                                   challengesAccepted.split('-')[4];
                               gameColor =
                                   gameColor == 'black' ? 'white' : 'black';
-                               Navigator.of(context).pushNamed(
+                              Navigator.of(context).pushNamed(
                                   '/boardControllerArgs',
                                   arguments: [
                                     gameColor,
@@ -146,8 +133,7 @@ Map<String, dynamic> m = {};
                               String gameId = challenges.split('-')[4];
                               String opponentEmailId = challenges.split('-')[5];
 
-                              return 
-                              Row(children: [
+                              return Row(children: [
                                 Container(
                                   height: screenHeight * 0.1,
                                   width: screenWidth * 0.140,
@@ -259,16 +245,12 @@ Map<String, dynamic> m = {};
                               return Container();
                             }
                           } else {
-                            return
-                             Container();
+                            return Container();
                           }
-                          
                         } else {
-                          return 
-                          Container();
+                          return Container();
                         }
-                      })
-                      ),
+                      })),
               Row(
                 children: [
                   Expanded(

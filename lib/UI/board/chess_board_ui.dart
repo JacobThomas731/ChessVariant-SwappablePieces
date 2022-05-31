@@ -19,6 +19,8 @@ class ChessBoardUi extends StatefulWidget {
   late var whiteTimer;
   late var blackTimer;
   late int time;
+  late var decrementSwap;
+  late var decrementOppSwap;
 
   ChessBoardUi(this.color, this.pieceSquareMap, this.boardController, this.time,
       this.opponentEmailId,
@@ -33,6 +35,8 @@ class ChessBoardUi extends StatefulWidget {
     obj.blackTimer = GameTimer(time);
     whiteTimer = obj.whiteTimer;
     blackTimer = obj.blackTimer;
+    decrementSwap = obj.decrementSwapCounter;
+    decrementOppSwap = obj.decrementOpponentSwapCounter;
     return obj;
   }
 }
@@ -43,6 +47,19 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
   var whiteTimer;
   var blackTimer;
   var count = 3;
+  var opponentCount = 3;
+
+  void decrementSwapCounter() {
+    setState(() {
+      count--;
+    });
+  }
+
+  void decrementOpponentSwapCounter() {
+    setState(() {
+      opponentCount--;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +72,11 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
     AssetImage background =
         const AssetImage('assets/homepage/homeScreen_background.png');
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.transparent,
+      ),
       body: Stack(alignment: Alignment.center, children: [
         Image(
           image: background,
@@ -108,7 +130,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                       Expanded(
                         child: Center(
                           child:
-                              widget.color == 'white' ? blackTimer : whiteTimer,
+                          widget.color == 'white' ? blackTimer : whiteTimer,
                         ),
                       )
                     ],
@@ -142,7 +164,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                       Expanded(
                         child: Center(
                           child: Text(
-                            '$count',
+                            '$opponentCount',
                             style: TextStyle(
                               fontSize: height * 0.042,
                               fontFamily: 'ol',
@@ -184,8 +206,8 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
 
                           if (data.data() != null) {
                             Map<String, dynamic> m =
-                                (snapshots.data! as dynamic).data()
-                                    as Map<String, dynamic>;
+                            (snapshots.data! as dynamic).data()
+                            as Map<String, dynamic>;
                             oppRating = m['rating'];
                           }
                         }
@@ -200,8 +222,8 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                       }),
                 ),
                 Container(
-                    // player name
-                    // 9
+                  // player name
+                  // 9
                     height: height * 0.085,
                     width: width * 0.175,
                     //color: boardBackground,
@@ -218,8 +240,8 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
 
                             if (data.data() != null) {
                               Map<String, dynamic> m =
-                                  (snapshots.data! as dynamic).data()
-                                      as Map<String, dynamic>;
+                              (snapshots.data! as dynamic).data()
+                              as Map<String, dynamic>;
                               oppUserName = m['username'];
                             }
                           }
@@ -251,8 +273,8 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                   //color: boardBackground,
                 ),
                 Container(
-                    // player name
-                    // 9
+                  // player name
+                  // 9
                     height: height * 0.085,
                     //color: boardBackground,
                     alignment: Alignment.center,
@@ -268,8 +290,8 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
 
                             if (data.data() != null) {
                               Map<String, dynamic> m =
-                                  (snapshots.data! as dynamic).data()
-                                      as Map<String, dynamic>;
+                              (snapshots.data! as dynamic).data()
+                              as Map<String, dynamic>;
                               ownUserName = m['username'];
                             }
                           }
@@ -300,8 +322,8 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
 
                           if (data.data() != null) {
                             Map<String, dynamic> m =
-                                (snapshots.data! as dynamic).data()
-                                    as Map<String, dynamic>;
+                            (snapshots.data! as dynamic).data()
+                            as Map<String, dynamic>;
                             ownRating = m['rating'];
                           }
                         }
@@ -401,7 +423,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                       Expanded(
                         child: Center(
                           child:
-                              widget.color == 'white' ? whiteTimer : blackTimer,
+                          widget.color == 'white' ? whiteTimer : blackTimer,
                         ),
                       )
                     ],
@@ -423,7 +445,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
               child: squareHolder),
         ),
         Positioned(
-            // right panel
+          // right panel
             top: height * 0.05,
             left: width * 0.75,
             child: Column(children: [
@@ -437,7 +459,7 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                 width: width * 0.23,
               ),
               Container(
-                  // chat
+                // chat
                   color: boardBackground,
                   height: height * 0.6,
                   width: width * 0.23,
@@ -447,12 +469,12 @@ class _ChessBoardUiState extends State<ChessBoardUi> {
                           height: height * 0.05,
                           child: Center(
                               child: Text(
-                            'chat',
-                            style: TextStyle(
-                                fontSize: height * 0.028,
-                                fontFamily: 'ol',
-                                color: boardColor),
-                          ))),
+                                'chat',
+                                style: TextStyle(
+                                    fontSize: height * 0.028,
+                                    fontFamily: 'ol',
+                                    color: boardColor),
+                              ))),
                       Container(
                         height: height * 0.45,
                         width: width * 0.18,

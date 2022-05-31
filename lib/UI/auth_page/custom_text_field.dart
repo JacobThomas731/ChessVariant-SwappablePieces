@@ -33,12 +33,12 @@ class CustomTextField {
                     borderRadius:
                         BorderRadius.all(Radius.circular(screenHeight * 0.002)),
                     borderSide:
-                    BorderSide(color: theme2, width: screenHeight * 0.002)),
+                        BorderSide(color: theme2, width: screenHeight * 0.002)),
                 focusedBorder: OutlineInputBorder(
                     borderRadius:
-                    BorderRadius.all(Radius.circular(screenHeight * 0.002)),
+                        BorderRadius.all(Radius.circular(screenHeight * 0.002)),
                     borderSide:
-                    BorderSide(color: theme2, width: screenHeight * 0.002)),
+                        BorderSide(color: theme2, width: screenHeight * 0.002)),
                 labelText: text,
                 labelStyle: TextStyle(
                     color: const Color(0xff8e6d58),
